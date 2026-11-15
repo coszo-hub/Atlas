@@ -1,6 +1,6 @@
 export const BUILD_COMMAND = "PYTHONPATH=src .venv/bin/python -m atlas_map_data.build_atlas_bundle";
 
-// The atlas can be hosted below a site subpath (for example /rca-atlas/map2/).
+// The atlas can be hosted below a site subpath (coszo.org/atlas/, so its data is at /atlas/atlas/).
 // Vite supplies that subpath at build time, so keep every static-data request
 // relative to it rather than assuming that /atlas is at the domain root.
 export const atlasUrl = path => `${import.meta.env.BASE_URL}atlas/${path.replace(/^\/+/, "")}`;

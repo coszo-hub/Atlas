@@ -12,7 +12,7 @@ const apiProxy = {
 };
 
 export default defineConfig({
-  // The public atlas is served below /rca-atlas/map2/, not at the custom-domain root.
+  // The public atlas is served below /atlas/ (coszo.org/atlas/), not at the custom-domain root.
   // Relative asset URLs keep both the Pages deployment and local preview portable.
   base: "./",
   plugins: [react()],
