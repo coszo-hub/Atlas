@@ -1102,9 +1102,10 @@ test("when the high-rate seismic data stop reaching EarthScope, the count says s
   }), {});
   const data = await res.json();
   assert.equal(res.status, 200);
-  assert.match(data.answer, /^No one can count Axial earthquakes for Sunday, November 15 yet\. The seismometers are recording/);
+  assert.match(data.answer, /^Axial earthquakes for Sunday, November 15 cannot be counted from public data yet\. The seismometers are recording/);
   assert.match(data.answer, /since about 2026-11-14 08:00 UTC their high-sample-rate data .* have not reached it/);
-  assert.match(data.answer, /has located earthquakes up to 2026-11-12 01:00 UTC/);
+  assert.match(data.answer, /has located earthquakes only up to 2026-11-12 01:00 UTC, having stopped updating before the high-rate data stopped reaching EarthScope\./);
+  assert.match(data.answer, /efforts are made to backfill .* so the count should appear then\.$/);
   assert.deepEqual(data.answer_citations.map((c) => c.id), ["axial-live-catalog", "earthscope-oo-dataselect"]);
   assert.ok(probes.length <= 27, `${probes.length} EarthScope requests`);
 });

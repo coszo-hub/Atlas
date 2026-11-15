@@ -788,10 +788,14 @@ async function liveAxialCount(question, tz) {
   const behind = (located && located < window.end && Date.now() - located.getTime() > 3 * 3_600_000) || !files.length;
   const feed = behind ? await highRateWithheld(Math.min(window.end.getTime(), Date.now() - 1_800_000) - 600_000,
     located ? located.getTime() : window.start.getTime() - 3 * 86_400_000) : null;
-  const backfill = "The catalog's site says it backfills locations for intervals when the high-sample-rate data are diverted by the Navy and later released, so the count will appear then.";
+  const backfill = "The catalog's site says efforts are made to backfill locations for intervals when the high-sample-rate data are diverted by the Navy and later released, so the count should appear then.";
+  // The catalog can stop on its own before the data do (12 November 2026, two days before them); say so, so the
+  // missing data are not read as the reason it stopped.
+  const stoppedFirst = feed?.since && located && feed.since - located.getTime() > 86_400_000
+    ? ", having stopped updating before the high-rate data stopped reaching EarthScope" : "";
   if ((located && located <= window.start) || !files.length) {
     const answer = feed
-      ? `No one can count Axial earthquakes for ${window.label} yet. ${withheldText(feed)} The live Axial catalog, which these counts come from, has located earthquakes up to ${reach ?? "an earlier day"}. ${backfill}`
+      ? `Axial earthquakes for ${window.label} cannot be counted from public data yet. ${withheldText(feed)} The live Axial catalog, which these counts come from, has located earthquakes only up to ${reach ?? "an earlier day"}${stoppedFirst}. ${backfill}`
       : located && located <= window.start
         ? `The live Axial catalog cannot count ${window.label} yet: its earthquake locations reach only ${reach}, and later hours are not located yet. ${backfill}`
         : `The live Axial catalog has no file for ${window.label} yet${reach ? ` (its earthquake locations reach ${reach})` : ""}, so it cannot count that day. ${backfill}`;
