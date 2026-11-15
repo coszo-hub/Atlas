@@ -41,6 +41,8 @@ input[type=range]:disabled { opacity: 0.35; }
 .regions .unplaced { margin-top: 4px; border-top: 1px solid var(--hairline); border-radius: 0 0 4px 4px; color: var(--text-secondary); font-size: 12px; }
 .header { width: 320px; padding: 14px 16px 12px; }
 .header h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
+.header .brand { display: flex; align-items: center; gap: 10px; }
+.header .logo { width: 44px; height: 44px; flex: none; }
 .header p { margin: 4px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
 .header .stats { display: flex; gap: 22px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--hairline); }
 .header .stats div { display: flex; flex-direction: column; gap: 2px; }
