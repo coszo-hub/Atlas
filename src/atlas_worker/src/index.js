@@ -719,6 +719,50 @@ async function completePrompt(prompt, mode, env, requestedModel = "auto") {
   throw lastError;
 }
 
+const EARTHSCOPE_DATASELECT = "https://service.earthscope.org/fdsnws/dataselect/1/query";
+const EARTHSCOPE_SOURCE = { id: "earthscope-oo-dataselect", title: "EarthScope FDSN dataselect, OOI cabled array seismometers (network OO)",
+  url: "https://service.earthscope.org/fdsnws/dataselect/1/" };
+const isoSeconds = (ms) => new Date(ms).toISOString().slice(0, 19);
+const utcHour = (ms) => `${new Date(ms).toISOString().slice(0, 13).replace("T", " ")}:00 UTC`;
+
+// Whether EarthScope holds any of a channel in the ten minutes from `t`: true, false, or null when it could not say.
+async function seismicData(sta, cha, t) {
+  const q = new URLSearchParams({ net: "OO", sta, loc: "*", cha, starttime: isoSeconds(t), endtime: isoSeconds(t + 600_000) });
+  try {
+    const r = await fetch(`${EARTHSCOPE_DATASELECT}?${q}`, { signal: AbortSignal.timeout(8_000) });
+    if (r.status === 204 || r.status === 404) return false;
+    return r.ok ? (await r.arrayBuffer()).byteLength > 0 : null;
+  } catch {
+    return null;
+  }
+}
+
+// The catalog locates earthquakes from the seismometers' high-sample-rate channels. Those can stop reaching the
+// public archive while the instruments keep recording (from 14 November 2026: every 40-200 samples/s channel of the
+// cabled array missing at EarthScope, the 1 and 8 samples/s ones arriving), the intervals the catalog's site says
+// are diverted by the Navy and later released. Checked at `at`; if withheld there, the hour they stopped is found
+// among the times since `floor` (two rounds of twelve probes, about an hour's resolution over three days).
+async function highRateWithheld(at, floor) {
+  const [cc, as, low] = await Promise.all([seismicData("AXCC1", "HHZ", at), seismicData("AXAS1", "EHZ", at), seismicData("AXCC1", "LHZ", at)]);
+  if (cc !== false || as !== false || low !== true) return null;
+  const probe = async (lo, hi) => {
+    const times = Array.from({ length: 12 }, (_, i) => lo + ((hi - lo) * i) / 11);
+    const has = await Promise.all(times.map((t) => seismicData("AXCC1", "HHZ", t)));
+    const last = has.lastIndexOf(true);
+    return last < 0 ? null : [times[last], times[last + 1] ?? hi];
+  };
+  const lo = Math.max(floor, at - 7 * 86_400_000);
+  const coarse = await probe(lo, at);
+  if (!coarse) return { since: null, before: lo };
+  const fine = await probe(coarse[0], coarse[1]);
+  return { since: (fine ?? coarse)[1] };
+}
+
+function withheldText(feed) {
+  const when = feed.since ? `since about ${utcHour(feed.since)}` : `since before ${utcHour(feed.before)}`;
+  return `The seismometers are recording: their 1-sample-a-second channel still reaches the public archive (EarthScope). But ${when} their high-sample-rate data (40 to 200 samples a second), which earthquakes are detected and located from, have not reached it, at the central caldera (AXCC1) or the ASHES vent field (AXAS1).`;
+}
+
 async function liveAxialCount(question, tz) {
   const window = axialDayWindow(question, { tz });
   if (!window) return null;
@@ -739,11 +783,19 @@ async function liveAxialCount(question, tz) {
     return [await upstream.text(), window.stamps[i], url];
   })).then((all) => all.filter(Boolean))]);
   const reach = located && `${located.toISOString().slice(0, 16).replace("T", " ")} UTC`;
-  if (located && located <= window.start) {
-    return notCounted(`The live Axial catalog cannot count ${window.label} yet: its earthquake locations reach only ${reach}, and later hours are not located yet. The catalog's site says it backfills locations for intervals when the data were diverted and later released, so the count will appear then.`);
-  }
-  if (!files.length) {
-    return notCounted(`The live Axial catalog has no file for ${window.label} yet${reach ? ` (its earthquake locations reach ${reach})` : ""}, so it cannot count that day. The catalog's site says it backfills locations for intervals when the data were diverted and later released.`);
+  // When the catalog is behind, say why if the seismic archive shows it: checked inside the day, half an hour back
+  // from now at most (the archive runs minutes behind).
+  const behind = (located && located < window.end && Date.now() - located.getTime() > 3 * 3_600_000) || !files.length;
+  const feed = behind ? await highRateWithheld(Math.min(window.end.getTime(), Date.now() - 1_800_000) - 600_000,
+    located ? located.getTime() : window.start.getTime() - 3 * 86_400_000) : null;
+  const backfill = "The catalog's site says it backfills locations for intervals when the high-sample-rate data are diverted by the Navy and later released, so the count will appear then.";
+  if ((located && located <= window.start) || !files.length) {
+    const answer = feed
+      ? `No one can count Axial earthquakes for ${window.label} yet. ${withheldText(feed)} The live Axial catalog, which these counts come from, has located earthquakes up to ${reach ?? "an earlier day"}. ${backfill}`
+      : located && located <= window.start
+        ? `The live Axial catalog cannot count ${window.label} yet: its earthquake locations reach only ${reach}, and later hours are not located yet. ${backfill}`
+        : `The live Axial catalog has no file for ${window.label} yet${reach ? ` (its earthquake locations reach ${reach})` : ""}, so it cannot count that day. ${backfill}`;
+    return { ...notCounted(answer), answer_citations: feed ? [home, EARTHSCOPE_SOURCE] : [home] };
   }
   const all = eventsInWindow(files, window);
   const floor = magnitudeFloor(question);
@@ -760,13 +812,15 @@ async function liveAxialCount(question, tz) {
   // Locations an hour or two behind are the catalog's normal pace; further behind, the day is only partly counted.
   if (located && located < window.end && Date.now() - located.getTime() > 3 * 3_600_000) {
     answer += ` The catalog's locations reach only ${reach} so far, so this counts the day only up to then.`;
+    if (feed) answer += ` ${withheldText(feed)}`;
   }
   return {
     query: question,
     answer,
     answer_model: "axial_count_events (live catalog)",
     answer_citations: files.map(([, stamp, url]) => ({ id: files.length > 1 ? `axial-live-catalog-${stamp}` : "axial-live-catalog",
-      title: files.length > 1 ? `Axial Seamount Earthquake Catalog, ${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6)} UTC` : "Axial Seamount Earthquake Catalog", url })),
+      title: files.length > 1 ? `Axial Seamount Earthquake Catalog, ${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6)} UTC` : "Axial Seamount Earthquake Catalog", url }))
+      .concat(feed ? [EARTHSCOPE_SOURCE] : []),
     hits: [], neighbors: [], events,
     tool_hints: [{ name: "axial_count_events", description: "Executed against the live daily Axial catalog", score: 1, required_arguments: ["day"],
       input_schema: { day: window.day, tz: window.tz, label: window.label, today: window.today, ...(floor ? { min_magnitude: floor.value, inclusive: floor.inclusive } : {}) } }],

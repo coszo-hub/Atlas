@@ -1066,3 +1066,51 @@ test("a task answer's script is the tested script with the model's settings; a b
   assert.match(cut, /START, END = "2025-01-01", "2025-01-02"/);
   assert.match(cut, /response="csv"\)\n```$/);
 });
+
+test("when the high-rate seismic data stop reaching EarthScope, the count says so and since when", async (t) => {
+  const { default: worker } = await import("../src/index.js");
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-11-15T22:45:00Z") });
+  const cutoff = Date.parse("2026-11-14T08:00:00Z");
+  const probes = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    const u = new URL(String(url));
+    if (u.host === "axial.ocean.washington.edu" && u.pathname === "/") {
+      return new Response("Catalog last updated at 12-Nov-2026 02:04:37 UTC with locations up to 12-Nov-2026 01:00:00 UTC");
+    }
+    if (u.host === "service.earthscope.org") {
+      const cha = u.searchParams.get("cha"), start = Date.parse(`${u.searchParams.get("starttime")}Z`);
+      probes.push(cha);
+      const has = cha === "LHZ" || (u.searchParams.get("sta") === "AXCC1" && start < cutoff);   // AXAS1 is withheld too
+      return has ? new Response(new Uint8Array(512)) : new Response(null, { status: 204 });
+    }
+    return new Response("", { status: 404 });
+  });
+  const res = await worker.fetch(new Request("https://w.example/v1/answer", {
+    method: "POST", headers: { origin: "https://coszo.org", "content-type": "application/json" },
+    body: JSON.stringify({ query: "How many earthquakes at Axial today?", tz: "America/Los_Angeles" }),
+  }), {});
+  const data = await res.json();
+  assert.equal(res.status, 200);
+  assert.match(data.answer, /^No one can count Axial earthquakes for Sunday, November 15 yet\. The seismometers are recording/);
+  assert.match(data.answer, /since about 2026-11-14 08:00 UTC their high-sample-rate data .* have not reached it/);
+  assert.match(data.answer, /has located earthquakes up to 2026-11-12 01:00 UTC/);
+  assert.deepEqual(data.answer_citations.map((c) => c.id), ["axial-live-catalog", "earthscope-oo-dataselect"]);
+  assert.ok(probes.length <= 27, `${probes.length} EarthScope requests`);
+});
+
+test("a day the catalog has not reached, with the seismic data flowing, keeps the catalog's own explanation", async (t) => {
+  const { default: worker } = await import("../src/index.js");
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-11-15T22:45:00Z") });
+  t.mock.method(globalThis, "fetch", async (url) => {
+    const u = new URL(String(url));
+    if (u.host === "axial.ocean.washington.edu" && u.pathname === "/") return new Response("with locations up to 12-Nov-2026 01:00:00 UTC");
+    if (u.host === "service.earthscope.org") return new Response(new Uint8Array(512));
+    return new Response("", { status: 404 });
+  });
+  const data = await (await worker.fetch(new Request("https://w.example/v1/answer", {
+    method: "POST", headers: { origin: "https://coszo.org", "content-type": "application/json" },
+    body: JSON.stringify({ query: "How many earthquakes at Axial on 2026-11-14?" }),
+  }), {})).json();
+  assert.match(data.answer, /^The live Axial catalog cannot count .* yet: its earthquake locations reach only 2026-11-12 01:00 UTC/);
+  assert.doesNotMatch(data.answer, /EarthScope/);
+});
