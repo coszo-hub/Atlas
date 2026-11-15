@@ -730,16 +730,20 @@ async function liveAxialCount(question, tz) {
   const coverage = fetch(AXIAL_CATALOG, { signal: AbortSignal.timeout(10_000) })
     .then((r) => (r.ok ? r.text() : "")).then(locatedUntil).catch(() => null);
   const urls = window.stamps.map((stamp) => `${AXIAL_CATALOG}/hypo71/hypo71_${stamp}.dat`);
-  // A local day can reach into a UTC day the catalog has not started yet; only a day with no file at all fails.
+  // A local day can reach into a UTC day the catalog has not started yet, and a catalog that has stopped updating
+  // has no file for the days since (12 November 2026: no files from the 13th), so a missing file is not a failure.
   const [located, files] = await Promise.all([coverage, Promise.all(urls.map(async (url, i) => {
     const upstream = await fetch(url, { signal: AbortSignal.timeout(20_000) });
-    if (upstream.status === 404 && i > 0) return null;
+    if (upstream.status === 404) return null;
     if (!upstream.ok) throw new Error(`Axial catalog ${upstream.status}`);
     return [await upstream.text(), window.stamps[i], url];
   })).then((all) => all.filter(Boolean))]);
   const reach = located && `${located.toISOString().slice(0, 16).replace("T", " ")} UTC`;
   if (located && located <= window.start) {
     return notCounted(`The live Axial catalog cannot count ${window.label} yet: its earthquake locations reach only ${reach}, and later hours are not located yet. The catalog's site says it backfills locations for intervals when the data were diverted and later released, so the count will appear then.`);
+  }
+  if (!files.length) {
+    return notCounted(`The live Axial catalog has no file for ${window.label} yet${reach ? ` (its earthquake locations reach ${reach})` : ""}, so it cannot count that day. The catalog's site says it backfills locations for intervals when the data were diverted and later released.`);
   }
   const all = eventsInWindow(files, window);
   const floor = magnitudeFloor(question);

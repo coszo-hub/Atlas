@@ -444,6 +444,26 @@ test("an Axial count says when the catalog has not located the day yet, or only 
   assert.match(big.answer, new RegExp(`^There were ${big.events.length} Axial Seamount earthquakes of magnitude above 1 \\(of ${all.length} in all\\)`));
 });
 
+test("a catalog that has stopped updating has no file for the day, which is an answer, not a failure", async (t) => {
+  const { default: worker } = await import("../src/index.js");
+  let home = () => new Response("Catalog last updated at 12-Nov-2026 02:04:37 UTC with locations up to 12-Nov-2026 01:00:00 UTC");
+  t.mock.method(globalThis, "fetch", async (url) => (String(url) === "http://axial.ocean.washington.edu" ? home() : new Response("", { status: 404 })));
+  const ask = async (query, tz) => {
+    const res = await worker.fetch(new Request("https://w.example/v1/answer", {
+      method: "POST", headers: { origin: "https://coszo.org", "content-type": "application/json" }, body: JSON.stringify({ query, tz }),
+    }), {});
+    return [res.status, await res.json()];
+  };
+  const [status, stale] = await ask("How many earthquakes at Axial on 2026-11-14?", "America/Los_Angeles");
+  assert.equal(status, 200);
+  assert.match(stale.answer, /cannot count .* yet: its earthquake locations reach only 2026-11-12 01:00 UTC/);
+  assert.equal(stale.events.length, 0);
+  home = () => new Response("", { status: 502 });                                        // nor can the coverage be read
+  const [status2, unknown] = await ask("How many earthquakes at Axial on 2026-11-14?");
+  assert.equal(status2, 200);
+  assert.match(unknown.answer, /^The live Axial catalog has no file for .* yet, so it cannot count that day\./);
+});
+
 test("a status question is answered from the instrument's live check, cited as the instrument", async (t) => {
   assert.ok(isStatusQuestion("is the pressure gauge at slope base operational"));
   assert.ok(!isStatusQuestion("What does the pressure gauge at Slope Base measure?"));
