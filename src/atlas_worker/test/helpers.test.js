@@ -138,6 +138,17 @@ test("yesterday and explicit dates are the asker's days too; other questions are
   assert.equal(axialDayWindow("What instruments are at Axial?", { now: evening }), null);
 });
 
+test("a named day may separate a written month from its numbers with hyphens, slashes or dots", () => {
+  const now = new Date("2026-11-15T22:45:00Z");
+  for (const q of ["how many earthquakes at axial on 11-Nov-2026", "How many earthquakes at Axial on 11-nov-2026?",
+    "how many earthquakes at axial on Nov-11-2026", "how many earthquakes at axial on 2026-Nov-11", "earthquakes at Axial, count 11/Nov/2026",
+    "how many earthquakes at axial on 11.Nov.2026", "how many earthquakes at axial on 11 Nov 2026", "how many earthquakes at axial on November 11, 2026",
+    "how many earthquakes at axial on 11-Nov", "how many earthquakes at axial on 2026-11-11", "how many earthquakes at axial on 11/11/2026"]) {
+    assert.equal(axialDayWindow(q, { now })?.day, "2026-11-11", q);
+  }
+  assert.equal(axialDayWindow("how many earthquakes at axial on 31-Nov-2026", { now }), null);   // no such day
+});
+
 test("events in the window: the Seattle day so far counts rows from both files and no others", () => {
   const w = axialDayWindow("How many earthquakes at Axial today?", { tz: "America/Los_Angeles", now: evening });
   const events = eventsInWindow([[day24, "20260924"], [day25, "20260925"]], w);

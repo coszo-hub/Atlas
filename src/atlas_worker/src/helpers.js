@@ -329,20 +329,23 @@ function localMidnight(day, tz) {
   return wall - zoneOffset(tz, guess);   // again at the guess, in case a DST change falls between
 }
 
-// A calendar day as people write it: 2026-10-01, October 1 2026, Oct 1st, 1 October, 10/1/2026 (US order), with a
-// slip in the ordinal ("1sr") allowed. Without a year it is the latest such day up to today. Null for none, or for a
-// day that does not exist (February 30).
+// A calendar day as people write it: 2026-10-01, October 1 2026, Oct 1st, 1 October, 10/1/2026 (US order), and with
+// hyphens, slashes or dots between a named month and the numbers (11-Nov-2026, the catalog's own style; Nov-11-2026;
+// 2026-Nov-11), with a slip in the ordinal ("1sr") allowed. Without a year it is the latest such day up to today.
+// Null for none, or for a day that does not exist (February 30).
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 const MONTH = "(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\\.?";
 const DAY = "(\\d{1,2})(?:st|nd|rd|th|[a-z]{1,2})?";
-const YEAR = "(?:,?\\s*(20\\d{2}))?";
+const SEP = "(?:\\s+|\\s*[-/.]\\s*)";
+const YEAR = "(?:(?:,\\s*|\\s*[-/.]\\s*|\\s+)(20\\d{2}))?";
 export function namedDay(question, today) {
   const q = String(question || "").toLowerCase();
   let y, m, d;
   let match = q.match(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/);
   if (match) [, y, m, d] = match;
-  else if ((match = q.match(new RegExp(`\\b${MONTH}\\s+${DAY}\\b${YEAR}`)))) { m = MONTHS.indexOf(match[1].slice(0, 3)) + 1; [, , d, y] = match; }
-  else if ((match = q.match(new RegExp(`\\b${DAY}\\s+(?:of\\s+)?${MONTH}${YEAR}`)))) { m = MONTHS.indexOf(match[2].slice(0, 3)) + 1; [, d, , y] = match; }
+  else if ((match = q.match(new RegExp(`\\b(20\\d{2})${SEP}${MONTH}${SEP}${DAY}\\b`)))) { m = MONTHS.indexOf(match[2].slice(0, 3)) + 1; [, y, , d] = match; }
+  else if ((match = q.match(new RegExp(`\\b${MONTH}${SEP}${DAY}\\b${YEAR}`)))) { m = MONTHS.indexOf(match[1].slice(0, 3)) + 1; [, , d, y] = match; }
+  else if ((match = q.match(new RegExp(`\\b${DAY}${SEP}(?:of\\s+)?${MONTH}${YEAR}`)))) { m = MONTHS.indexOf(match[2].slice(0, 3)) + 1; [, d, , y] = match; }
   else if ((match = q.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(20\d{2}))?\b/))) [, m, d, y] = match;
   else return null;
   const iso = (year) => `${year}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
