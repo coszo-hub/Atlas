@@ -662,16 +662,20 @@ def build(data_root: Path, output: Path) -> None:
         ("COSZO-BPR-O6", "Bottom pressure recorder O6", "bottom_pressure_recorder", "O6", 44.4512, -124.3616, None),
     ]
     ascpr = ev("SOURCE-DATA-UCSD-ASCPR", locator="Technical Details: collection site coordinates")
+    # A benchmark's record says what it is: listed only as a site, the five read as planned COSZO deployments.
+    benchmark = ("A benchmark of the 2014-2017 campaign-style absolute seafloor pressure surveys (Cook et al., 2023), "
+                 "occupied by an ROV carrying an Absolute Self-Calibrating Pressure Recorder for a few hours a visit")
     for canonical, name, typ, location, lat, lon, note in related:
         bpr = canonical.startswith("COSZO-BPR-")
         add(
-            canonical, name, typ, location, ["COSZO"], "deployment_site_reference", "status_not_stated_in_workbook",
+            canonical, name, typ, location, ["COSZO"], "deployment_site_reference",
+            "surveyed_2014_to_2017" if bpr else "status_not_stated_in_workbook",
             [ev("SOURCE-COSZO-DEPLOYMENT-SITES", locator="Sheet1"), *([ascpr] if bpr else [])],
             coszo_role="related_deployment_site_asset",
             aliases=[], site=None, node=None, station=None, network=None, instrument_code=None,
             latitude=lat, longitude=lon, depth_m=None, manufacturer=None, model=None, sensor_components=[],
             source_system="COSZO deployment-site workbook", source_urls=["https://doi.org/10.6075/J0F18ZXJ"] if bpr else [],
-            arcada_document_id=None, notes=note,
+            arcada_document_id=None, notes=f"{benchmark}; listed in the COSZO deployment-site workbook." if bpr else note,
         )
     # O1 and O2 are not in the workbook, but are benchmarks of the same campaign-style absolute pressure surveys as O2B
     # and O3-O6 (Cook et al., 2023), at the dataset's coordinates; O2B is a second benchmark about 100 m from O2.
@@ -683,7 +687,7 @@ def build(data_root: Path, output: Path) -> None:
             latitude=lat, longitude=lon, depth_m=None, manufacturer=None, model=None, sensor_components=[],
             source_system="UC San Diego Library dataset (Cook et al., 2023)",
             source_urls=["https://doi.org/10.6075/J0F18ZXJ"], arcada_document_id=None,
-            notes="A benchmark of the 2014-2017 campaign-style absolute seafloor pressure surveys; not in the COSZO deployment-site workbook.",
+            notes=f"{benchmark}; not in the COSZO deployment-site workbook.",
         )
 
     # Every ID the corpus knows an instrument by, so a record citing any of them finds it. OOI asset management and

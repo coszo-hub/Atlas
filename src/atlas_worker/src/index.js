@@ -331,7 +331,7 @@ async function typeRecords(inventory, env) {
       { query: inventory.search, limit: 50, collection_ids: ["instruments"] }, { "x-api-key": env.ATLAS_API_KEY });
     const seen = new Set();
     return (found.hits || []).filter((hit) => inventory.record.test(hit.title || "") && !seen.has(hit.chunk_id) && seen.add(hit.chunk_id))
-      .slice(0, 30).map(withRouteCitations);
+      .slice(0, 30).map((hit) => ({ ...withRouteCitations(hit), inventory: true }));
   } catch (error) {
     console.error("instrument type search failed", error instanceof Error ? error.message : "unknown");
     return [];
@@ -893,7 +893,7 @@ export default {
         context.literature = paperKeys(selectedEvidenceHits(context, query)).length ? found.slice(0, 1) : found;
       }
       if (isDasOverview(query)) context.experiments = await dasExperimentRecords(env);
-      else context.fulltext = await fullTextPassages(context, query, env);
+      else if (!context.inventory?.length) context.fulltext = await fullTextPassages(context, query, env);
       if (isStatusQuestion(query)) context.live = await liveStatuses(selectedEvidenceHits(context, query), query, env, context.hits);
       context.hits = withPlaces(context.hits, context.fulltext);
       const evidenceHits = selectedEvidenceHits(context, query);

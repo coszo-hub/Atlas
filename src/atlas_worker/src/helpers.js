@@ -61,6 +61,13 @@ export const TASK_COLLECTION = "task_recipes";
 const RECIPE_CHARS = 16_000;
 const isTask = (hit) => hit.collection_id === TASK_COLLECTION;
 const isRecipe = (hit) => hit.collection_id === RECIPE_COLLECTION || isTask(hit);
+// The records of every instrument of a type (typeRecords, for "what bottom pressure gauges are there") have room of
+// their own: the 29 pressure records run to ~18,000 characters with their headers, and in the main evidence's 12,000
+// the list stopped at O1 (O2, O4, both planned SCPRs and two planned gauges went unlisted). Such a question asks for
+// no paper passages, so the main evidence keeps what is left of the prompt's ~26,000.
+const INVENTORY_CHARS = 20_000;
+const MAIN_WITH_INVENTORY_CHARS = 6_000;
+const isInventory = (hit) => hit.inventory === true;
 
 // The keys the passage search knows a paper by: its DOI (no resolver prefix) and its catalog or document ID. A
 // paper the evidence only names by DOI (an OOI page "adapted from Philip et al., 2023, doi: 10.1126/...") counts
@@ -276,9 +283,10 @@ export function evidencePackage(hits, sourceNumbers) {
   const sections = [];
   // Full-text passages come last, in room of their own (eight passages of ~1,300 characters, the median page):
   // the main evidence and the passages never take each other's room.
-  const room = { main: hits.some(isLayer) ? MAIN_WITH_FULLTEXT_CHARS : MAX_EVIDENCE_CHARS, layer: FULLTEXT_CHARS, recipe: RECIPE_CHARS };
+  const room = { main: hits.some(isLayer) ? MAIN_WITH_FULLTEXT_CHARS : hits.some(isInventory) ? MAIN_WITH_INVENTORY_CHARS : MAX_EVIDENCE_CHARS,
+    layer: FULLTEXT_CHARS, recipe: RECIPE_CHARS, inventory: INVENTORY_CHARS };
   for (const hit of hits) {
-    const budget = isLayer(hit) ? "layer" : isRecipe(hit) ? "recipe" : "main";
+    const budget = isLayer(hit) ? "layer" : isRecipe(hit) ? "recipe" : isInventory(hit) ? "inventory" : "main";
     if (room[budget] <= 0) continue;
     const refs = [...new Set((hit.citations || []).map((c) => sourceNumbers.get(sourceKey(c.source_id || hit.chunk_id, c.url))).filter(Boolean))];
     const kind = isLayer(hit) ? "scientific literature, full text" : isTask(hit) ? "task recipe" : isRecipe(hit) ? "download recipe" : sourceKind(hit);

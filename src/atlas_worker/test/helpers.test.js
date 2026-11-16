@@ -1166,3 +1166,16 @@ test("general pages on getting OOI data give way to a recipe with no OOI route",
   assert.equal(withoutOffRouteAccess(hits, [{ ...ucsd, chunk_id: "recipe_type_bottom_pressure_recorder" }]).length, 5);
   assert.equal(withoutOffRouteAccess(hits, [{ chunk_id: "S", collection_id: "websites", title: "Slope Base" }]).length, 5);
 });
+
+test("a type's records have room of their own: all 29 pressure records reach the evidence", () => {
+  const records = Array.from({ length: 29 }, (_, i) => ({ chunk_id: `R${i}`, collection_id: "instruments", title: `Pressure record ${i}`,
+    text: "x".repeat(530), inventory: true }));
+  const page = { chunk_id: "P", collection_id: "websites", title: "A page", text: "y".repeat(9_000) };
+  const evidence = evidencePackage([...records, page], new Map());
+  assert.ok(evidence.includes("Pressure record 28\n"));
+  assert.ok(evidence.length <= 26_100);
+  // the main evidence keeps the rest of the prompt
+  assert.equal((evidence.match(/y/g) || []).length, 6_000 - "A page (website)\n".length);
+  // without them, a page has the main room it had
+  assert.equal((evidencePackage([page], new Map()).match(/y/g) || []).length, 9_000);
+});
