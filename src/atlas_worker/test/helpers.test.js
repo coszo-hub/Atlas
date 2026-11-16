@@ -942,6 +942,14 @@ test("a request for code for a task gets that task's recipe: its task and instru
   assert.deepEqual(taskRecipeIds("Give me Python code to download Oregon Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) "
     + "(RS01SLBS-MJ01A-06-PRESTA101) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC", TASKS), []);   // its name, not a task
   assert.deepEqual(taskRecipeIds("Write code to remove the tides from the Slope Base tidal pressure gauge", TASKS), ["task_botpt_detide"]);
+  for (const name of ["Oregon Shelf Benthic Package 3D Current Meter (CE02SHBP-LJ01D-07-VEL3DC108)",
+    "Axial Seamount Base Spectrophotometer (AC-S) (RS03AXBS-LJ03A-11-OPTAAC303)",
+    "Oregon Offshore Benthic Package Broadband Hydrophone (CE04OSBP-LJ01C-11-HYDBBA105)",
+    "ASHES Hydrothermal Field Thermistor Array (RS03ASHS-MJ03B-07-TMPSFA301)",
+    "Axial Seamount Central Caldera Tiltmeter/Accelerometer Station AXCC2 (EARTHSCOPE-OO-AXCC2)"]) {
+    assert.deepEqual(taskRecipeIds(`Give me Python code to download ${name} data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC`, TASKS), [], name);
+  }
+  assert.deepEqual(taskRecipeIds("Plot the ASHES thermistor array temperatures for a week", TASKS), ["task_tmpsf_vent_temperature"]);
   assert.deepEqual(taskRecipeIds("Write a script to plot the waveform of an Axial earthquake at AXCC1", TASKS), wave);
   assert.deepEqual(taskRecipeIds("how do I remove the instrument response from a seismometer and bandpass it?", TASKS), wave);
   assert.deepEqual(taskRecipeIds("Plot yesterday's biggest earthquake at AXEC2", TASKS), wave);

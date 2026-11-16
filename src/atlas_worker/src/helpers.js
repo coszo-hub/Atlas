@@ -536,19 +536,24 @@ const TASK_REQUEST = /\b(?:scripts?|code|python|programs?|notebooks?|functions?|
 // Words any task may draw ("plot the noise at AXCC1") count only between tasks with the same specific words.
 const GENERIC_TASK_WORD = /^(?:plot\w*|figures?|graphs?|visuali[sz]\w*)$/;
 // In code mode (the chat's Code toggle) every question asks for code, in whatever words.
-// Words that only name an instrument are not a task: OOI calls its absolute pressure gauges "Tidal Pressure Gauge",
-// whose "tidal" sent "download the Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) data" to the de-tiding task.
-const INSTRUMENT_NAME_WORDS = /\btidal (?:seafloor )?pressure(?: (?:gauges?|sensors?|recorders?))?\b/gi;
+// Words that only name an instrument are not a task. Asked to download each sensor's data by its name, 23 of 146
+// questions went to a task: "Tidal Pressure Gauge" to de-tiding, "Current Meter" to the currents tasks,
+// "Spectrophotometer" to the hydrophone spectrogram, "Benthic Package" to the event package, "Thermistor" to the vent
+// temperature task and "Tiltmeter" to the BOTPT tilt task. The name phrases are left out of the task words; the words
+// that ask for a task ("currents", "an event package", "the tides") still count.
+const INSTRUMENT_NAME_WORDS = new RegExp("\\b(?:tidal (?:seafloor )?pressure(?: (?:gauges?|sensors?|recorders?))?|"
+  + "(?:3-?d |point |single[- ]point )?current meters?|benthic (?:experiment )?packages?|spectrophotometers?|"
+  + "(?:vent fluid )?thermistors?(?: arrays?)?|tiltmeters?)\\b", "gi");
 
 export function taskRecipeIds(question, tasks, { code = false } = {}) {
   const q = String(question || "");
   if (!code && !TASK_REQUEST.test(q)) return [];
-  const asked = q.replace(INSTRUMENT_NAME_WORDS, "pressure gauge");
-  const found = (pattern) => [...new Set((asked.match(new RegExp(pattern, "gi")) || []).map((w) => w.toLowerCase()))];
+  const asked = q.replace(INSTRUMENT_NAME_WORDS, "instrument");   // for the task words only: names are instrument words
+  const found = (pattern, text = asked) => [...new Set((text.match(new RegExp(pattern, "gi")) || []).map((w) => w.toLowerCase()))];
   const score = (words) => { const specific = words.filter((w) => !GENERIC_TASK_WORD.test(w)).length; return specific ? specific * 100 : words.length; };
   // Its instrument words count too: "the noise PSD of the AXCC1 hydrophone" is the hydrophone's task, not the seismometer's.
   const scored = (tasks || []).filter((t) => new RegExp(t.about, "i").test(q))
-    .map((t) => [t, score(found(t.task)), found(t.about).length * 100])
+    .map((t) => [t, score(found(t.task)), found(t.about, q).length * 100])
     .filter(([, n]) => n > 0).map(([t, n, m]) => [t, n + m]).sort((a, b) => b[1] - a[1]);
   return scored.length ? [scored[0][0].chunk_id] : [];
 }
