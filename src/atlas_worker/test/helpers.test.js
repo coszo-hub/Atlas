@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord } from "../src/helpers.js";
+import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -1191,4 +1191,14 @@ test("a list of the Cascadia margin's instruments leaves out Axial Seamount's", 
   assert.ok(!isAxialRecord(record("Southern Hydrate Ridge Flank Seafloor Pressure (Tidal Pressure Gauge)", "Southern Hydrate Ridge")));
   assert.ok(!isAxialRecord(record("Bottom pressure recorder O1", "O1")));
   assert.ok(!isAxialRecord(record("Oregon Mid Slope cabled Self-Calibrating Pressure Recorder (SCPR)", "Oregon Mid Slope")));
+});
+
+test("a list of COSZO's instruments keeps the records COSZO names among their projects", () => {
+  assert.equal(typeInventory("what bottom pressure gauges are part of coszo?").coszo, true);
+  assert.equal(typeInventory("which pressure gauges are on the RCA?").coszo, false);
+  const record = (title, projects) => ({ title, text: `Instrument: ${title}\nProjects: ${projects}\nLocation: x` });
+  assert.ok(isCoszoRecord(record("Oregon Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge)", "Regional Cabled Array, COSZO")));
+  assert.ok(isCoszoRecord(record("Bottom pressure recorder O1", "COSZO")));
+  assert.ok(!isCoszoRecord(record("Axial Seamount Base Seafloor Pressure Sensor (Tidal Pressure Gauge)", "Regional Cabled Array")));
+  assert.ok(!isCoszoRecord({ title: "Data · COSZO", text: "COSZO data" }));
 });

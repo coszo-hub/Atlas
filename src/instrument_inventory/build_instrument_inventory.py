@@ -878,6 +878,11 @@ def build(data_root: Path, output: Path) -> None:
             f"Deployment state: {row['deployment_state']}\nAliases: {aliases}\n"
             f"Sensor components: {components}"
         )
+        # The new COSZO cabled sensors (the map's PLANNED ones) said only "documented project instance" and were
+        # answered as if they were recording.
+        if row.get("coszo_role") in ("new_sensor_suite", "Oregon_Shelf_suite"):
+            text += ("\nPlanned: a COSZO sensor not yet operating. All data streams will be available to download "
+                     "through EarthScope once all systems are operational.")
         if row.get("mounted_on"):
             text += f"\nMounted on: {row['mounted_on']}{MOUNT_KINDS.get(re.sub(r' [(].*', '', row['mounted_on']), '')}"
         if row.get("measurement_roles"):

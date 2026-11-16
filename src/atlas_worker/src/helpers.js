@@ -468,7 +468,8 @@ export function typeInventory(question) {
   // temperature", "what depths were the hydrophones", "papers used COVIS data".
   const listed = (asked) => new RegExp(`\\b(?:which|what|list|all|every|how many|where are)\\W+(?:[\\w-]+\\W+){0,2}?(?:${asked.source})[\\w-]*?(?:s\\b|\\s+(?:sensors?|instruments?|gauges?|stations?|recorders?|meters?|probes?|packages?|devices?)\\b)`, "i").test(q);
   const i = INSTRUMENT_TYPES.findIndex(([asked]) => listed(asked));
-  return i >= 0 && TYPE_SEARCH[i] ? { search: `${TYPE_SEARCH[i]} instrument`, record: INSTRUMENT_TYPES[i][1], margin: MARGIN.test(q) } : null;
+  return i >= 0 && TYPE_SEARCH[i] ? { search: `${TYPE_SEARCH[i]} instrument`, record: INSTRUMENT_TYPES[i][1], margin: MARGIN.test(q),
+    coszo: /\bcoszo\b/i.test(q) } : null;
 }
 
 // The Cascadia margin is the subduction zone off Oregon (Slope Base, Hydrate Ridge, the shelf and slope sites);
@@ -476,6 +477,12 @@ export function typeInventory(question) {
 // its BOTPTs or SCPRs. A record is Axial's by its name or its Location line (International District, ASHES).
 const MARGIN = /\bcascadia\b|\bcsz\b|\boregon margin\b|\bcontinental (?:margin|slope|shelf)\b|\bsubduction zone\b/i;
 const AXIAL_PLACE = /\baxial\b|\bashes\b|\binternational district\b|\b(?:central|eastern) caldera\b/i;
+// "Which pressure gauges are part of COSZO?": the records whose Projects line names COSZO. Gemma, given all 29
+// pressure records, left out the Slope Base and Hydrate Ridge tidal gauges, which COSZO shares with the RCA.
+export function isCoszoRecord(hit) {
+  return /\bCOSZO\b/.test((String(hit.text || "").match(/^Projects: (.*)$/m) || [])[1] || "");
+}
+
 export function isAxialRecord(hit) {
   const location = (String(hit.text || "").match(/^Location: (.*)$/m) || [])[1] || "";
   return AXIAL_PLACE.test(`${hit.title || ""}\n${location}`);
