@@ -17,6 +17,7 @@ Each watched sensor is checked one way, the first that serves it:
               only by its files
   erddap      OOI ERDDAP (the map's dataset, else ERDDAP's own for the designator): the 10-minute bins with data
   rawdata     a broadband hydrophone: its 5-minute files on OOI's raw data server
+  piweb       a PI instrument with daily files on the PI data portal (the SCPR's two gauges, a line a second)
   none        nothing public says whether it recorded (QA/QC plots not updated since 2024); listed, not graded
 A sensor with an ERDDAP dataset besides its Nereus check is checked by both (check.py takes the worse).
 Usage: python build_watchlist.py [--sensors PATH] [--out PATH]"""
@@ -77,6 +78,12 @@ def check_of(sensor: dict, nereus: dict[str, dict], erddap: set[str]) -> dict:
     if re.match(r"^[A-Z0-9]{8}-[A-Z0-9]{5}-\d{2}-HYDBB[A-Z]\d{3}$", refdes):
         site, node, _, inst = refdes.split("-")
         return {"method": "rawdata", "path": f"{site}/{node}/{inst}"}
+    # A PI instrument whose own daily files are on the PI data portal: the SCPR's two Paroscientific gauges, a line a
+    # second (its hourly CSV on GitHub is derived from them, and stopped being rebuilt on 14 Nov 2026 while they
+    # recorded on).
+    gauges = [a["url"] for a in sensor.get("access", []) if a["kind"] == "pi_portal" and re.search(r"_PARO\d/?$", a.get("url", ""))]
+    if gauges:
+        return {"method": "piweb", "folders": gauges}
     out: dict = {}
     row = nereus.get(sensor.get("refdes") or "") or {}
     status = lambda kind: (((row.get(f"latest{kind}StatusConnection") or {}).get("status")) or {}).get("code")

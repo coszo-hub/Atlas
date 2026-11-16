@@ -216,3 +216,27 @@ class RawdataTests(unittest.TestCase):
         alone = [{"method": "earthscope", "state": "ok"}, {"method": "rawdata", "state": "no_data"}]
         check.shared_diversion(alone)
         self.assertEqual(alone[1]["state"], "no_data")
+
+
+class PiwebTests(unittest.TestCase):
+    def test_the_scpr_is_checked_by_its_gauges_daily_files(self):
+        scpr = {"id": "SCPRAAA301", "refdes": "RS03CCAL-MJ03F-09-SCPRAA301", "access": [
+            {"kind": "pi_portal", "url": "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301/"},
+            {"kind": "pi_portal", "url": "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301_PARO1/"},
+            {"kind": "pi_portal", "url": "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301_PARO2/"}]}
+        self.assertEqual(build_watchlist.check_of(scpr, {}, set()), {"method": "piweb", "folders": [
+            "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301_PARO1/", "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301_PARO2/"]})
+
+    def test_a_day_of_seconds_is_graded_and_the_worse_gauge_leads(self):
+        full = "".join(f"<log-ts:2026-11-15T{h:02d}:{m:02d}:00.784> *0001,15549.19,28.76,5.85\n" for h in range(24) for m in range(60)).encode()
+        half = "".join(f"<log-ts:2026-11-15T{h:02d}:{m:02d}:00.784> *0001,15549.19,28.76,5.85\n" for h in range(12) for m in range(60)).encode()
+        listing = lambda g: f'<a href="SCPRAA301_{g}_10.40.2.10_4001_20261115T0000_UTC.dat">'.encode()
+
+        def get(url, **k):
+            if url.endswith("/2026/11/"):
+                return 200, listing("PARO1" if "PARO1" in url else "PARO2")
+            return 200, full if "PARO1" in url else half
+        with mock.patch.object(check, "get", get):
+            r = check.check_piweb({"check": {"folders": ["http://x/SCPRAA301_PARO1/", "http://x/SCPRAA301_PARO2/"]}, "gap": 120}, date(2026, 11, 15))
+        self.assertEqual((r["state"], r["longestGapMin"], r["detail"]), ("gaps", 720, "PARO2: gaps"))
+        self.assertEqual([g["state"] for g in r["gauges"]], ["ok", "gaps"])
