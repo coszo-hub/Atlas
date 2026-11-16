@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess } from "../src/helpers.js";
+import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -1178,4 +1178,17 @@ test("a type's records have room of their own: all 29 pressure records reach the
   assert.equal((evidence.match(/y/g) || []).length, 6_000 - "A page (website)\n".length);
   // without them, a page has the main room it had
   assert.equal((evidencePackage([page], new Map()).match(/y/g) || []).length, 9_000);
+});
+
+test("a list of the Cascadia margin's instruments leaves out Axial Seamount's", () => {
+  assert.equal(typeInventory("what bottom pressure gauges are present in the cascadia region?").margin, true);
+  assert.equal(typeInventory("list all the pressure sensors on the Cascadia margin").margin, true);
+  assert.equal(typeInventory("which pressure gauges are on the RCA?").margin, false);
+  const record = (title, location) => ({ title, text: `Instrument: ${title}\nLocation: ${location}\nStatus: x` });
+  assert.ok(isAxialRecord(record("International District Hydrothermal Field 2 Seafloor Pressure", "Axial Seamount International District")));
+  assert.ok(isAxialRecord(record("ASHES Hydrothermal Field Seafloor Pressure", "ASHES Hydrothermal Field, Axial Seamount")));
+  assert.ok(isAxialRecord(record("Axial Self-Calibrating Pressure Recorder unit 001 (2013-2015 short mooring)", "summit caldera")));
+  assert.ok(!isAxialRecord(record("Southern Hydrate Ridge Flank Seafloor Pressure (Tidal Pressure Gauge)", "Southern Hydrate Ridge")));
+  assert.ok(!isAxialRecord(record("Bottom pressure recorder O1", "O1")));
+  assert.ok(!isAxialRecord(record("Oregon Mid Slope cabled Self-Calibrating Pressure Recorder (SCPR)", "Oregon Mid Slope")));
 });
