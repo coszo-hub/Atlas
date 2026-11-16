@@ -854,6 +854,19 @@ test("a recipe is found by the instrument a question picks, the designator or st
   // the SCPR is catalogued as SCPRAAA301; OOI's designator reaches it
   assert.deepEqual(recipeChunkIds("pressure at MJ03F", ["RS03CCAL-MJ03F-09-SCPRAA301"]), ["recipe_SCPRAAA301"]);
   assert.equal(recipeChunkIds("x", ["RS03CCAL-MJ03F-05-BOTPTA301", "RS03CCAL-MJ03F-07-A0ABPA301", "RS03CCAL-MJ03F-09-SCPRAA301"]).length, 2);
+  // COSZO sensors with no OOI code: a pressure benchmark by its station, a planned sensor by its site and type.
+  assert.deepEqual(recipeChunkIds("where do I download the O1 pressure sensor data", []), ["recipe_COSZO-BPR-O1"]);
+  assert.deepEqual(recipeChunkIds("O2B and O3 bottom pressure recorder data", []), ["recipe_COSZO-BPR-O2B", "recipe_COSZO-BPR-O3"]);
+  assert.deepEqual(recipeChunkIds("download O2 sensor data from the shallow profiler", []), []);   // oxygen, not O2
+  assert.deepEqual(recipeChunkIds("How do I download data from the Oregon Mid Slope absolute pressure gauge?", []),
+    ["recipe_COSZO-OO-CZMID-APG"]);
+  assert.deepEqual(recipeChunkIds("Oregon Outer Shelf current meter data", []), ["recipe_COSZO-OO-CZOSH-VEL3D"]);
+  assert.deepEqual(recipeChunkIds("Oregon Shelf differential pressure gauge data", []), ["recipe_COSZO-OO-CZSHF-DPG"]);
+  // An OOI instrument the question names comes first, and keeps a planned namesake out.
+  assert.deepEqual(recipeChunkIds("download Oregon Offshore Benthic Package 3D Current Meter (CE04OSBP-LJ01C-07-VEL3DC107) data", []),
+    ["recipe_CE04OSBP-LJ01C-07-VEL3DC107"]);
+  assert.deepEqual(recipeChunkIds("Oregon Offshore current meter data", ["CE04OSBP-LJ01C-07-VEL3DC107"]),
+    ["recipe_CE04OSBP-LJ01C-07-VEL3DC107", "recipe_COSZO-OO-CZOFF-VEL3D"]);
 });
 
 test("a download question naming a type and no place gets every instrument of it: the type's overview and its example", async () => {

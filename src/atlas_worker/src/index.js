@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -405,11 +405,17 @@ async function instrumentRecords(refdes, env) {
 // The download recipes (data_recipes, build_data_recipes.py) of the instruments a data access question asks for: those
 // dataAccessInstruments picks, and any reference designator or station it names (RS03CCAL-MJ03F-05-BOTPTA301, AXBA1).
 // Two at most: one instrument's recipe runs to ~7,000 characters.
+// A COSZO sensor with no OOI code is named by its benchmark (O1) or its planned site and type (coszoSensorIds); a
+// planned one comes after the OOI instruments a question names, which share its site's name ("Oregon Offshore").
 export function recipeChunkIds(question, picked) {
   const q = String(question || "");
+  const coszo = coszoSensorIds(q);
   const named = [...(q.match(/\b(?:RS|CE)\d{2}[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{2}-[A-Z0-9]{9}\b/gi) || []),
-    ...(q.match(/\b[A-Z]{2,4}\d{1,2}\b/g) || []).map((code) => `EARTHSCOPE-OO-${code}`)].map((c) => c.toUpperCase());
-  return [...new Set([...named, ...picked].map((id) => RECIPE_IDS[id]).filter(Boolean))].slice(0, 2);
+    ...(q.match(/\b[A-Z]{2,4}\d{1,2}\b/g) || []).map((code) => `EARTHSCOPE-OO-${code}`),
+    ...coszo.filter((id) => id.startsWith("COSZO-BPR-"))].map((c) => c.toUpperCase());
+  const ids = (list) => list.map((id) => RECIPE_IDS[id]).filter(Boolean);
+  const planned = ids(named).length ? [] : coszo.filter((id) => id.startsWith("COSZO-OO-"));
+  return [...new Set([...ids(named), ...ids(picked), ...ids(planned)])].slice(0, 2);
 }
 
 // A question naming a type and no place gets the type's overview (every instrument of it: where, its easiest route)

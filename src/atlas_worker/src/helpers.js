@@ -601,6 +601,26 @@ export function codeModeAnswer(tasks) {
     + "\nAsk for one of these, naming the instrument, place and time; or name an instrument to get a script that downloads its data.";
 }
 
+// The COSZO sensors a question names that have no OOI code: the absolute pressure benchmarks O1-O6 and O2B (Cook et
+// al., 2023) when it is about pressure ("O2" alone may be oxygen), and a planned cabled sensor by its site and type
+// ("the Oregon Mid Slope absolute pressure gauge"). Their recipe IDs (COSZO-BPR-O1, COSZO-OO-CZMID-APG).
+const COSZO_SITES = [[/\bmid[- ]?slope\b|\bCZMID\b/i, "CZMID"], [/\bouter shelf\b|\bCZOSH\b/i, "CZOSH"],
+  [/\b(?:oregon )?offshore\b|\bCZOFF\b/i, "CZOFF"], [/(?<!outer )\bshelf\b|\bCZSHF\b/i, "CZSHF"]];
+const COSZO_TYPES = [[/\babsolute pressure|\bAPGs?\b/i, "APG"], [/\bdifferential pressure|\bDPGs?\b/i, "DPG"],
+  [/\bself[- ]calibrating|\bSCPRs?\b/i, "SCPR"], [/\bGSSM\b|geodetic (?:and|&) seismic/i, "GSSM"],
+  [/\bCOBSO\b|\bbroadband seismom|\bstrong[- ]motion|\bseismometers?\b|\bOBS\b/i, "COBSO"],
+  [/\blow[- ]frequency hydrophones?\b|\bHYDLF\b|\bhydrophones?\b/i, "HYDLF"],
+  [/\bcurrent meters?\b|\bVEL3D\b|\bcurrents?\b/i, "VEL3D"]];
+export function coszoSensorIds(question) {
+  const q = String(question || "");
+  const benchmarks = /\b(?:pressure|BPRs?|benchmarks?|ASCPR|recorders?|geodesy)\b/i.test(q)
+    ? [...new Set(q.match(/\bO(?:2B|[1-6])\b/g) || [])].map((s) => `COSZO-BPR-${s}`) : [];
+  const site = COSZO_SITES.find(([asked]) => asked.test(q));
+  const types = site ? COSZO_TYPES.filter(([asked]) => asked.test(q)).map(([, code]) => `COSZO-OO-${site[1]}-${code}`) : [];
+  // "absolute pressure" is not also the differential gauge; "low-frequency hydrophone" names one type.
+  return [...benchmarks, ...types.slice(0, 1)];
+}
+
 export function isDataAccessQuestion(question) {
   const q = String(question || "");
   // Or a request for code ("a Python script for the Axial Base CTD temperature in March 2025"), which may name no data.
