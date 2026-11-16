@@ -104,6 +104,21 @@ class AccessTest(unittest.TestCase):
         broadband = rec(refdes="RS03CCAL-MJ03F-06-HYDBBA305", lat=45.9547, lon=-130.0090)
         self.assertEqual([x for x in access.build_access(broadband, ext, PI, {}) if x["kind"] == "earthscope"], [])
 
+    def test_planned_coszo_sensor_points_to_earthscope(self):
+        planned = rec(id="COSZO-OO-CZMID-APG", refdes="PN01B-MJ01E-APG", status="PLANNED", sources=["https://coszo.org/coszo-instruments.html"])
+        routes = access.build_access(planned, EXT, PI, {})
+        self.assertEqual([r["kind"] for r in routes], ["planned"])
+        self.assertEqual(routes[0]["how"], "All data streams will be available to download through EarthScope once all systems are operational.")
+        self.assertIn("net=OO&sta=CZMID", routes[0]["url"])
+
+    def test_bottom_pressure_recorder_site_gets_its_ascpr_visits(self):
+        routes = access.build_access(rec(id="COSZO-BPR-O3"), EXT, PI, {})
+        self.assertEqual([r["kind"] for r in routes], ["ucsd_ascpr"])
+        self.assertEqual([f["url"].rsplit("/", 2)[1] for f in routes[0]["files"]], ["_30_1.csv", "_48_1.csv"])
+        self.assertEqual([f["start"][:10] for f in routes[0]["files"]], ["2016-06-06", "2017-09-05"])
+        self.assertTrue(routes[0]["url"].startswith("https://library.ucsd.edu/"))
+        self.assertEqual(access.build_access(rec(id="COSZO-BPR-O9"), EXT, PI, {}), [])
+
     def test_pi_portal_endpoints(self):
         routes = access.build_access(rec(instrumentId="INSTRUMENT-pi"), EXT, PI, {})
         pi = [x for x in routes if x["kind"] == "pi_portal"]

@@ -25,7 +25,9 @@ export const SENSORS = [
   s("shelf-bpr", { family: "seismic", type: "seismometer", lat: 44.63731, lon: -124.30576, depth: null, waterDepth: null,
     site: "oregon-shelf", region: "shelf", location: "Oregon Shelf", siteCode: null, node: null, status: "PLANNED", statusGroup: "planned",
     statusSource: "Inventory: new COSZO sensor", statusAsOf: null, sources: ["https://coszo.org/x"],
-    access: [{ kind: "documentation", label: "Documentation", url: "https://coszo.org/x", how: "No public data feed is known yet." }] }),
+    access: [{ kind: "planned", label: "EarthScope (once operational): station OO.CZSHF",
+      url: "https://service.earthscope.org/fdsnws/station/1/query?net=OO&sta=CZSHF&level=channel&format=text",
+      how: "All data streams will be available to download through EarthScope once all systems are operational." }] }),
   s("unlocated-bpt", { lat: null, lon: null, name: "Axial Base bottom pressure and tilt", family: "seismic" }),
   // Unplaced: no position and no catalogued site (the real bundle has five, e.g. PI-MASSP-ASHES and the DAS experiments).
   s("pi-massp", { lat: null, lon: null, name: "ASHES PI mass spectrometer", type: "mass_spectrometer", site: null, region: null,

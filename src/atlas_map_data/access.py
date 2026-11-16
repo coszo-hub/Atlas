@@ -38,6 +38,7 @@ ALLOWED_HOSTS = {
     "oceanobservatories.org", "ooinet.oceanobservatories.org", "ec2.qaqc.ooi-rca.net",
     "piweb.ooirsn.uw.edu", "service.earthscope.org", "ds.iris.edu", "www.earthscope.org",
     "interactiveoceans.washington.edu", "axial.ceoas.oregonstate.edu", "coszo.org", "www.coszo.org", "github.com", "doi.org",
+    "library.ucsd.edu",
 }
 # The cabled SCPR's hourly means (both gauges: raw, drift-corrected, and seafloor uplift), which the Axial-Seamount
 # self-calibrating-pressure repository regenerates every day. The map reads the CSV from GitHub when the panel opens,
@@ -89,6 +90,49 @@ def erddap_dataset_id(refdes: str) -> str:
 def earthscope_station(record: dict) -> tuple[str, str] | None:
     m = re.fullmatch(r"EARTHSCOPE-([A-Z0-9]+)-([A-Z0-9]+)", record["id"])
     return (m.group(1), m.group(2)) if m else None
+
+
+# COSZO's planned cabled sensors publish nothing yet; their stations (OO.CZSHF, CZOSH, CZMID, CZOFF) are registered at
+# EarthScope, where every data stream will be.
+PLANNED_HOW = "All data streams will be available to download through EarthScope once all systems are operational."
+
+
+def planned_route(record: dict) -> dict:
+    m = re.fullmatch(r"COSZO-([A-Z0-9]+)-([A-Z0-9]+)-.+", record["id"])
+    url = (f"{FDSN_STATION}?net={m.group(1)}&sta={m.group(2)}&level=channel&format=text" if m
+           else "https://coszo.org/coszo-instruments.html")
+    return {"kind": "planned", "label": "EarthScope (once operational)" + (f": station {m.group(1)}.{m.group(2)}" if m else ""),
+            "url": url, "how": PLANNED_HOW}
+
+
+# The bottom pressure recorder sites O2B-O6 are the benchmarks of Cook et al. (2023, JGR Solid Earth,
+# doi:10.1029/2023JB026413): an ROV set an Absolute Self-Calibrating Pressure Recorder on each for about two hours a
+# survey (2015-2017). Their calibrated absolute sea pressure is in the UC San Diego Library, one CSV a visit; each file's
+# station and times were read from the file (its pressure matches the station's depth).
+ASCPR_DATASET = "https://library.ucsd.edu/dc/object/bb6529640g"
+ASCPR_DOI = "https://doi.org/10.6075/J0F18ZXJ"
+ASCPR_VISITS = {   # station -> (component, first and last sample, UTC)
+    "O2B": [(20, "2015-10-20T04:10:30Z", "2015-10-20T06:00:14Z"), (27, "2016-06-05T19:11:35Z", "2016-06-05T21:32:58Z")],
+    "O3": [(30, "2016-06-06T05:05:35Z", "2016-06-06T07:19:59Z"), (48, "2017-09-05T05:46:50Z", "2017-09-05T07:55:24Z")],
+    "O4": [(33, "2016-06-08T08:05:45Z", "2016-06-08T09:52:04Z"), (51, "2017-09-04T17:35:50Z", "2017-09-04T19:42:23Z")],
+    "O5": [(36, "2016-06-08T01:58:30Z", "2016-06-08T03:56:14Z"), (54, "2017-09-02T23:50:30Z", "2017-09-03T02:19:19Z"),
+           (55, "2017-09-07T02:33:00Z", "2017-09-07T05:12:04Z")],
+    "O6": [(39, "2016-06-07T18:30:50Z", "2016-06-07T20:41:58Z"), (58, "2017-09-02T15:55:45Z", "2017-09-02T17:40:59Z"),
+           (59, "2017-09-07T12:27:30Z", "2017-09-07T14:02:59Z")],
+}
+
+
+def ascpr_route(record: dict) -> dict | None:
+    m = re.fullmatch(r"COSZO-BPR-(O\w+)", record["id"])
+    visits = ASCPR_VISITS.get(m.group(1)) if m else None
+    if not visits:
+        return None
+    days = ", ".join(v[1][:10] for v in visits)
+    return {"kind": "ucsd_ascpr", "label": "UC San Diego Library: calibrated absolute seafloor pressure (Cook et al., 2023)",
+            "url": ASCPR_DATASET, "doi": ASCPR_DOI, "station": m.group(1),
+            "files": [{"url": f"{ASCPR_DATASET}/_{c}_1.csv/download", "start": a, "end": b} for c, a, b in visits],
+            "how": f"Calibrated absolute seafloor pressure (kPa, two gauges) from ROV visits of about two hours on {days}; "
+                   "one CSV a visit, no login. Ocean tides are not removed."}
 
 
 PI_HOST = "piweb.ooirsn.uw.edu"
@@ -187,6 +231,8 @@ def refresh_qaqc(runtime: Path, index_paths: list[str]) -> int:
 
 def build_access(record: dict, external: dict, pi_endpoints: dict[str, list[dict]],
                  vertical_channels: dict[str, str]) -> list[dict]:
+    if record.get("status") == "PLANNED":
+        return [planned_route(record)]
     routes: list[dict] = []
     refdes = record.get("refdes")
     if refdes:
@@ -241,6 +287,8 @@ def build_access(record: dict, external: dict, pi_endpoints: dict[str, list[dict
         routes.append({"kind": "pi_portal", "label": f"PI data portal: {ep['label']}", "instrumentKey": ep["instrument_key"],
                        "endpointId": ep["endpoint_id"],
                        "url": ep["url"], "how": "Public directory listing; open folders by date to find files."})
+    if (ascpr := ascpr_route(record)):
+        routes.append(ascpr)
     routes = [r for r in routes if _allowed(r["url"])]
     if not routes:     # decided after the host filter, so filtered-out data routes still get documentation
         for url in record.get("sources", []):

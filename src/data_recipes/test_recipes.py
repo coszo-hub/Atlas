@@ -60,7 +60,7 @@ def ooi_account() -> bool:
 def windowed(test: dict) -> str | None:
     """The recipe's code with the test's timeframe in place of its example one."""
     code, kind = test["code"], test["kind"]
-    if kind in ("erddap", "gold"):
+    if kind in ("erddap", "gold", "ucsd"):
         code, n = re.subn(r'^START, END = .*$', f'START, END = "{test["start"]}", "{test["end"]}"', code, count=1, flags=re.M)
     elif kind == "raw":
         a, b = (datetime.fromisoformat(test[k]) for k in ("start", "end"))

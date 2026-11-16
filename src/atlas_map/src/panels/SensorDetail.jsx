@@ -17,7 +17,7 @@ export default function SensorDetail({ sensor, bundle, onBack, backLabel }) {
       {sensor.lat == null && <div className="meta">No recorded position, so it is not drawn on the map.</div>}
       <LiveStatus sensor={sensor} manifest={bundle.manifest} />
       {hasLive ? <LiveData sensor={sensor} /> :
-        <section className="no-feed"><h3>Live data</h3><p>No live feed. {sensor.statusGroup === "planned" ? "This sensor is planned for COSZO; its data will appear here once it is deployed and publishing." : "No public data service is known for this sensor."}</p></section>}
+        <section className="no-feed"><h3>Live data</h3><p>No live feed. {sensor.statusGroup === "planned" ? "This sensor is planned for COSZO. All data streams will be available to download through EarthScope once all systems are operational." : sensor.access.some(a => a.kind === "ucsd_ascpr") ? "Its data are short ROV visits, one file each; see Get this data." : "No public data service is known for this sensor."}</p></section>}
       <GetThisData sensor={sensor} />
       {(sensor.sources.length > 0 || sensor.corrections.length > 0) && (
         <section className="sources"><h3>Sources</h3>

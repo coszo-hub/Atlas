@@ -67,6 +67,18 @@ describe("SensorDetail", () => {
     vi.stubGlobal("fetch", vi.fn());
     render(<SensorDetail sensor={b.sensorById["shelf-bpr"]} bundle={b} onBack={() => {}} />);
     expect(screen.getByText(/No live feed/)).toBeInTheDocument();
+    // Said under Live data and as the sensor's one route under Get this data.
+    expect(screen.getAllByText(/available to download through EarthScope once all systems are operational/)).toHaveLength(2);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+  it("points a benchmark's ROV visits to Get this data", () => {
+    vi.stubGlobal("fetch", vi.fn());
+    const bpr = { ...b.sensorById["shelf-bpr"], status: "UNKNOWN", statusGroup: "unknown",
+      access: [{ kind: "ucsd_ascpr", label: "UC San Diego Library", url: "https://library.ucsd.edu/dc/object/bb6529640g",
+        how: "Calibrated absolute seafloor pressure from ROV visits." }] };
+    render(<SensorDetail sensor={bpr} bundle={b} onBack={() => {}} />);
+    expect(screen.getByText(/short ROV visits, one file each/)).toBeInTheDocument();
+    expect(screen.getByText("UC San Diego Library")).toBeInTheDocument();
     expect(fetch).not.toHaveBeenCalled();
   });
   it("names the failed upstream source and retries", async () => {

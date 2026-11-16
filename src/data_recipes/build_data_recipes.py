@@ -710,6 +710,42 @@ def github_route(url: str, label: str, info: dict) -> tuple[str, str]:
     return text, url
 
 
+def ascpr_route(route: dict) -> tuple[str, str]:
+    """A bottom pressure recorder site's campaign visits (Cook et al., 2023): the script takes the visits that overlap
+    the timeframe, since a timeframe between visits has no data, and says which visits there are when none does."""
+    sta, files = route["station"], route["files"]
+    visits = "; ".join(f"{f['start'][:16].replace('T', ' ')} to {f['end'][11:16]} UTC" for f in files)
+    rows = "\n".join(f'    ({f["start"][:19].replace("T", " ")!r}, {f["end"][:19].replace("T", " ")!r}, {f["url"]!r}),' for f in files)
+    first = files[0]
+    text = (f"{route['label']}: station {sta} is a seafloor benchmark that an ROV occupied with an Absolute "
+            f"Self-Calibrating Pressure Recorder for about two hours a survey, so its data are short visits, not a "
+            f"continuous record: {visits}. A timeframe between visits has no data. The UC San Diego Library holds one "
+            f"CSV a visit, public, no login ({route['url']}; cite {route['doi']}). Per the dataset's readme, each "
+            f"row is time1, time2 (each gauge's timestamp, a MATLAB datenumber), pressure1, pressure2 (calibrated "
+            f"absolute sea pressure at the benchmark surface, kPa, from two Paroscientific gauges), temperature1, "
+            f"temperature2 (degrees C), with no header; ocean tides are not removed. The script downloads the visits "
+            f"that overlap the timeframe and writes one CSV with UTC times.\n"
+            f"```python\n# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\n"
+            f'START, END = {first["start"][:10] + " 00:00"!r}, {first["end"][:10] + " 23:59"!r}   # UTC\n'
+            f"# Station {sta}'s visits (first and last sample, UTC) and their files\n"
+            f"VISITS = [\n{rows}\n]\n"
+            f'NAMES = ["time1", "time2", "pressure1_kPa", "pressure2_kPa", "temperature1_C", "temperature2_C"]\n'
+            f"t1, t2 = pd.Timestamp(START), pd.Timestamp(END)\n"
+            f"parts = []\n"
+            f"for a, b, url in VISITS:\n"
+            f"    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n"
+            f"        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n"
+            f"        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n"
+            f"            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n"
+            f"        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\n"
+            f"if not parts:\n"
+            f"    raise SystemExit(\"No {sta} visit in the timeframe; its visits are \" + \"; \".join(f\"{{a}} to {{b}}\" for a, b, _ in VISITS))\n"
+            f"out = pd.concat(parts).rename(columns={{\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"}})\n"
+            f'out.to_csv("ascpr_{sta}_pressure.csv", index=False)\n'
+            f'print(len(out), "rows", out["time1_utc"].min(), "to", out["time1_utc"].max())\n```')
+    return text, route["url"]
+
+
 def m2m_route(refdes: str, streams: list[tuple[str, dict]]) -> str:
     """OOI M2M: every stream, including data newer than the Gold Copy, for anyone with a free OOI account. The request
     turns off the notification email as OOI's own ooi-data-explorations does (email=None)."""
@@ -759,7 +795,30 @@ def tested_note(result: dict) -> str:
     return f"\nTested {result['date']}: the script ran in a clean Python environment and wrote {result['wrote']}."
 
 
+PLANNED_HOW = "All data streams will be available to download through EarthScope once all systems are operational."
+
+
+def planned_recipe(sensor: dict) -> dict:
+    """A planned COSZO sensor publishes nothing yet: its recipe says where its data will be, and gives no script."""
+    route = sensor["access"][0]
+    name, label = sensor["name"], sensor.get("refdes") or sensor["id"]
+    station = route["label"].split("station ")[-1] if "station " in route["label"] else None
+    text = (f"How to download {name} ({label}) data. It is a planned COSZO sensor"
+            f"{' at ' + sensor['location'] if sensor.get('location') else ''}{', on EarthScope station ' + station if station else ''}, "
+            f"and publishes no data yet. {route['how']} Until then there is no data to download and no download script.")
+    return {"chunk_id": f"recipe_{sensor['id']}", "title": f"How to download {name} ({label}) data: recipes", "text": text,
+            "ids": [i for i in dict.fromkeys([sensor["id"], sensor.get("refdes"), *(sensor.get("aliases") or [])]) if i],
+            "sources": [{"source_id": "RECIPE-SOURCE-" + hashlib.sha256(route["url"].encode()).hexdigest()[:20],
+                         "title": f"{name}: {route['label']}", "source_url": route["url"]}],
+            "routes": [route["label"].split(":")[0]], "type": sensor.get("type"), "name": name, "label": label,
+            "place": sensor.get("location"), "depth": sensor.get("depthRange") or sensor.get("depth"),
+            "easiest": "planned: " + route["how"][0].lower() + route["how"][1:].rstrip("."), "easiest_kind": "planned",
+            "until": "", "tests": []}
+
+
 def recipe(sensor: dict, src: dict, retrieved: str, results: dict | None = None) -> dict | None:
+    if (sensor.get("access") or [{}])[0].get("kind") == "planned":
+        return planned_recipe(sensor)
     results = results or {}
     ids = [sensor["id"], sensor.get("refdes"), *(sensor.get("aliases") or [])]
     refdes = next((i for i in ids if i and re.fullmatch(r"(?:RS|CE)\d{2}[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{2}-[A-Z0-9]{9}", i)), None)
@@ -807,6 +866,10 @@ def recipe(sensor: dict, src: dict, retrieved: str, results: dict | None = None)
         if a["kind"] == "pi_portal" and a["url"] in src["portal"] and src["portal"][a["url"]]["sample"]:
             routes.append((4, *portal_route(a["url"], a["label"], src["portal"][a["url"]]),
                            {"kind": "portal", "file_sizes": src["portal"][a["url"]]["sample_sizes"], "summary": f"the RCA PI data portal, {a['url']}"}))
+        if a["kind"] == "ucsd_ascpr":
+            f = a["files"][0]
+            routes.append((4, *ascpr_route(a), {"kind": "ucsd", "start": f["start"][:19], "end": f["end"][:19],
+                                                "summary": f"the UC San Diego Library (Cook et al., 2023), station {a['station']}'s visits"}))
         if a["kind"] == "repository" and a["url"] in src["github"] and src["github"][a["url"]]["files"]:
             routes.append((4, *github_route(a["url"], a["label"], src["github"][a["url"]]), {"kind": "github", "summary": f"GitHub, {a['url']}"}))
     for i, r in enumerate(routes):
@@ -869,15 +932,21 @@ def type_overviews(recipes: list[dict]) -> list[dict]:
     out = []
     for kind, members in sorted(groups.items()):
         members.sort(key=lambda r: (not r["label"].startswith("RS"), r["label"]))
-        common = max({m["easiest_kind"] for m in members}, key=lambda k: sum(m["easiest_kind"] == k for m in members))
+        kinds = {m["easiest_kind"] for m in members} - ({"planned"} if any(m["easiest_kind"] != "planned" for m in members) else set())
+        common = max(kinds, key=lambda k: sum(m["easiest_kind"] == k for m in members))
         example = min((m for m in members if m["easiest_kind"] == common),
                       key=lambda m: (not m["label"].startswith("RS"), m["label"][9:11] in ("SF", "DP"), "".join(chr(255 - ord(c)) for c in m["until"])))
         label = " ".join(ACRONYMS.get(w, w) for w in kind.split("_"))
         count = f"the {len(members)} {label} instruments" if len(members) > 1 else f"the one {label} instrument"
-        lines = [f"Where to download {label} data: {count} the atlas maps, each with its place "
-                 f"and its easiest route. Each has its own recipe with a tested Python script; the scripts of instruments "
-                 f"with the same route differ only in their dataset ID or stream and variable names. The example recipe is "
-                 f"{example['name']} ({example['label']})."]
+        planned = sum(m["easiest_kind"] == "planned" for m in members)
+        if planned == len(members):
+            are = "All are planned COSZO sensors and publish" if len(members) > 1 else "It is a planned COSZO sensor and publishes"
+            lines = [f"Where to download {label} data: {count} the atlas maps, each with its place. {are} no data yet. {PLANNED_HOW}"]
+        else:
+            lines = [f"Where to download {label} data: {count} the atlas maps, each with its place "
+                     f"and its easiest route. Each{' that publishes data' if planned else ''} has its own recipe with a tested "
+                     f"Python script; the scripts of instruments with the same route differ only in their dataset ID or stream "
+                     f"and variable names. The example recipe is {example['name']} ({example['label']})."]
         for m in members:
             d = m["depth"] if isinstance(m["depth"], list) else [m["depth"]] * 2 if isinstance(m["depth"], (int, float)) else None
             depth = "" if not d else f"{d[0]:g} m" if d[0] == d[1] else f"{d[0]:g}-{d[1]:g} m"

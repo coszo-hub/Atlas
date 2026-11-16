@@ -20,7 +20,7 @@ WORKER = "https://rca-atlas.quakehunt.workers.dev/v1/answer"
 TESTS = ROOT / "runtime_data/DataRecipes/tests.json"
 SENSORS = ROOT / "src/atlas_map/public/atlas/sensors.json"
 SERVICES = OrderedDict([("earthscope", r"service\.earthscope\.org|fdsn"), ("erddap", r"erddap"), ("gold", r"thredds|dodsC|opendap"),
-                        ("raw", r"rawdata\.oceanobservatories"), ("portal", r"piweb\.ooirsn"), ("github", r"github"),
+                        ("raw", r"rawdata\.oceanobservatories"), ("portal", r"piweb\.ooirsn"), ("github", r"github"), ("ucsd", r"library\.ucsd\.edu"),
                         ("m2m", r"ooinet\.oceanobservatories\.org/api")])
 
 
