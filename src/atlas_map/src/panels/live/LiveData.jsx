@@ -7,19 +7,24 @@ import SeriesView from "./SeriesView.jsx";
 import WaveformView from "./WaveformView.jsx";
 
 // One primary view, in this order: ERDDAP series, else EarthScope waveform, else the SCPR's hourly CSV, else QA/QC
-// plots; then OSU's Axial plots and PI file browsing. QA/QC plots are filed under the route's refdes: a seismometer's is its OOI OBS.
+// plots; then OSU's Axial plots and PI files (a link beside a plot, else the file browser). QA/QC plots are filed under the route's refdes: a seismometer's is its OOI OBS.
 export default function LiveData({ sensor }) {
   const by = k => sensor.access.find(a => a.kind === k);
   const erddap = by("erddap"), es = by("earthscope"), scpr = by("scpr_hourly"), qaqc = by("qaqc"), osu = by("osu_axial"),
     pi = sensor.access.filter(a => a.kind === "pi_portal");
   const plotsRef = qaqc?.refdes ?? sensor.refdes;
+  // A sensor with a plot links to its PI portal files (the combined folder, which holds the others) rather than browsing
+  // each folder: the SCPR's five routes listed only their year folders. One with nothing else keeps the browser; Get
+  // this data lists every route.
+  const piLink = (erddap || es || scpr || qaqc) && pi.length ? (pi.find(r => /combined/i.test(r.label)) ?? pi[0]) : null;
   return (
     <section className="live-data"><h3>Live data</h3>
       {erddap ? <SeriesView refdes={sensor.refdes} /> : es ? <WaveformView route={es} /> : scpr ? <ScprSeries route={scpr} />
         : qaqc ? <PlotGallery refdes={plotsRef} /> : null}
       {(erddap || es) && qaqc && <Lazy summary="Recent QA/QC plots">{() => <PlotGallery refdes={plotsRef} />}</Lazy>}
       {osu && <Lazy summary="OSU Axial monitoring plots">{() => <OsuPlots route={osu} />}</Lazy>}
-      {pi.map(r => <FileBrowser key={r.endpointId ?? r.url} route={r} />)}
+      {piLink ? <p className="pi-link"><a href={piLink.url} target="_blank" rel="noreferrer">Data files on the PI data portal ↗</a></p>
+        : pi.map(r => <FileBrowser key={r.endpointId ?? r.url} route={r} />)}
     </section>
   );
 }

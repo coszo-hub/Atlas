@@ -18,6 +18,18 @@ const scpr = {
 };
 
 describe("SCPR hourly series", () => {
+  it("links its PI portal files once, to the combined folder, instead of browsing each folder", async () => {
+    const pi = (label, path) => ({ kind: "pi_portal", label: `PI data portal: ${label}`, url: `http://piweb.ooirsn.uw.edu/scpr/data/${path}/`, how: "" });
+    const withPi = { ...scpr, access: [...scpr.access, pi("SCPRAA301 data", "SCPRAA301"), pi("SCPR combined data", "SCPR_Data"),
+      pi("SCPRAA301 SCPR", "SCPRAA301_SCPR"), pi("SCPRAA301 PARO1", "SCPRAA301_PARO1"), pi("SCPRAA301 PARO2", "SCPRAA301_PARO2")] };
+    const f = vi.fn(async () => ({ ok: true, status: 200, text: async () => SCPR_CSV }));
+    vi.stubGlobal("fetch", f);
+    render(<LiveData sensor={withPi} />);
+    await screen.findByTestId("chart");
+    expect(screen.getByRole("link", { name: /Data files on the PI data portal/ })).toHaveAttribute("href", "http://piweb.ooirsn.uw.edu/scpr/data/SCPR_Data/");
+    expect(screen.queryByText(/PI data portal: SCPRAA301 PARO1/)).toBeNull();
+    expect(f.mock.calls.every(([u]) => !String(u).includes("piweb"))).toBe(true);   // no folder listings asked
+  });
   it("fetches the CSV from GitHub and plots both gauges' uplift over the full record", async () => {
     const f = vi.fn(async () => ({ ok: true, status: 200, text: async () => SCPR_CSV }));
     vi.stubGlobal("fetch", f);
