@@ -70,6 +70,8 @@ test("a status question about one instrument gets its Watcher row: what its data
   const hit = watchSensorHit(report, null, botpt);
   assert.equal(hit.title, "Watcher: Axial Seamount Central Caldera Seafloor Pressure");
   assert.equal(hit.text, "Axial Seamount Central Caldera Seafloor Pressure (RS03CCAL-MJ03F-05-BOTPTA301) is not recording over the 24 hours to 2026-11-16 21:06 UTC, by the Watcher, from OOI ERDDAP. Its last sample: 2026-10-28 22:38 UTC. Nereus lists its operational status as failed.");
+  const noted = watchSensorHit(report, null, { ...botpt, note: { title: "Data output stopped - again", message: "Instrument set to failed.", startedAt: "2026-10-28T22:39:00+00:00" } });
+  assert.match(noted.text, /The RCA operators' open note on it in Nereus, from 2026-10-28, quoted: "Data output stopped - again: Instrument set to failed\."$/);
   // Nereus's operational FAILED was "of unknown status" in the live check
   assert.match(liveStatusHit({ title: "Axial Seamount Central Caldera Seafloor Pressure" }, "RS03CCAL-MJ03F-05-BOTPTA301",
     { status: "FAILED", evidenceMode: "live", data: { code: "UNMONITORED", checkedAt: "2026-11-16T21:00:00Z" } }).text, /is failed, checked live by Nereus/);

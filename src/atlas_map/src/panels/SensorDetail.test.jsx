@@ -15,7 +15,7 @@ describe("SensorDetail", () => {
       String(url).includes("/status/") ? { refdes: "R", status: "OPERATIONAL", data: { code: "OK", checkedAt: "2026-09-23T11:58:00Z" }, evidenceMode: "live", source: "Nereus" }
         : { variables: [], coverage: {} } })));
     render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
-    await waitFor(() => expect(screen.getByText("Operating, per Nereus · its data check was good at Sep 23, 11:58 UTC")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Operating, per Nereus · its data check was good at Sep 23, 2026, 11:58 UTC")).toBeInTheDocument());
   });
   it("a failed instrument whose data Nereus does not check says so, with no live data check claimed", async () => {
     vi.stubGlobal("fetch", vi.fn(async url => ({ ok: true, status: 200, json: async () =>

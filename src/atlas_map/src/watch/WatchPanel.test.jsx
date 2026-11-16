@@ -2,11 +2,14 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import HudDock from "../ui/HudDock.jsx";
 import { WatchProvider } from "./WatchProvider.jsx";
-import { WatchLine, reportSpan } from "./WatchPanel.jsx";
+import { reportSpan } from "./WatchPanel.jsx";
+import SensorStatus from "./SensorStatus.jsx";
 
 const REPORT = { day: "2026-11-15", axial200Hz: "Navy Diversion", sensors: [
   { id: "HYS14", refdes: null, state: "diverted", since: "2026-11-15", source: "EarthScope", method: "earthscope", gap: 10 },
   { id: "POD", refdes: "CE04OSPS-SF01B-2A-CTDPFA107", state: "no_data", since: "2026-08-03", source: "OOI ERDDAP", method: "erddap", gap: 360, nereusStatus: "OFFLINE" },
+  { id: "BOTPT", refdes: "RS03CCAL-MJ03F-05-BOTPTA301", state: "no_data", since: "2026-10-28", lastData: "2026-10-28T22:38:00Z", source: "OOI ERDDAP", method: "erddap", gap: 30,
+    nereusStatus: "FAILED", note: { title: "Data output stopped - again", message: "No data output or ping response. Instrument set to failed.", startedAt: "2026-10-28T22:39:00+00:00" } },
   { id: "HYDBB", refdes: "RS01SLBS-LJ01A-09-HYDBBA102", state: "gaps", since: "2026-11-15", source: "Nereus (data check)", method: "nereus", gap: 30 },
   { id: "CTD", refdes: "RS01SLBS-LJ01A-12-CTDPFB101", state: "ok", since: "2026-11-15", source: "Nereus (data check)", method: "nereus", gap: 60 },
 ] };
@@ -35,10 +38,10 @@ describe("the Watcher", () => {
     expect(owl).toHaveAttribute("aria-pressed", "true");
     const key = screen.getByRole("group", { name: "Watcher" });
     expect(key).toHaveTextContent("Watcher · Nov 15, 2026 UTC");
-    expect(key).toHaveTextContent(/Not recording\s*1/);
+    expect(key).toHaveTextContent(/Not recording\s*2/);
     expect(key).toHaveTextContent(/Navy diversion\s*1/);
     expect(key).toHaveTextContent(/Gaps\s*1/);
-    expect(key).toHaveTextContent("4 sensors watched");
+    expect(key).toHaveTextContent("5 sensors watched");
     expect(key).toHaveTextContent("200 Hz data under Navy diversion");
   });
   it("a colour's row lists its sensors, and a sensor in the list opens its card", async () => {
@@ -47,7 +50,7 @@ describe("the Watcher", () => {
     const bundle = { sensorById: { POD: { name: "Oregon Offshore Cabled Shallow Profiler Mooring CTD", site: "osps" } }, siteById: { osps: { label: "Oregon Offshore Cabled Shallow Profiler Mooring" } } };
     await mount(<HudDock scene={{ U: { exag: { value: 6 } } }} credit="GMRT" bundle={bundle} onSensor={onSensor} />);
     fireEvent.click(screen.getByRole("button", { name: /Watcher/ }));
-    const row = screen.getByRole("button", { name: /Not recording\s*1/ });
+    const row = screen.getByRole("button", { name: /Not recording\s*2/ });
     expect(row).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(row);
     expect(row).toHaveAttribute("aria-expanded", "true");
@@ -58,15 +61,23 @@ describe("the Watcher", () => {
     fireEvent.click(screen.getByRole("button", { name: /^CTD/ }));
     expect(onSensor).toHaveBeenCalledWith("POD");
   });
-  it("a sensor's card says its state, since when, Nereus's word and the check", async () => {
+  it("a card's status: a sentence, the operators' note, and where it comes from", async () => {
     mockFetch();
-    await mount(<WatchLine id="POD" />);
-    expect(screen.getByText(/Not recording since Aug 3, 2026 · Nereus: offline/)).toBeInTheDocument();
-    expect(screen.getByText(/checked by OOI ERDDAP/)).toBeInTheDocument();
+    await mount(<SensorStatus sensor={{ id: "BOTPT", refdes: "RS03CCAL-MJ03F-05-BOTPTA301", access: [] }} />);
+    expect(screen.getByText("Not recording").closest("p")).toHaveTextContent("Not recording: no data since Oct 28, 2026, 22:38 UTC.");
+    expect(screen.getByText(/Operators' note, Oct 28, 2026: Data output stopped - again · Nereus lists it as failed/)).toBeInTheDocument();
+    expect(screen.getByText("No data output or ping response. Instrument set to failed.")).toBeInTheDocument();
+    expect(screen.getByText("Nov 15, 2026 UTC · from OOI ERDDAP")).toBeInTheDocument();
   });
-  it("shows nothing for a sensor the Watcher does not watch", async () => {
+  it("without a note, Nereus's word in a sentence", async () => {
     mockFetch();
-    await mount(<WatchLine id="COSZO-BPR-O1" />);
-    expect(screen.queryByText("Watcher")).toBeNull();
+    await mount(<SensorStatus sensor={{ id: "POD", refdes: "CE04OSPS-SF01B-2A-CTDPFA107", access: [] }} />);
+    expect(screen.getByText("Nereus, the RCA's instrument monitor, lists it as offline.")).toBeInTheDocument();
+  });
+  it("a sensor the Watcher does not grade shows the live status line instead", async () => {
+    mockFetch();
+    await mount(<SensorStatus sensor={{ id: "COSZO-BPR-O1", refdes: null, status: "UNKNOWN", access: [] }} />);
+    expect(screen.queryByText(/Not recording|Recording/)).toBeNull();
+    expect(screen.getByText(/Status unknown/)).toBeInTheDocument();
   });
 });

@@ -12,9 +12,9 @@ export default function GetThisData({ sensor }) {
           <div key={i} className="route">
             <a href={a.url} target="_blank" rel="noreferrer">{a.label}</a>
             <p>{a.how}</p>
-            {snip && (<div className="snippet"><div className="snip-head"><span>{snip.label}</span>
-              <button onClick={() => { navigator.clipboard?.writeText(snip.code); setCopied(i); }}>{copied === i ? "Copied" : "Copy"}</button></div>
-              <pre className="mono">{snip.code}</pre></div>)}
+            {snip && (<details className="snippet"><summary className="snip-head"><span>{snip.label}</span>
+              <button onClick={e => { e.preventDefault(); navigator.clipboard?.writeText(snip.code); setCopied(i); }}>{copied === i ? "Copied" : "Copy"}</button></summary>
+              <pre className="mono">{snip.code}</pre></details>)}
           </div>
         );
       })}

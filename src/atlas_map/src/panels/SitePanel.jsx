@@ -5,10 +5,19 @@ import { fmtDate, fmtDepth, fmtRange, statusLabel } from "../data/format.js";
 import { status as fetchStatus } from "../api/gateway.js";
 import { useLive } from "./live/useLive.js";
 import { WatchDot } from "../watch/WatchPanel.jsx";
+import { useWatch } from "../watch/WatchProvider.jsx";
+
+// A row's status in the Watcher's words where it grades the sensor, as the card says it.
+const WATCH_ROW = { no_data: "Not recording", diverted: "Navy diversion", gaps: "Recording, gaps", ok: "Recording" };
 
 // A row's status. Sensors Nereus does not track have no snapshot status ("Status unknown"); for those with an ERDDAP
 // dataset or QA/QC plots the gateway reports how recent their data are, as the sensor card does. Others make no request.
 function RowStatus({ sensor }) {
+  const watched = WATCH_ROW[useWatch().states[sensor.id]?.state];
+  return watched ? <>{watched}</> : <CatalogStatus sensor={sensor} />;
+}
+
+function CatalogStatus({ sensor }) {
   const dated = sensor.status === "UNKNOWN" && sensor.refdes && sensor.access.some(a => a.kind === "erddap" || a.kind === "qaqc");
   const live = useLive(dated ? `status:${sensor.refdes}` : null, o => fetchStatus(sensor.refdes, o));
   const d = live.state === "ok" && live.data.evidenceMode === "data_age" ? live.data : null;

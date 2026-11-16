@@ -55,23 +55,6 @@ export function WatchKey({ bundle, onSensor }) {
   );
 }
 
-// A sensor's line in the Watcher: its state, since when, and why.
-export function WatchLine({ id }) {
-  const { report, states } = useWatch();
-  const s = states[id];
-  if (!report || !s) return null;
-  const since = s.since && s.state !== "ok" ? ` since ${fmtDay(s.since.slice(0, 10))}` : "";
-  return (
-    <section className="watch-line"><h3>Watcher</h3>
-      <p><span className={`watch-dot ${s.state}`} aria-hidden="true" />{WATCH_LABEL[s.state] || s.state}{since}
-        {s.nereusStatus && s.nereusStatus !== "OPERATIONAL" ? ` · Nereus: ${s.nereusStatus.toLowerCase().replaceAll("_", " ")}` : ""}</p>
-      {s.detail && <p className="hint">{s.detail}</p>}
-      <p className="hint">{s.day ? `${reportSpan(report)}, checked by ${s.source || s.method}` : "Nereus's live status, over the report"}
-        {s.erddap && s.agree === false ? `; ERDDAP: ${WATCH_LABEL[s.erddap.state] || s.erddap.state}` : ""}.</p>
-    </section>
-  );
-}
-
 export function WatchDot({ id }) {
   const { on, states } = useWatch();
   const st = states[id]?.state;

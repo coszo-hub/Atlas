@@ -278,3 +278,22 @@ class WindowTests(unittest.TestCase):
         with mock.patch.object(check, "nereus_history", lambda *a: hours):
             r = check.check_nereus({"check": {"refdes": "R"}, "gap": 60}, self.START, self.END, {"R": {"id": 1}})
         self.assertEqual((r["state"], r["hoursGood"], r["hoursBad"], r["lastData"]), ("gaps", 9, 16, "2026-11-15T10:00:00Z"))
+
+
+class NotesTests(unittest.TestCase):
+    def test_each_instruments_newest_open_note_cut_to_plain_text(self):
+        import json as _json
+        notes = [
+            {"id": "944", "title": "Data output stopped - again", "message": "No data output or ping response.\n\n11/8/26 - Instrument set to failed.",
+             "categoryCode": "INSTRUMENT_FAULT", "startedAt": "2026-10-28T22:39:00+00:00", "endedAt": None,
+             "instrumentConnections": [{"instrument": {"designator": "RS03CCAL-MJ03F-05-BOTPTA301"}}]},
+            {"id": "943", "title": "No connection to instrument", "message": "closed", "startedAt": "2026-10-22T17:00:00+00:00",
+             "endedAt": "2026-10-23T18:00:00+00:00", "instrumentConnections": [{"instrument": {"designator": "RS03CCAL-MJ03F-05-BOTPTA301"}}]},
+            {"id": "900", "title": "Long", "message": "x" * 900, "startedAt": "2026-09-01T00:00:00+00:00", "endedAt": None,
+             "instrumentConnections": [{"instrument": {"designator": "R2"}}]},
+        ]
+        with mock.patch.object(check, "get", lambda *a, **k: (200, _json.dumps({"data": {"notes": notes}}).encode())):
+            out = check.nereus_notes(DAY)
+        self.assertEqual(out["RS03CCAL-MJ03F-05-BOTPTA301"], {"title": "Data output stopped - again", "category": "INSTRUMENT_FAULT",
+            "message": "No data output or ping response. 11/8/26 - Instrument set to failed.", "startedAt": "2026-10-28T22:39:00+00:00"})
+        self.assertEqual(len(out["R2"]["message"]), check.NOTE_CHARS + 1)

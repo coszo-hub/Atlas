@@ -76,3 +76,18 @@ body.resizing-side { cursor: ew-resize; user-select: none; }
 .live-data details summary { cursor: pointer; color: var(--text-secondary); font-size: 12.5px; margin: 8px 0; }
 .files + .files, .series + .files, .waveform + .files { margin-top: 10px; }
 .sp-row .stale { color: var(--text-muted); }   /* data older than three days (SitePanel RowStatus) */
+
+/* The card's status (SensorStatus): one sentence, the operators' word, where it comes from. */
+.sensor-detail .status-head { margin-top: 14px; }
+.sensor-status p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.45; }
+.sensor-status .state b { font-weight: 600; }
+.sensor-status .hint { font-size: 11.5px; color: var(--text-secondary); }
+.sensor-status .src { color: var(--text-muted); }
+.sensor-status details.note { margin: 6px 0 0; font-size: 12px; }
+.sensor-status details.note summary { cursor: pointer; color: var(--text-secondary); }
+.sensor-status details.note p { margin: 4px 0 0 12px; }
+details.sources > summary, details.snippet > summary { cursor: pointer; list-style-position: inside; }
+details.sources > summary { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 18px 0 6px; }
+details.snippet > summary.snip-head { display: flex; align-items: center; justify-content: space-between; }
+.series-empty { font-size: 12px; color: var(--text-primary); background: color-mix(in srgb, var(--watch-yellow, #e0b13a) 14%, transparent);
+  border-left: 2px solid var(--watch-yellow, #e0b13a); padding: 4px 8px; margin: 6px 0; }

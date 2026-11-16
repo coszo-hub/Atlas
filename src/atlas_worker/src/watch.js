@@ -104,7 +104,7 @@ export function watchHit(report, live, now = Date.now()) {
   const lines = [
     `Watcher report for ${span}: each watched sensor graded from Nereus's hourly data checks, OOI ERDDAP, EarthScope, OOI's raw data server and the PI data portal${live?.fetchedAt ? `, with Nereus's live status at ${live.fetchedAt.slice(0, 16).replace("T", " ")} UTC laid over it` : ""}.`,
     `${rows.length} sensors watched: ${recording} recording (${recording - gaps.length - diverted.length} normally, ${gaps.length} with gaps longer than normal, ${diverted.length} under the Navy's diversion of their high-rate data), ${down.length} not recording, ${unchecked} not checked (no public data check). Temporary, campaign, planned and not-deployed sensors are not watched.`,
-    down.length ? `Not recording (no sample for 24 hours or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}`).join("\n")}` : "No watched sensor is without data.",
+    down.length ? `Not recording (no sample for 24 hours or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}${r.note?.title ? `; the operators' open note: "${r.note.title}"` : ""}`).join("\n")}` : "No watched sensor is without data.",
     diverted.length ? `Navy diversion (the high-rate data held back: a seismometer's or low-frequency hydrophone's 8 Hz data reaching EarthScope without its 200 Hz; a broadband hydrophone without its files on the raw data server since they stopped together): ${diverted.map((r) => `${r.name} (${id(r)})`).join("; ")}.` : "",
     gaps.length ? `Recording with gaps (samples in the 24 hours, but a gap longer than normal):\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",
     // The report keeps one of two fixed values for the page's line (check.py, axial_200hz), never its text.
@@ -148,6 +148,8 @@ export function watchSensorHit(report, live, row, now = Date.now()) {
   if (s.detail) parts.push(`${s.detail}.`);
   if (row.nereusStatus && row.nereusStatus !== "OPERATIONAL") parts.push(`Nereus lists its operational status as ${row.nereusStatus.toLowerCase().replaceAll("_", " ")}.`);
   if (row.erddap && row.agree === false) parts.push(`OOI ERDDAP found it ${WORDS[row.erddap.state] || row.erddap.state}.`);
+  // The operators' open note in Nereus, quoted as written (plain text, cut to 600 characters by the daily check).
+  if (row.note?.title) parts.push(`The RCA operators' open note on it in Nereus, from ${String(row.note.startedAt || "").slice(0, 10)}, quoted: "${row.note.title}: ${row.note.message || ""}"`);
   return { chunk_id: `WATCHER-${row.id}`, collection_id: "watcher", title: `Watcher: ${row.name}`, text: parts.join(" "),
     citations: [{ source_id: "WATCHER", title: "RCA Atlas Watcher daily report", url: WATCH_REPORT_URL }] };
 }
