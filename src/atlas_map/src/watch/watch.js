@@ -43,14 +43,14 @@ export function currentState(row, live, now = Date.now(), from = null) {
     const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
     if (minutes == null || minutes >= DAY_MIN) {
       return { state: "no_data", since: row.state === "no_data" ? row.since : at.slice(0, 10) || row.since,
-        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", day: false };
+        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", day: false, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
     }
-    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, day: false };
+    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, day: false, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
     return base;
   }
   if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")
       && row.agree !== false) {   // a state ERDDAP's independent check set (it disagreed with Nereus) is not Nereus's to clear
-    return { state: "ok", since: null, detail: `Recording again (Nereus, ${String(nereus.checkedAt || "").slice(0, 16).replace("T", " ")} UTC)`, day: false };
+    return { state: "ok", since: null, detail: `Recording again (Nereus, ${String(nereus.checkedAt || "").slice(0, 16).replace("T", " ")} UTC)`, day: false, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
   }
   return base;
 }

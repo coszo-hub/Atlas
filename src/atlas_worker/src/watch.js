@@ -80,17 +80,19 @@ export function currentState(row, live, now = Date.now(), from = null) {
     const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
     if (minutes == null || minutes >= DAY_MIN) {
       return { state: "no_data", since: row.state === "no_data" ? row.since : at.slice(0, 10) || row.since,
-        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", live: true };
+        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", live: true, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
     }
-    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, live: true };
+    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, live: true, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
     return base;
   }
   if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")
       && row.agree !== false) {   // a state ERDDAP's independent check set (it disagreed with Nereus) is not Nereus's to clear
-    return { state: "ok", since: null, detail: "recording again by Nereus's live check", live: true };
+    return { state: "ok", since: null, detail: "recording again by Nereus's live check", live: true, liveAt: nereus.checkedAt || live?.fetchedAt || null, dailyState: row.state };
   }
   return base;
 }
+
+const at = (iso) => String(iso || "").slice(0, 16).replace("T", " ");
 
 // The evidence record: the day, the counts, and every sensor not recording, under diversion, or with gaps.
 export function watchHit(report, live, now = Date.now()) {
@@ -104,7 +106,7 @@ export function watchHit(report, live, now = Date.now()) {
   const lines = [
     `Watcher report for ${span}: each watched sensor graded from Nereus's hourly data checks, OOI ERDDAP, EarthScope, OOI's raw data server and the PI data portal${live?.fetchedAt ? `, with Nereus's live status at ${live.fetchedAt.slice(0, 16).replace("T", " ")} UTC laid over it` : ""}.`,
     `${rows.length} sensors watched: ${recording} recording (${recording - gaps.length - diverted.length} normally, ${gaps.length} with gaps longer than normal, ${diverted.length} under the Navy's diversion of their high-rate data), ${down.length} not recording, ${unchecked} not checked (no public data check). Temporary, campaign, planned and not-deployed sensors are not watched.`,
-    down.length ? `Not recording (no sample for 24 hours or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}${r.note?.title ? `; the operators' open note: "${r.note.title}"` : ""}`).join("\n")}` : "No watched sensor is without data.",
+    down.length ? `Not recording (no sample for 24 hours or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; checked live by Nereus at ${at(r.liveAt)} UTC: ${r.detail}` : ""}${r.note?.title ? `; the operators' open note: "${r.note.title}"` : ""}`).join("\n")}` : "No watched sensor is without data.",
     diverted.length ? `Navy diversion (the high-rate data held back: a seismometer's or low-frequency hydrophone's 8 Hz data reaching EarthScope without its 200 Hz; a broadband hydrophone without its files on the raw data server since they stopped together): ${diverted.map((r) => `${r.name} (${id(r)})`).join("; ")}.` : "",
     gaps.length ? `Recording with gaps (samples in the 24 hours, but a gap longer than normal):\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",
     // The report keeps one of two fixed values for the page's line (check.py, axial_200hz), never its text.
@@ -133,7 +135,6 @@ export async function watchRecords(ctx) {
 
 const WORDS = { ok: "recording normally", gaps: "recording, with gaps longer than normal", diverted: "recording, its high-rate data under the Navy's diversion",
   no_data: "not recording", unchecked: "not checked", failed: "not checked (the check failed)" };
-const at = (iso) => String(iso || "").slice(0, 16).replace("T", " ");
 
 // One sensor's Watcher row, for a status question that names it ("Is the Central Caldera BOTPT working?"): what its
 // data show over the 24 hours, beside the live per-instrument check, which sees only Nereus's status (UNMONITORED for
@@ -142,7 +143,9 @@ export function watchSensorHit(report, live, row, now = Date.now()) {
   const s = { ...row, ...currentState(row, live, now, report.from || report.day) };
   const span = report.to && !report.to.endsWith("T00:00:00Z") ? `the 24 hours to ${at(report.to)} UTC` : `${report.day} (UTC)`;
   const id = row.refdes || row.id.replace(/^EARTHSCOPE-OO-/, "OO.");
-  const parts = [`${row.name} (${id}) is ${WORDS[s.state] || s.state} over ${span}, by the Watcher, from ${row.source || row.method}.`];
+  const parts = [s.live
+    ? `${row.name} (${id}) is ${WORDS[s.state] || s.state}, checked live by Nereus at ${at(s.liveAt)} UTC; the daily check of ${span} found it ${WORDS[row.state] || row.state}, from ${row.source || row.method}.`
+    : `${row.name} (${id}) is ${WORDS[s.state] || s.state}, by the daily check of ${span} (run ${at(report.generatedAt || report.to)} UTC), from ${row.source || row.method}.`];
   if (s.state === "no_data") parts.push(s.lastData || row.lastData ? `Its last sample: ${at(s.lastData || row.lastData)} UTC.` : `No sample since ${s.since}.`);
   if (s.state === "gaps" && row.longestGapMin) parts.push(`Its longest gap: ${row.longestGapMin} minutes (normal for it: ${row.gap}).`);
   if (s.detail) parts.push(`${s.detail}.`);

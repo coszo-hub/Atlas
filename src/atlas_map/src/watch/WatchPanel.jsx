@@ -22,13 +22,13 @@ export function WatchKey({ bundle, onSensor }) {
   if (!report) return <div className="panel watch-key"><div className="eyebrow">Watcher</div><p className="hint">The daily report is not available just now.</p></div>;
   const site = id => bundle?.siteById?.[bundle?.sensorById?.[id]?.site]?.label;
   const of = k => Object.entries(states).filter(([, s]) => s.state === k)
-    .map(([id, s]) => ({ id, name: bundle?.sensorById?.[id]?.name || s.name, site: site(id) || s.site || "", since: s.since }))
+    .map(([id, s]) => ({ id, name: bundle?.sensorById?.[id]?.name || s.name, site: site(id) || s.site || "", since: s.since, live: s.day === false }))
     // The site is on its own line: a name that starts with it ("Oregon Offshore Cabled Shallow Profiler Mooring CTD") drops it.
     .map(r => ({ ...r, short: r.site && r.name.startsWith(`${r.site} `) ? r.name.slice(r.site.length + 1) : r.name }))
     .sort((a, b) => a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
   return (
     <div className="panel watch-key">
-      <div className="eyebrow">Watcher · {reportSpan(report)}</div>
+      <div className="eyebrow">Watcher · daily check {reportSpan(report)}</div>
       {["no_data", "diverted", "gaps"].map(k => (
         <div key={k}>
           <button className="row" title={MEANING[k]} aria-expanded={open === k} disabled={!counts[k]}
@@ -40,7 +40,7 @@ export function WatchKey({ bundle, onSensor }) {
               {of(k).map(r => (
                 <li key={r.id}><button onClick={() => onSensor?.(r.id)}>
                   <span className="nm" title={r.name}>{r.short}</span>
-                  <span className="d">{r.site}{r.since && k !== "diverted" ? ` · since ${fmtDay(r.since.slice(0, 10))}` : ""}</span>
+                  <span className="d">{r.site}{r.since && k !== "diverted" ? ` · since ${fmtDay(r.since.slice(0, 10))}` : ""}{r.live ? " · checked live" : ""}</span>
                 </button></li>
               ))}
             </ul>
@@ -49,7 +49,7 @@ export function WatchKey({ bundle, onSensor }) {
       ))}
       <div className="row muted"><span className="watch-dot ok" aria-hidden="true" />Recording<b className="mono">{counts.recording - counts.gaps - counts.diverted}</b></div>
       <p className="hint">{counts.watched} sensors watched; those recording normally are not highlighted.
-        {live?.fetchedAt ? ` Nereus live status ${fmtTime(live.fetchedAt)} UTC.` : ""}
+        {live?.fetchedAt ? ` Checked live by Nereus: ${fmtTime(live.fetchedAt)} UTC (marked "checked live" where it changed the daily check).` : ""}
         {report.axial200Hz === "Navy Diversion" ? " Axial catalog: 200 Hz data under Navy diversion." : ""}</p>
     </div>
   );

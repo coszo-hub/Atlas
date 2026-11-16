@@ -44,12 +44,12 @@ test("the Watcher report as evidence: Nereus's live status over the day's report
   // Nereus's delay read 148 days for hydrophones good until 11:00 on the 15th: the report's last data dates the stop
   const hydbb = { ...report.sensors[2], lastData: "2026-11-15T11:00:00Z" };
   assert.deepEqual(currentState(hydbb, { instruments: { [hydbb.refdes]: { check: "BAD", delayMin: 213690 } } }, NOW, "2026-11-15"),
-    { state: "no_data", since: "2026-11-15", detail: "Nereus finds no data now; the last was 2026-11-15 11:00 UTC", live: true });
+    { state: "no_data", since: "2026-11-15", detail: "Nereus finds no data now; the last was 2026-11-15 11:00 UTC", live: true, liveAt: null, dailyState: "gaps" });
   const hit = watchHit(report, live, NOW);
   assert.equal(hit.title, "Watcher report: sensors not recording (2026-11-15)");
   assert.match(hit.text, /5 sensors watched: 2 recording \(0 normally, 1 with gaps longer than normal, 1 under the Navy's diversion of their high-rate data\), 2 not recording, 1 not checked/);
   assert.match(hit.text, /- Oregon Offshore Cabled Shallow Profiler Mooring CTD \(CE04OSPS-SF01B-2A-CTDPFA107\), since 2026-08-03; Nereus lists it as offline/);
-  assert.match(hit.text, /- Oregon Slope Base Seafloor CTD \(RS01SLBS-LJ01A-12-CTDPFB101\), since 2026-11-15; Nereus finds no data now; the last was 2026-11-15 00:00 UTC/);
+  assert.match(hit.text, /- Oregon Slope Base Seafloor CTD \(RS01SLBS-LJ01A-12-CTDPFB101\), since 2026-11-15; checked live by Nereus at 2026-11-16 18:55 UTC: Nereus finds no data now; the last was 2026-11-15 00:00 UTC/);
   assert.match(hit.text, /Navy diversion \(the high-rate data held back: .*?\): Southern Hydrate Ridge Summit Seismic Station HYS14 \(OO\.HYS14\)/);
   assert.match(hit.text, /- Oregon Slope Base Seafloor Broadband Hydrophone \(RS01SLBS-LJ01A-09-HYDBBA102\): a 780-minute gap/);
   assert.match(hit.text, /catalog page lists its 200 Hz waveform data as under Navy diversion\./);
@@ -69,7 +69,11 @@ test("a status question about one instrument gets its Watcher row: what its data
     state: "no_data", since: "2026-10-28", lastData: "2026-10-28T22:38:00Z", gap: 30, source: "OOI ERDDAP", method: "erddap", nereusStatus: "FAILED" };
   const hit = watchSensorHit(report, null, botpt);
   assert.equal(hit.title, "Watcher: Axial Seamount Central Caldera Seafloor Pressure");
-  assert.equal(hit.text, "Axial Seamount Central Caldera Seafloor Pressure (RS03CCAL-MJ03F-05-BOTPTA301) is not recording over the 24 hours to 2026-11-16 21:06 UTC, by the Watcher, from OOI ERDDAP. Its last sample: 2026-10-28 22:38 UTC. Nereus lists its operational status as failed.");
+  assert.equal(hit.text, "Axial Seamount Central Caldera Seafloor Pressure (RS03CCAL-MJ03F-05-BOTPTA301) is not recording, by the daily check of the 24 hours to 2026-11-16 21:06 UTC (run 2026-11-16 21:06 UTC), from OOI ERDDAP. Its last sample: 2026-10-28 22:38 UTC. Nereus lists its operational status as failed.");
+  // changed by Nereus's live check: said so, with when, and what the daily check found
+  const ctd = { id: "C", refdes: "R", name: "A CTD", state: "ok", since: "2026-11-16", gap: 60, source: "Nereus (data check)", lastData: "2026-11-15T09:00:00Z" };
+  const liveHit = watchSensorHit(report, { instruments: { R: { check: "BAD", delayMin: 2000, checkedAt: "2026-11-16T21:30:00Z" } } }, ctd, Date.parse("2026-11-16T21:40:00Z"));
+  assert.match(liveHit.text, /^A CTD \(R\) is not recording, checked live by Nereus at 2026-11-16 21:30 UTC; the daily check of the 24 hours to 2026-11-16 21:06 UTC found it recording normally/);
   const noted = watchSensorHit(report, null, { ...botpt, note: { title: "Data output stopped - again", message: "Instrument set to failed.", startedAt: "2026-10-28T22:39:00+00:00" } });
   assert.match(noted.text, /The RCA operators' open note on it in Nereus, from 2026-10-28, quoted: "Data output stopped - again: Instrument set to failed\."$/);
   // Nereus's operational FAILED was "of unknown status" in the live check

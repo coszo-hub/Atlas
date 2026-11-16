@@ -980,7 +980,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
   const task = /\(task recipe\) \| sources:/.test(evidence);
   const typeOverview = /^Where to download .* data: every .* \(download recipe\) \| sources:/m.test(evidence);
   const sensorWatch = /^Watcher: /m.test(evidence)
-    ? "A record titled \"Watcher: …\" says whether that sensor's data actually arrived over the 24 hours it names, read from the data themselves (OOI ERDDAP, EarthScope, OOI's raw data server, the PI data portal, Nereus's hourly checks). Lead with it: say whether the sensor is recording and since when it has not, with its source; then give the live status record's finding too, and when the two disagree say so plainly rather than choosing one."
+    ? "A record titled \"Watcher: …\" says whether that sensor's data actually arrived over the 24 hours it names, read from the data themselves (OOI ERDDAP, EarthScope, OOI's raw data server, the PI data portal, Nereus's hourly checks). Lead with it: say whether the sensor is recording and since when it has not, with its source, and whether that was checked live (by Nereus, at the time given) or by the daily check (with its date); then give the live status record's finding too, and when the two disagree say so plainly rather than choosing one."
     : "";
   const watchInstruction = /^Watcher report: /m.test(evidence)
     ? "The record titled \"Watcher report\" grades every watched sensor over the period it names: answer from it, saying which period (UTC) it covers, naming each sensor not recording with the date since and any status Nereus gives, then those under Navy diversion and those with gaps; do not call a sensor it does not list as not recording down."

@@ -22,6 +22,16 @@ export function sentence(s) {
   }
 }
 
+const DAILY_WORDS = { no_data: "Not recording", diverted: "Navy diversion", gaps: "Recording, with gaps", ok: "Recording normally" };
+
+// How and when the status was found: the daily check (when it ran, over the 24 hours before) or Nereus's live check
+// (when Nereus checked), with what the daily check had said.
+export function checkedLine(s, report) {
+  const t = report.generatedAt || report.to, daily = t ? fmtUtc(t) : reportSpan(report);
+  if (s.day !== false) return `Daily check: ${daily} (the 24 h before) · from ${s.source || s.method}`;
+  return `Checked live: ${s.liveAt ? fmtUtc(s.liveAt) : "now"} · by Nereus (daily check, ${daily}: ${DAILY_WORDS[s.dailyState] || s.dailyState})`;
+}
+
 export default function SensorStatus({ sensor, manifest }) {
   const { report, states } = useWatch();
   const s = states[sensor.id];
@@ -40,7 +50,7 @@ export default function SensorStatus({ sensor, manifest }) {
         </details>
       ) : word && <p className="hint">Nereus, the RCA's instrument monitor, lists it as {word}.</p>}
       {s.erddap && s.agree === false && <p className="hint">OOI ERDDAP disagrees: it found it {s.erddap.state.replace("_", " ")}.</p>}
-      <p className="hint src">{s.day ? `${reportSpan(report)} · from ${s.source || s.method}` : "Nereus's live status, over the daily check"}</p>
+      <p className="hint src">{checkedLine(s, report)}</p>
     </section>
   );
 }

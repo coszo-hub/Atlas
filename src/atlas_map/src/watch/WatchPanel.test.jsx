@@ -5,7 +5,7 @@ import { WatchProvider } from "./WatchProvider.jsx";
 import { reportSpan } from "./WatchPanel.jsx";
 import SensorStatus from "./SensorStatus.jsx";
 
-const REPORT = { day: "2026-11-15", axial200Hz: "Navy Diversion", sensors: [
+const REPORT = { day: "2026-11-15", generatedAt: "2026-11-16T01:20:00Z", axial200Hz: "Navy Diversion", sensors: [
   { id: "HYS14", refdes: null, state: "diverted", since: "2026-11-15", source: "EarthScope", method: "earthscope", gap: 10 },
   { id: "POD", refdes: "CE04OSPS-SF01B-2A-CTDPFA107", state: "no_data", since: "2026-08-03", source: "OOI ERDDAP", method: "erddap", gap: 360, nereusStatus: "OFFLINE" },
   { id: "BOTPT", refdes: "RS03CCAL-MJ03F-05-BOTPTA301", state: "no_data", since: "2026-10-28", lastData: "2026-10-28T22:38:00Z", source: "OOI ERDDAP", method: "erddap", gap: 30,
@@ -37,7 +37,7 @@ describe("the Watcher", () => {
     fireEvent.click(owl);
     expect(owl).toHaveAttribute("aria-pressed", "true");
     const key = screen.getByRole("group", { name: "Watcher" });
-    expect(key).toHaveTextContent("Watcher · Nov 15, 2026 UTC");
+    expect(key).toHaveTextContent("Watcher · daily check Nov 15, 2026 UTC");
     expect(key).toHaveTextContent(/Not recording\s*2/);
     expect(key).toHaveTextContent(/Navy diversion\s*1/);
     expect(key).toHaveTextContent(/Gaps\s*1/);
@@ -67,7 +67,7 @@ describe("the Watcher", () => {
     expect(screen.getByText("Not recording").closest("p")).toHaveTextContent("Not recording: no data since Oct 28, 2026, 22:38 UTC.");
     expect(screen.getByText(/Operators' note, Oct 28, 2026: Data output stopped - again · Nereus lists it as failed/)).toBeInTheDocument();
     expect(screen.getByText("No data output or ping response. Instrument set to failed.")).toBeInTheDocument();
-    expect(screen.getByText("Nov 15, 2026 UTC · from OOI ERDDAP")).toBeInTheDocument();
+    expect(screen.getByText("Daily check: Nov 16, 2026, 01:20 UTC (the 24 h before) · from OOI ERDDAP")).toBeInTheDocument();
   });
   it("without a note, Nereus's word in a sentence", async () => {
     mockFetch();
@@ -79,5 +79,15 @@ describe("the Watcher", () => {
     await mount(<SensorStatus sensor={{ id: "COSZO-BPR-O1", refdes: null, status: "UNKNOWN", access: [] }} />);
     expect(screen.queryByText(/Not recording|Recording/)).toBeNull();
     expect(screen.getByText(/Status unknown/)).toBeInTheDocument();
+  });
+});
+
+describe("which check a status is from", () => {
+  it("the daily check, with when it ran; or Nereus's live check, with when, and what the daily check said", async () => {
+    const { checkedLine } = await import("./SensorStatus.jsx");
+    const report = { generatedAt: "2026-11-16T01:20:00Z", day: "2026-11-16" };
+    expect(checkedLine({ day: true, source: "OOI ERDDAP" }, report)).toBe("Daily check: Nov 16, 2026, 01:20 UTC (the 24 h before) · from OOI ERDDAP");
+    expect(checkedLine({ day: false, liveAt: "2026-11-16T21:30:00Z", dailyState: "ok" }, report))
+      .toBe("Checked live: Nov 16, 2026, 21:30 UTC · by Nereus (daily check, Nov 16, 2026, 01:20 UTC: Recording normally)");
   });
 });
