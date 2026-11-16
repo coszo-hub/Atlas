@@ -67,13 +67,13 @@ const DAY_MIN = 1440;
 // As the map's (src/atlas_map/src/watch/watch.js): when a sensor stopped is the report's last data time, Nereus's delay
 // only without one (it read 148 days for hydrophones good until the day before), never before the day the report saw
 // it recording.
-export function currentState(row, live, now = Date.now(), day = null) {
+export function currentState(row, live, now = Date.now(), from = null) {
   const nereus = row.refdes && live?.instruments?.[row.refdes];
   const base = { state: row.state, since: row.since, detail: row.detail || null, live: false };
   if (!nereus || !nereus.check || nereus.check === "UNMONITORED" || row.state === "diverted") return base;
   if (nereus.check === "BAD") {
     let stopped = row.lastData ? Date.parse(row.lastData) : nereus.delayMin != null ? now - nereus.delayMin * 60_000 : null;
-    if (stopped != null && day && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(`${day}T00:00:00Z`));
+    if (stopped != null && from && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(from.length === 10 ? `${from}T00:00:00Z` : from));
     const minutes = stopped == null ? null : (now - stopped) / 60_000;
     const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
     if (minutes == null || minutes >= DAY_MIN) {
@@ -92,18 +92,19 @@ export function currentState(row, live, now = Date.now(), day = null) {
 
 // The evidence record: the day, the counts, and every sensor not recording, under diversion, or with gaps.
 export function watchHit(report, live, now = Date.now()) {
-  const rows = (report?.sensors || []).map((row) => ({ ...row, ...currentState(row, live, now, report.day) }));
+  const rows = (report?.sensors || []).map((row) => ({ ...row, ...currentState(row, live, now, report.from || report.day) }));
+  const span = report.to && !report.to.endsWith("T00:00:00Z") ? `the 24 hours to ${report.to.slice(0, 16).replace("T", " ")} UTC` : `${report.day} (UTC)`;
   const of = (state) => rows.filter((r) => r.state === state);
   const id = (r) => r.refdes || r.id.replace(/^EARTHSCOPE-OO-/, "OO.");
   const words = (st) => (st ? st.toLowerCase().replaceAll("_", " ") : "");
   const down = of("no_data"), diverted = of("diverted"), gaps = of("gaps"), unchecked = of("unchecked").length + of("failed").length;
   const recording = rows.length - down.length - unchecked;
   const lines = [
-    `Watcher report for ${report.day} (UTC): each watched sensor graded from Nereus's hourly data checks, OOI ERDDAP and EarthScope${live?.fetchedAt ? `, with Nereus's live status at ${live.fetchedAt.slice(0, 16).replace("T", " ")} UTC laid over it` : ""}.`,
+    `Watcher report for ${span}: each watched sensor graded from Nereus's hourly data checks, OOI ERDDAP, EarthScope, OOI's raw data server and the PI data portal${live?.fetchedAt ? `, with Nereus's live status at ${live.fetchedAt.slice(0, 16).replace("T", " ")} UTC laid over it` : ""}.`,
     `${rows.length} sensors watched: ${recording} recording (${recording - gaps.length - diverted.length} normally, ${gaps.length} with gaps longer than normal, ${diverted.length} under the Navy's diversion of their high-rate data), ${down.length} not recording, ${unchecked} not checked (no public data check). Temporary, campaign, planned and not-deployed sensors are not watched.`,
-    down.length ? `Not recording (no data for a day or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}`).join("\n")}` : "No watched sensor is without data.",
+    down.length ? `Not recording (no sample for 24 hours or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}`).join("\n")}` : "No watched sensor is without data.",
     diverted.length ? `Navy diversion (the high-rate data held back: a seismometer's or low-frequency hydrophone's 8 Hz data reaching EarthScope without its 200 Hz; a broadband hydrophone without its files on the raw data server since they stopped together): ${diverted.map((r) => `${r.name} (${id(r)})`).join("; ")}.` : "",
-    gaps.length ? `Recording with gaps:\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",
+    gaps.length ? `Recording with gaps (samples in the 24 hours, but a gap longer than normal):\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",
     // The report keeps one of two fixed values for the page's line (check.py, axial_200hz), never its text.
     report.axial200Hz === "Navy Diversion" ? "The Axial Seamount earthquake catalog page lists its 200 Hz waveform data as under Navy diversion."
       : report.axial200Hz === "No diversion stated" ? "The Axial Seamount earthquake catalog page does not list its 200 Hz waveform data as under Navy diversion." : "",

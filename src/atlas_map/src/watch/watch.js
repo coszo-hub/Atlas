@@ -7,7 +7,7 @@ import { ATLAS_WORKER } from "../api/gateway.js";
 //   gaps      recording, with a gap longer than normal for it (yellow)
 //   diverted  the Navy's diversion of the high-rate data: 8 Hz seismic data reaching EarthScope without the 200 Hz, and
 //             broadband hydrophones without their files when it is so (blue)
-//   no_data   nothing for a day or more (red)
+//   no_data   no sample for 24 hours or more (red)
 // ok, unchecked and failed (the check could not be made) are not highlighted.
 export const WATCH_LIVE_URL = import.meta.env.PROD ? `${ATLAS_WORKER}/v1/watch/live` : "/api/watch-live";
 export const PROBLEM = ["no_data", "diverted", "gaps"];   // worst first
@@ -31,13 +31,14 @@ const DAY_MIN = 1440;
 // When it stopped is the report's last data time: Nereus's "delay" is not always the time since the last data (the
 // broadband hydrophones, good until 11:00 UTC on 15 Nov 2026, read 148 days), so it is used only without one, and a
 // sensor the report saw recording on its day did not stop before that day.
-export function currentState(row, live, now = Date.now(), day = null) {
+export function currentState(row, live, now = Date.now(), from = null) {
   const nereus = row.refdes && live?.instruments?.[row.refdes];
   const base = { state: row.state, since: row.since, detail: row.detail || null, day: true };
   if (!nereus || !nereus.check || nereus.check === "UNMONITORED" || row.state === "diverted") return base;
   if (nereus.check === "BAD") {
     let stopped = row.lastData ? Date.parse(row.lastData) : nereus.delayMin != null ? now - nereus.delayMin * 60_000 : null;
-    if (stopped != null && day && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(`${day}T00:00:00Z`));
+    // from: the report's window start (an older report names only its day)
+    if (stopped != null && from && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(from.length === 10 ? `${from}T00:00:00Z` : from));
     const minutes = stopped == null ? null : (now - stopped) / 60_000;
     const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
     if (minutes == null || minutes >= DAY_MIN) {
@@ -57,7 +58,7 @@ export function currentState(row, live, now = Date.now(), day = null) {
 // Every watched sensor's state now, by sensor id.
 export function watchStates(report, live, now = Date.now()) {
   const out = {};
-  for (const row of report?.sensors || []) out[row.id] = { ...row, ...currentState(row, live, now, report.day) };
+  for (const row of report?.sensors || []) out[row.id] = { ...row, ...currentState(row, live, now, report.from || report.day) };
   return out;
 }
 

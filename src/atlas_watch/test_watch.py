@@ -2,7 +2,7 @@
 import struct
 import sys
 import unittest
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -56,7 +56,7 @@ class NereusTests(unittest.TestCase):
         sensor = {"check": {"refdes": "R"}, "gap": gap}
         calls = iter([self.hours(codes), list(back)])
         with mock.patch.object(check, "nereus_history", lambda *a: next(calls)):
-            return check.check_nereus(sensor, date(2026, 11, 15), {"R": {"id": 1}})
+            return check.check_nereus(sensor, *check.day_window(date(2026, 11, 15)), {"R": {"id": 1}})
 
     def test_bad_hours_longer_than_the_normal_gap_are_gaps(self):
         r = self.grade(["GOOD"] * 11 + ["BAD"] * 13)
@@ -110,21 +110,21 @@ class CombinedTests(unittest.TestCase):
 
     def test_erddap_data_outweigh_a_bad_nereus_day(self):
         r = check.combined({"state": "no_data", "source": "Nereus"}, {"state": "ok", "coverage": 1.0, "lastData": "2026-11-15T23:50:00Z",
-                                                                       "erddapNewest": "2026-11-16T03:00:00Z"}, self.day)
+                                                                       "erddapNewest": "2026-11-16T03:00:00Z"}, check.day_window(self.day)[1])
         self.assertEqual((r["state"], r["agree"]), ("ok", False))
 
     def test_an_erddap_gap_makes_a_good_nereus_day_yellow(self):
-        r = check.combined({"state": "ok"}, {"state": "gaps", "longestGapMin": 120, "erddapNewest": "2026-11-16T03:00:00Z"}, self.day)
+        r = check.combined({"state": "ok"}, {"state": "gaps", "longestGapMin": 120, "erddapNewest": "2026-11-16T03:00:00Z"}, check.day_window(self.day)[1])
         self.assertEqual(r["state"], "gaps")
 
     def test_erddap_behind_the_day_says_nothing(self):
         behind = {"state": "no_data", "coverage": 0.0, "erddapNewest": "2026-11-14T11:30:00Z"}
-        self.assertEqual(check.combined({"state": "ok"}, behind, self.day)["state"], "ok")
+        self.assertEqual(check.combined({"state": "ok"}, behind, check.day_window(self.day)[1])["state"], "ok")
         passed = {**behind, "erddapNewest": "2026-11-16T01:00:00Z"}
-        self.assertEqual(check.combined({"state": "ok"}, passed, self.day)["state"], "gaps")
+        self.assertEqual(check.combined({"state": "ok"}, passed, check.day_window(self.day)[1])["state"], "gaps")
 
     def test_an_unmonitored_nereus_day_takes_erddap(self):
-        r = check.combined({"state": "unchecked"}, {"state": "ok", "source": "OOI ERDDAP"}, self.day)
+        r = check.combined({"state": "unchecked"}, {"state": "ok", "source": "OOI ERDDAP"}, check.day_window(self.day)[1])
         self.assertEqual((r["state"], r["source"]), ("ok", "OOI ERDDAP"))
 
 
@@ -158,7 +158,7 @@ class ErddapMeasuredTests(unittest.TestCase):
 
     def run_check(self, csv):
         with mock.patch.object(check, "get", self.fake(csv)):
-            return check.check_erddap({"check": {"dataset": "ooi-rs03ccal-mj03f-05-botpta301"}, "gap": 30}, date(2026, 11, 15))
+            return check.check_erddap({"check": {"dataset": "ooi-rs03ccal-mj03f-05-botpta301"}, "gap": 30}, *check.day_window(date(2026, 11, 15)))
 
     def test_rows_without_a_measured_value_are_no_data_since_the_last_one(self):
         csv = "time,botpres,bottilt_xtlt\nUTC,count,count\n2026-11-15T00:00:00Z,0,0\n2026-11-15T00:10:00Z,0,0\n"
@@ -188,7 +188,7 @@ class OwnVariablesTests(unittest.TestCase):
         lasts = {"a": datetime(2025, 10, 22, tzinfo=timezone.utc).timestamp(), "b": datetime(2026, 8, 3, 17, 22, tzinfo=timezone.utc).timestamp()}
         with mock.patch.object(check, "erddap_info", lambda d: (datetime(2026, 8, 3, 17, 22, tzinfo=timezone.utc).timestamp(), ["a", "b"])), \
              mock.patch.object(check, "erddap_last_measured", lambda d, v, before: lasts[v]):
-            r = check.check_erddap({"check": {"dataset": "x"}, "gap": 360}, date(2026, 11, 15))
+            r = check.check_erddap({"check": {"dataset": "x"}, "gap": 360}, *check.day_window(date(2026, 11, 15)))
         self.assertEqual((r["state"], r["lastData"]), ("no_data", "2026-08-03T17:22:00Z"))
 
 
@@ -202,8 +202,8 @@ class RawdataTests(unittest.TestCase):
         listing += '<a href="./OO-HYVM1--YDH-2026-11-14T07:35:00.000000Z.mseed">'
         pages = {"2026/11/14": (200, listing.encode()), "2026/11/15": (404, b"")}
         with mock.patch.object(check, "get", lambda url, **k: pages.get(url.rstrip("/")[-10:], (404, b""))):
-            day14 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, date(2026, 11, 14))
-            day15 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, date(2026, 11, 15))
+            day14 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, *check.day_window(date(2026, 11, 14)))
+            day15 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, *check.day_window(date(2026, 11, 15)))
         self.assertEqual((day14["state"], day14["lastData"]), ("gaps", "2026-11-14T07:40:00Z"))
         self.assertEqual((day15["state"], day15["lastData"]), ("no_data", "2026-11-14T07:40:00Z"))
 
@@ -237,6 +237,44 @@ class PiwebTests(unittest.TestCase):
                 return 200, listing("PARO1" if "PARO1" in url else "PARO2")
             return 200, full if "PARO1" in url else half
         with mock.patch.object(check, "get", get):
-            r = check.check_piweb({"check": {"folders": ["http://x/SCPRAA301_PARO1/", "http://x/SCPRAA301_PARO2/"]}, "gap": 120}, date(2026, 11, 15))
+            r = check.check_piweb({"check": {"folders": ["http://x/SCPRAA301_PARO1/", "http://x/SCPRAA301_PARO2/"]}, "gap": 120}, *check.day_window(date(2026, 11, 15)))
         self.assertEqual((r["state"], r["longestGapMin"], r["detail"]), ("gaps", 720, "PARO2: gaps"))
         self.assertEqual([g["state"] for g in r["gauges"]], ["ok", "gaps"])
+
+
+class WindowTests(unittest.TestCase):
+    """The 24 hours before the check runs: red when there is no sample in them, yellow when some are missing."""
+    START = datetime(2026, 11, 15, 1, 20, tzinfo=timezone.utc).timestamp()
+    END = START + 86400
+
+    def raw(self, pages):
+        return mock.patch.object(check, "get", lambda url, **k: pages.get(url.rstrip("/")[-10:], (404, b"")))
+
+    def files(self, day, hours):
+        return (200, "".join(f'<a href="./X-{day}T{h:02d}:{m:02d}:00.000000Z.mseed">' for h in hours for m in range(0, 60, 5)).encode())
+
+    def test_a_window_reads_the_two_days_it_spans(self):
+        pages = {"2026/11/15": self.files("2026-11-15", range(24)), "2026/11/16": self.files("2026-11-16", range(2))}
+        with self.raw(pages):
+            r = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, self.START, self.END)
+        self.assertEqual((r["state"], r["coverage"]), ("ok", 1.0))
+
+    def test_no_sample_for_24_hours_is_red_dated_from_the_last(self):
+        # the last file 07:35 on the 14th: 25 hours before the window's start of 01:20 on the 15th... and none since
+        pages = {"2026/11/14": self.files("2026-11-14", range(8))}
+        with self.raw(pages):
+            r = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, self.START, self.END)
+        self.assertEqual((r["state"], r["lastData"]), ("no_data", "2026-11-14T08:00:00Z"))
+
+    def test_samples_with_a_long_gap_are_yellow(self):
+        pages = {"2026/11/15": self.files("2026-11-15", range(12)), "2026/11/16": self.files("2026-11-16", range(2))}
+        with self.raw(pages):
+            r = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, self.START, self.END)
+        self.assertEqual(r["state"], "gaps")
+        self.assertEqual(r["longestGapMin"], 720)
+
+    def test_nereus_hours_in_the_window(self):
+        hours = [{"date": (datetime(2026, 11, 15, tzinfo=timezone.utc) + timedelta(hours=h)).isoformat(), "code": "GOOD" if h < 10 else "BAD"} for h in range(48)]
+        with mock.patch.object(check, "nereus_history", lambda *a: hours):
+            r = check.check_nereus({"check": {"refdes": "R"}, "gap": 60}, self.START, self.END, {"R": {"id": 1}})
+        self.assertEqual((r["state"], r["hoursGood"], r["hoursBad"], r["lastData"]), ("gaps", 9, 16, "2026-11-15T10:00:00Z"))

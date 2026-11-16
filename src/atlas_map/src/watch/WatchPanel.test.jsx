@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import HudDock from "../ui/HudDock.jsx";
 import { WatchProvider } from "./WatchProvider.jsx";
-import { WatchLine } from "./WatchPanel.jsx";
+import { WatchLine, reportSpan } from "./WatchPanel.jsx";
 
 const REPORT = { day: "2026-11-15", axial200Hz: "Navy Diversion", sensors: [
   { id: "HYS14", refdes: null, state: "diverted", since: "2026-11-15", source: "EarthScope", method: "earthscope", gap: 10 },
@@ -20,6 +20,11 @@ const mount = async ui => { await act(async () => { render(<WatchProvider>{ui}</
 afterEach(() => { vi.unstubAllGlobals(); localStorage.clear(); });
 
 describe("the Watcher", () => {
+  it("names a report's span: the 24 hours to when it ran, or a re-graded UTC day", () => {
+    expect(reportSpan({ day: "2026-11-17", from: "2026-11-16T01:20:00Z", to: "2026-11-17T01:20:00Z" })).toBe("24 h to Nov 17, 01:20 UTC");
+    expect(reportSpan({ day: "2026-11-15", from: "2026-11-15T00:00:00Z", to: "2026-11-16T00:00:00Z" })).toBe("Nov 15, 2026 UTC");
+    expect(reportSpan({ day: "2026-11-15" })).toBe("Nov 15, 2026 UTC");
+  });
   it("the owl button turns the Watcher view on, with its key and counts", async () => {
     mockFetch();
     await mount(<HudDock scene={{ U: { exag: { value: 6 } } }} credit="GMRT" />);

@@ -980,7 +980,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
   const task = /\(task recipe\) \| sources:/.test(evidence);
   const typeOverview = /^Where to download .* data: every .* \(download recipe\) \| sources:/m.test(evidence);
   const watchInstruction = /^Watcher report: /m.test(evidence)
-    ? "The record titled \"Watcher report\" grades every watched sensor for the day it names: answer from it, saying which day (UTC) it covers, naming each sensor not recording with the date since and any status Nereus gives, then those under Navy diversion and those with gaps; do not call a sensor it does not list as not recording down."
+    ? "The record titled \"Watcher report\" grades every watched sensor over the period it names: answer from it, saying which period (UTC) it covers, naming each sensor not recording with the date since and any status Nereus gives, then those under Navy diversion and those with gaps; do not call a sensor it does not list as not recording down."
     : "";
   const liveInstruction = isStatusQuestion(question) && /^Live status: /m.test(evidence)
     ? "Records titled \"Live status\" were checked against the live monitor moments ago: say from them whether each instrument is operating now, with the time of its data check, ahead of any older or catalog status in other records."

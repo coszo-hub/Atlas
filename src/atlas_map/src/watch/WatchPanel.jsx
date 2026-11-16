@@ -4,10 +4,13 @@ import { WATCH_LABEL } from "./watch.js";
 import "./watch.css";
 
 const fmtDay = day => new Date(`${day}T00:00:00Z`).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const fmtTime = t => new Date(t).toLocaleString("en-US", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "UTC" });
+// The report's span: the 24 hours to when it ran, or (an older or re-graded report) one UTC day.
+export const reportSpan = report => (report.to && !report.to.endsWith("T00:00:00Z") ? `24 h to ${fmtTime(report.to)} UTC` : `${fmtDay(report.day)} UTC`);
 const MEANING = {
-  no_data: "No data for a day or more",
+  no_data: "No sample for 24 hours or more",
   diverted: "High-rate data held back by the Navy: 8 Hz seismic data arriving without the 200 Hz, broadband hydrophones without their files",
-  gaps: "Recording, with a gap longer than normal for it",
+  gaps: "Samples in the 24 hours, but a gap longer than normal for it",
 };
 
 // The Watcher view's key, under the dock while the owl button is on: what each colour means and how many sensors
@@ -25,7 +28,7 @@ export function WatchKey({ bundle, onSensor }) {
     .sort((a, b) => a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
   return (
     <div className="panel watch-key">
-      <div className="eyebrow">Watcher · {fmtDay(report.day)} UTC</div>
+      <div className="eyebrow">Watcher · {reportSpan(report)}</div>
       {["no_data", "diverted", "gaps"].map(k => (
         <div key={k}>
           <button className="row" title={MEANING[k]} aria-expanded={open === k} disabled={!counts[k]}
@@ -63,7 +66,7 @@ export function WatchLine({ id }) {
       <p><span className={`watch-dot ${s.state}`} aria-hidden="true" />{WATCH_LABEL[s.state] || s.state}{since}
         {s.nereusStatus && s.nereusStatus !== "OPERATIONAL" ? ` · Nereus: ${s.nereusStatus.toLowerCase().replaceAll("_", " ")}` : ""}</p>
       {s.detail && <p className="hint">{s.detail}</p>}
-      <p className="hint">{s.day ? `${fmtDay(report.day)}, checked by ${s.source || s.method}` : "Nereus's live status, over the day's report"}
+      <p className="hint">{s.day ? `${reportSpan(report)}, checked by ${s.source || s.method}` : "Nereus's live status, over the report"}
         {s.erddap && s.agree === false ? `; ERDDAP: ${WATCH_LABEL[s.erddap.state] || s.erddap.state}` : ""}.</p>
     </section>
   );
