@@ -880,6 +880,11 @@ def build(data_root: Path, output: Path) -> None:
         )
         # The new COSZO cabled sensors (the map's PLANNED ones) said only "documented project instance" and were
         # answered as if they were recording.
+        # An RCA instrument COSZO builds on said only "Projects: Regional Cabled Array, COSZO", and "which pressure
+        # gauges are part of COSZO?" left out the Slope Base and Hydrate Ridge tidal gauges.
+        if row.get("coszo_role") == "existing_RCA_foundation":
+            text += ("\nCOSZO: part of COSZO, one of the existing RCA instruments COSZO builds on, already deployed "
+                     "and returning real-time data.")
         if row.get("coszo_role") in ("new_sensor_suite", "Oregon_Shelf_suite"):
             text += ("\nPlanned: a COSZO sensor not yet operating. All data streams will be available to download "
                      "through EarthScope once all systems are operational.")
