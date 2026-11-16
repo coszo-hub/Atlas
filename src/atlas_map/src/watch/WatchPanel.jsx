@@ -6,7 +6,7 @@ import "./watch.css";
 const fmtDay = day => new Date(`${day}T00:00:00Z`).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const MEANING = {
   no_data: "No data for a day or more",
-  diverted: "8 Hz seismic data arriving without the 200 Hz: the Navy's diversion",
+  diverted: "High-rate data held back by the Navy: 8 Hz seismic data arriving without the 200 Hz, broadband hydrophones without their files",
   gaps: "Recording, with a gap longer than normal for it",
 };
 

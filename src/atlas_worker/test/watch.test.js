@@ -47,7 +47,7 @@ test("the Watcher report as evidence: Nereus's live status over the day's report
   assert.match(hit.text, /5 sensors watched: 2 recording \(0 normally, 1 with gaps longer than normal, 1 with their 200 Hz data diverted by the Navy\), 2 not recording, 1 not checked/);
   assert.match(hit.text, /- Oregon Offshore Cabled Shallow Profiler Mooring CTD \(CE04OSPS-SF01B-2A-CTDPFA107\), since 2026-08-03; Nereus lists it as offline/);
   assert.match(hit.text, /- Oregon Slope Base Seafloor CTD \(RS01SLBS-LJ01A-12-CTDPFB101\), since 2026-11-15; Nereus finds no data now; the last was 2026-11-15 00:00 UTC/);
-  assert.match(hit.text, /Navy diversion \(8 Hz seismic data reaching EarthScope, 200 Hz not\): Southern Hydrate Ridge Summit Seismic Station HYS14 \(OO\.HYS14\)/);
+  assert.match(hit.text, /Navy diversion \(the high-rate data held back: .*?\): Southern Hydrate Ridge Summit Seismic Station HYS14 \(OO\.HYS14\)/);
   assert.match(hit.text, /- Oregon Slope Base Seafloor Broadband Hydrophone \(RS01SLBS-LJ01A-09-HYDBBA102\): a 780-minute gap/);
   assert.match(hit.text, /catalog page lists its 200 Hz waveform data as under Navy diversion\./);
   // anything else in the field is not passed on

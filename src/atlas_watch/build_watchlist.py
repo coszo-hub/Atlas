@@ -16,6 +16,7 @@ Each watched sensor is checked one way, the first that serves it:
   nereus      Nereus's hourly data check (GOOD, BAD) over the day, else its file check for an instrument it checks
               only by its files
   erddap      OOI ERDDAP (the map's dataset, else ERDDAP's own for the designator): the 10-minute bins with data
+  rawdata     a broadband hydrophone: its 5-minute files on OOI's raw data server
   none        nothing public says whether it recorded (QA/QC plots not updated since 2024); listed, not graded
 A sensor with an ERDDAP dataset besides its Nereus check is checked by both (check.py takes the worse).
 Usage: python build_watchlist.py [--sensors PATH] [--out PATH]"""
@@ -69,6 +70,13 @@ def check_of(sensor: dict, nereus: dict[str, dict], erddap: set[str]) -> dict:
     access = {a["kind"]: a for a in sensor.get("access", [])}
     if sensor["id"].startswith("EARTHSCOPE-"):
         return {"method": "earthscope", "network": "OO", "station": sensor["id"].split("-")[-1]}
+    # A broadband hydrophone's 5-minute MiniSEED files on OOI's raw data server: where its data go, and the record that
+    # showed all six stopping at 07:35 UTC on 14 Nov 2026 with the seismometers' 200 Hz (Nereus flagged them 27 hours
+    # later).
+    refdes = sensor.get("refdes") or ""
+    if re.match(r"^[A-Z0-9]{8}-[A-Z0-9]{5}-\d{2}-HYDBB[A-Z]\d{3}$", refdes):
+        site, node, _, inst = refdes.split("-")
+        return {"method": "rawdata", "path": f"{site}/{node}/{inst}"}
     out: dict = {}
     row = nereus.get(sensor.get("refdes") or "") or {}
     status = lambda kind: (((row.get(f"latest{kind}StatusConnection") or {}).get("status")) or {}).get("code")

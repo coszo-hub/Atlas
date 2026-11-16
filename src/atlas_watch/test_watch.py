@@ -169,3 +169,50 @@ class ErddapMeasuredTests(unittest.TestCase):
         rows = "".join(f"2026-11-15T{h:02d}:{m:02d}:00Z,600,0\n" for h in range(12) for m in range(0, 60, 10))
         r = self.run_check("time,botpres,bottilt_xtlt\nUTC,count,count\n" + rows)
         self.assertEqual((r["state"], r["checkedTo"]), ("ok", "2026-11-15T11:43:00Z"))
+
+
+class OwnVariablesTests(unittest.TestCase):
+    def info(self, names):
+        import json as _json
+        rows = [["attribute", "NC_GLOBAL", "time_coverage_end", "String", "2026-08-03T17:22:00Z"]] + [["variable", v, "", "float", ""] for v in names]
+        with mock.patch.object(check, "get", lambda *a, **k: (200, _json.dumps({"table": {"rows": rows}}).encode())):
+            return check.erddap_info("x")[1]
+
+    def test_a_sensor_is_graded_on_its_own_variables_not_its_neighbouring_ctds(self):
+        self.assertEqual(self.info(["time", "depth_reading_profiler_depth_enabled", "partial_pressure_of_carbon_dioxide_in_sea_water_profiler_depth_enabled",
+                                    "sea_water_pressure_profiler_depth_enabled"]), ["partial_pressure_of_carbon_dioxide_in_sea_water_profiler_depth_enabled"])
+        ctd = ["sea_water_temperature", "sea_water_practical_salinity", "sea_water_pressure"]
+        self.assertEqual(self.info(["time", *ctd, "sea_water_temperature_qc_agg"]), ctd)
+
+    def test_last_data_is_the_latest_of_its_variables(self):
+        lasts = {"a": datetime(2025, 10, 22, tzinfo=timezone.utc).timestamp(), "b": datetime(2026, 8, 3, 17, 22, tzinfo=timezone.utc).timestamp()}
+        with mock.patch.object(check, "erddap_info", lambda d: (datetime(2026, 8, 3, 17, 22, tzinfo=timezone.utc).timestamp(), ["a", "b"])), \
+             mock.patch.object(check, "erddap_last_measured", lambda d, v, before: lasts[v]):
+            r = check.check_erddap({"check": {"dataset": "x"}, "gap": 360}, date(2026, 11, 15))
+        self.assertEqual((r["state"], r["lastData"]), ("no_data", "2026-08-03T17:22:00Z"))
+
+
+class RawdataTests(unittest.TestCase):
+    def test_a_broadband_hydrophone_is_checked_by_its_raw_files(self):
+        hydbb = {"id": "RS01SLBS-LJ01A-09-HYDBBA102", "refdes": "RS01SLBS-LJ01A-09-HYDBBA102", "access": []}
+        self.assertEqual(build_watchlist.check_of(hydbb, {}, set()), {"method": "rawdata", "path": "RS01SLBS/LJ01A/HYDBBA102"})
+
+    def test_files_give_coverage_and_the_last_one_dates_a_stop(self):
+        listing = "".join(f'<a href="./OO-HYVM1--YDH-2026-11-14T{h:02d}:{m:02d}:00.000000Z.mseed">' for h in range(7) for m in range(0, 60, 5))
+        listing += '<a href="./OO-HYVM1--YDH-2026-11-14T07:35:00.000000Z.mseed">'
+        pages = {"2026/11/14": (200, listing.encode()), "2026/11/15": (404, b"")}
+        with mock.patch.object(check, "get", lambda url, **k: pages.get(url.rstrip("/")[-10:], (404, b""))):
+            day14 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, date(2026, 11, 14))
+            day15 = check.check_rawdata({"check": {"path": "X"}, "gap": 30}, date(2026, 11, 15))
+        self.assertEqual((day14["state"], day14["lastData"]), ("gaps", "2026-11-14T07:40:00Z"))
+        self.assertEqual((day15["state"], day15["lastData"]), ("no_data", "2026-11-14T07:40:00Z"))
+
+    def test_with_the_seismometers_diverted_a_hydrophone_without_files_is_diverted(self):
+        rows = [{"method": "earthscope", "state": "diverted"}, {"method": "rawdata", "state": "no_data", "lastData": "2026-11-14T07:40:00Z"},
+                {"method": "nereus", "state": "no_data"}]
+        check.shared_diversion(rows)
+        self.assertEqual([r["state"] for r in rows], ["diverted", "diverted", "no_data"])
+        self.assertIn("no files since 2026-11-14 07:40 UTC", rows[1]["detail"])
+        alone = [{"method": "earthscope", "state": "ok"}, {"method": "rawdata", "state": "no_data"}]
+        check.shared_diversion(alone)
+        self.assertEqual(alone[1]["state"], "no_data")

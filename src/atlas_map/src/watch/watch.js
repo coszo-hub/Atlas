@@ -5,7 +5,8 @@ import { ATLAS_WORKER } from "../api/gateway.js";
 // coszo-hub.github.io workflow from src/atlas_watch/check.py) grades the day before; Nereus's live status (the Worker's
 // /v1/watch/live) is laid over it, so a sensor that stopped since midnight shows now.
 //   gaps      recording, with a gap longer than normal for it (yellow)
-//   diverted  8 Hz seismic data reaching EarthScope without the 200 Hz: the Navy's diversion (blue)
+//   diverted  the Navy's diversion of the high-rate data: 8 Hz seismic data reaching EarthScope without the 200 Hz, and
+//             broadband hydrophones without their files when it is so (blue)
 //   no_data   nothing for a day or more (red)
 // ok, unchecked and failed (the check could not be made) are not highlighted.
 export const WATCH_LIVE_URL = import.meta.env.PROD ? `${ATLAS_WORKER}/v1/watch/live` : "/api/watch-live";
