@@ -1170,14 +1170,14 @@ test("general pages on getting OOI data give way to a recipe with no OOI route",
 test("a type's records have room of their own: all 29 pressure records reach the evidence", () => {
   const records = Array.from({ length: 29 }, (_, i) => ({ chunk_id: `R${i}`, collection_id: "instruments", title: `Pressure record ${i}`,
     text: "x".repeat(530), inventory: true }));
-  const page = { chunk_id: "P", collection_id: "websites", title: "A page", text: "y".repeat(9_000) };
+  const page = { chunk_id: "P", collection_id: "websites", title: "A page", text: "q".repeat(9_000) };
   const evidence = evidencePackage([...records, page], new Map());
-  assert.ok(evidence.includes("Pressure record 28\n"));
+  assert.ok(evidence.includes("Pressure record 28 (instrument inventory)\n"));
   assert.ok(evidence.length <= 26_100);
   // the main evidence keeps the rest of the prompt
-  assert.equal((evidence.match(/y/g) || []).length, 6_000 - "A page (website)\n".length);
+  assert.equal((evidence.match(/q/g) || []).length, 6_000 - "A page (website)\n".length);
   // without them, a page has the main room it had
-  assert.equal((evidencePackage([page], new Map()).match(/y/g) || []).length, 9_000);
+  assert.equal((evidencePackage([page], new Map()).match(/q/g) || []).length, 9_000);
 });
 
 test("a list of the Cascadia margin's instruments leaves out Axial Seamount's", () => {
@@ -1218,4 +1218,17 @@ test("a Cascadia margin question leaves out Axial's records, and Axial's lines o
   assert.ok(!/RS03|Axial Seamount Base/.test(text));
   assert.match(text, /The RCA has 2 cabled 3-D Single Point Velocity Meter instruments on the Cascadia margin/);
   assert.match(text, /- RS01SLBS-MJ01A-12-VEL3DB101/);
+});
+
+test("a type list is marked in the evidence and listed whole, the planned ones as planned", () => {
+  const record = { chunk_id: "R", collection_id: "instruments", title: "Oregon Mid Slope three-dimensional current meter", text: "Planned: a COSZO sensor not yet operating.", inventory: true };
+  const evidence = evidencePackage([record], new Map());
+  assert.match(evidence, /^Oregon Mid Slope three-dimensional current meter \(instrument inventory\)/);
+  const margin = answerPrompt({ question: "where are the vel3d sensors at cascadia slope", evidence, sources: [], mode: "research" });
+  assert.match(margin, /List every one of them/);
+  assert.match(margin, /the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites/);
+  const network = answerPrompt({ question: "which 3D current meters are in the network?", evidence, sources: [], mode: "research" });
+  assert.match(network, /List every one of them/);
+  assert.doesNotMatch(network, /Cascadia margin/);
+  assert.doesNotMatch(answerPrompt({ question: "where are the vel3d sensors at cascadia slope", evidence: "A page\nx", sources: [], mode: "research" }), /List every one of them/);
 });
