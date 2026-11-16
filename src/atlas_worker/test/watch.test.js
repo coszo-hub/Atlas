@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { nereusSummary, NEREUS_HELM_QUERY, isWatchQuestion, currentState, watchHit } from "../src/watch.js";
+import { nereusSummary, NEREUS_HELM_QUERY, isWatchQuestion, currentState, watchHit, watchSensorHit } from "../src/watch.js";
+import { liveStatusHit } from "../src/helpers.js";
 
 test("the Watcher's live layer: each instrument's operational status and its data check, else its file check", () => {
   const status = (code, delay = null) => ({ status: { code, delay, checkedAt: "2026-11-16T18:30:00Z" } });
@@ -60,4 +61,19 @@ test("the Watcher report names its 24 hours", () => {
   const report = { day: "2026-11-17", from: "2026-11-16T01:20:00Z", to: "2026-11-17T01:20:00Z", sensors: [] };
   assert.match(watchHit(report, null).text, /^Watcher report for the 24 hours to 2026-11-17 01:20 UTC:/);
   assert.match(watchHit({ day: "2026-11-15", sensors: [] }, null).text, /^Watcher report for 2026-11-15 \(UTC\):/);
+});
+
+test("a status question about one instrument gets its Watcher row: what its data show, beside Nereus", () => {
+  const report = { day: "2026-11-16", from: "2026-11-15T21:06:00Z", to: "2026-11-16T21:06:00Z" };
+  const botpt = { id: "RS03CCAL-MJ03F-05-BOTPTA301", refdes: "RS03CCAL-MJ03F-05-BOTPTA301", name: "Axial Seamount Central Caldera Seafloor Pressure",
+    state: "no_data", since: "2026-10-28", lastData: "2026-10-28T22:38:00Z", gap: 30, source: "OOI ERDDAP", method: "erddap", nereusStatus: "FAILED" };
+  const hit = watchSensorHit(report, null, botpt);
+  assert.equal(hit.title, "Watcher: Axial Seamount Central Caldera Seafloor Pressure");
+  assert.equal(hit.text, "Axial Seamount Central Caldera Seafloor Pressure (RS03CCAL-MJ03F-05-BOTPTA301) is not recording over the 24 hours to 2026-11-16 21:06 UTC, by the Watcher, from OOI ERDDAP. Its last sample: 2026-10-28 22:38 UTC. Nereus lists its operational status as failed.");
+  // Nereus's operational FAILED was "of unknown status" in the live check
+  assert.match(liveStatusHit({ title: "Axial Seamount Central Caldera Seafloor Pressure" }, "RS03CCAL-MJ03F-05-BOTPTA301",
+    { status: "FAILED", evidenceMode: "live", data: { code: "UNMONITORED", checkedAt: "2026-11-16T21:00:00Z" } }).text, /is failed, checked live by Nereus/);
+  assert.ok(isWatchQuestion("is anything broken at Axial?"));
+  assert.ok(isWatchQuestion("any outages today?"));
+  assert.ok(!isWatchQuestion("Is the Central Caldera BOTPT working?"));   // one instrument: the live check, with its Watcher row
 });

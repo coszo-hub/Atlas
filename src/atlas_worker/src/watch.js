@@ -60,7 +60,9 @@ const PROBLEM_WORDS = /\b(?:stopped|stop recording|not recording|no data|down|of
 export function isWatchQuestion(question) {
   const q = String(question || "");
   return /\bnavy diversion\b|\bwatcher\b/i.test(q)
-    || (/\b(?:which|what|list|any|how many|are there)\b/i.test(q) && /\b(?:sensors?|instruments?|stations?|seismometers?|hydrophones?)\b/i.test(q) && PROBLEM_WORDS.test(q));
+    || (/\b(?:which|what|list|any|how many|are there)\b/i.test(q) && /\b(?:sensors?|instruments?|stations?|seismometers?|hydrophones?)\b/i.test(q) && PROBLEM_WORDS.test(q))
+    // "is anything broken at Axial?", "any outages today?"
+    || /\b(?:anything|everything)\b.*\b(?:broken|down|offline|not working|recording)\b|\b(?:any|current)\s+outages?\b/i.test(q);
 }
 
 const DAY_MIN = 1440;
@@ -113,14 +115,54 @@ export function watchHit(report, live, now = Date.now()) {
     text: lines.join("\n"), citations: [{ source_id: "WATCHER", title: "RCA Atlas Watcher daily report", url: WATCH_REPORT_URL }] };
 }
 
+async function loadWatch(ctx) {
+  const report = await fetch(WATCH_REPORT_URL, { signal: AbortSignal.timeout(15_000) }).then((r) => (r.ok ? r.json() : null));
+  if (!report?.sensors) return null;
+  return { report, live: await nereusLive(ctx).catch(() => null) };
+}
+
 export async function watchRecords(ctx) {
   try {
-    const report = await fetch(WATCH_REPORT_URL, { signal: AbortSignal.timeout(15_000) }).then((r) => (r.ok ? r.json() : null));
-    if (!report?.sensors) return [];
-    const live = await nereusLive(ctx).catch(() => null);
-    return [watchHit(report, live)];
+    const w = await loadWatch(ctx);
+    return w ? [watchHit(w.report, w.live)] : [];
   } catch (error) {
     console.error("watcher report failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
+const WORDS = { ok: "recording normally", gaps: "recording, with gaps longer than normal", diverted: "recording, its high-rate data under the Navy's diversion",
+  no_data: "not recording", unchecked: "not checked", failed: "not checked (the check failed)" };
+const at = (iso) => String(iso || "").slice(0, 16).replace("T", " ");
+
+// One sensor's Watcher row, for a status question that names it ("Is the Central Caldera BOTPT working?"): what its
+// data show over the 24 hours, beside the live per-instrument check, which sees only Nereus's status (UNMONITORED for
+// that BOTPT, whose every pressure and tilt value has been NaN since 28 Oct 2026).
+export function watchSensorHit(report, live, row, now = Date.now()) {
+  const s = { ...row, ...currentState(row, live, now, report.from || report.day) };
+  const span = report.to && !report.to.endsWith("T00:00:00Z") ? `the 24 hours to ${at(report.to)} UTC` : `${report.day} (UTC)`;
+  const id = row.refdes || row.id.replace(/^EARTHSCOPE-OO-/, "OO.");
+  const parts = [`${row.name} (${id}) is ${WORDS[s.state] || s.state} over ${span}, by the Watcher, from ${row.source || row.method}.`];
+  if (s.state === "no_data") parts.push(s.lastData || row.lastData ? `Its last sample: ${at(s.lastData || row.lastData)} UTC.` : `No sample since ${s.since}.`);
+  if (s.state === "gaps" && row.longestGapMin) parts.push(`Its longest gap: ${row.longestGapMin} minutes (normal for it: ${row.gap}).`);
+  if (s.detail) parts.push(`${s.detail}.`);
+  if (row.nereusStatus && row.nereusStatus !== "OPERATIONAL") parts.push(`Nereus lists its operational status as ${row.nereusStatus.toLowerCase().replaceAll("_", " ")}.`);
+  if (row.erddap && row.agree === false) parts.push(`OOI ERDDAP found it ${WORDS[row.erddap.state] || row.erddap.state}.`);
+  return { chunk_id: `WATCHER-${row.id}`, collection_id: "watcher", title: `Watcher: ${row.name}`, text: parts.join(" "),
+    citations: [{ source_id: "WATCHER", title: "RCA Atlas Watcher daily report", url: WATCH_REPORT_URL }] };
+}
+
+// The Watcher rows of the instruments a status question's live checks named (LIVE-<refdes>, LIVE-OO.<station>).
+export async function watchSensorRecords(liveHits, ctx) {
+  const ids = new Set((liveHits || []).map((h) => String(h.chunk_id || "").replace(/^LIVE-/, "")).filter(Boolean));
+  if (!ids.size) return [];
+  try {
+    const w = await loadWatch(ctx);
+    if (!w) return [];
+    const key = (row) => [row.refdes, row.id, row.id.replace(/^EARTHSCOPE-OO-/, "OO.")];
+    return w.report.sensors.filter((row) => key(row).some((k) => k && ids.has(k))).map((row) => watchSensorHit(w.report, w.live, row));
+  } catch (error) {
+    console.error("watcher rows failed", error instanceof Error ? error.message : "unknown");
     return [];
   }
 }

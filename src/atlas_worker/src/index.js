@@ -8,7 +8,7 @@ import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, with
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
-import { watchLive, isWatchQuestion, watchRecords } from "./watch.js";
+import { watchLive, isWatchQuestion, watchRecords, watchSensorRecords } from "./watch.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -904,6 +904,8 @@ export default {
       if (isDasOverview(query)) context.experiments = await dasExperimentRecords(env);
       else if (!context.inventory?.length) context.fulltext = await fullTextPassages(context, query, env);
       if (isStatusQuestion(query)) context.live = await liveStatuses(selectedEvidenceHits(context, query), query, env, context.hits);
+      // What the named instruments' data show over the 24 hours (the Watcher), before the live check's Nereus status.
+      if (context.live?.length) context.watch = [...(context.watch || []), ...await watchSensorRecords(context.live, ctx)];
       context.hits = withPlaces(context.hits, context.fulltext);
       const evidenceHits = selectedEvidenceHits(context, query);
       const task = (context.access || []).find((hit) => hit.collection_id === TASK_COLLECTION);
