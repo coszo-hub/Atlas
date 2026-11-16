@@ -38,11 +38,15 @@ test("the Watcher report as evidence: Nereus's live status over the day's report
   ] };
   const live = { fetchedAt: "2026-11-16T18:55:00Z", instruments: { "RS01SLBS-LJ01A-12-CTDPFB101": { check: "BAD", delayMin: 3000 } } };
   assert.equal(currentState(report.sensors[3], live, NOW).state, "no_data");
+  // Nereus's delay read 148 days for hydrophones good until 11:00 on the 15th: the report's last data dates the stop
+  const hydbb = { ...report.sensors[2], lastData: "2026-11-15T11:00:00Z" };
+  assert.deepEqual(currentState(hydbb, { instruments: { [hydbb.refdes]: { check: "BAD", delayMin: 213690 } } }, NOW, "2026-11-15"),
+    { state: "no_data", since: "2026-11-15", detail: "Nereus finds no data now; the last was 2026-11-15 11:00 UTC", live: true });
   const hit = watchHit(report, live, NOW);
   assert.equal(hit.title, "Watcher report: sensors not recording (2026-11-15)");
   assert.match(hit.text, /5 sensors watched: 2 recording \(0 normally, 1 with gaps longer than normal, 1 with their 200 Hz data diverted by the Navy\), 2 not recording, 1 not checked/);
   assert.match(hit.text, /- Oregon Offshore Cabled Shallow Profiler Mooring CTD \(CE04OSPS-SF01B-2A-CTDPFA107\), since 2026-08-03; Nereus lists it as offline/);
-  assert.match(hit.text, /- Oregon Slope Base Seafloor CTD \(RS01SLBS-LJ01A-12-CTDPFB101\), since 2026-11-14; Nereus finds no data for 50 hours/);
+  assert.match(hit.text, /- Oregon Slope Base Seafloor CTD \(RS01SLBS-LJ01A-12-CTDPFB101\), since 2026-11-15; Nereus finds no data now; the last was 2026-11-15 00:00 UTC/);
   assert.match(hit.text, /Navy diversion \(8 Hz seismic data reaching EarthScope, 200 Hz not\): Southern Hydrate Ridge Summit Seismic Station HYS14 \(OO\.HYS14\)/);
   assert.match(hit.text, /- Oregon Slope Base Seafloor Broadband Hydrophone \(RS01SLBS-LJ01A-09-HYDBBA102\): a 780-minute gap/);
   assert.match(hit.text, /catalog page lists its 200 Hz waveform data as under Navy diversion\./);

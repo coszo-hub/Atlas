@@ -23,24 +23,27 @@ export const loadReport = signal => getJson(atlasUrl("watch/latest.json"), signa
 export const loadLive = signal => getJson(WATCH_LIVE_URL, signal);
 
 const DAY_MIN = 1440;
-const minutesAgo = (now, min) => new Date(now - min * 60_000).toISOString();
 
 // One sensor's state now: the report's, unless Nereus's live check, where it checks the sensor, says otherwise. A
 // sensor Nereus finds bad for a day or more is red from when it stopped; bad for longer than its normal gap, yellow; good
 // again after a red or yellow day that Nereus graded, recording again. Navy diversion, an EarthScope finding, stays.
-export function currentState(row, live, now = Date.now()) {
+// When it stopped is the report's last data time: Nereus's "delay" is not always the time since the last data (the
+// broadband hydrophones, good until 11:00 UTC on 15 Nov 2026, read 148 days), so it is used only without one, and a
+// sensor the report saw recording on its day did not stop before that day.
+export function currentState(row, live, now = Date.now(), day = null) {
   const nereus = row.refdes && live?.instruments?.[row.refdes];
   const base = { state: row.state, since: row.since, detail: row.detail || null, day: true };
   if (!nereus || !nereus.check || nereus.check === "UNMONITORED" || row.state === "diverted") return base;
-  const delay = nereus.delayMin;
   if (nereus.check === "BAD") {
-    if (delay == null || delay >= DAY_MIN) {
-      const since = delay == null ? row.since : minutesAgo(now, delay).slice(0, 10);
-      return { state: "no_data", since: row.state === "no_data" && row.since < since ? row.since : since,
-        detail: delay == null ? "Nereus finds no data now" : `Nereus finds no data for ${Math.round(delay / 60)} hours`, day: false };
+    let stopped = row.lastData ? Date.parse(row.lastData) : nereus.delayMin != null ? now - nereus.delayMin * 60_000 : null;
+    if (stopped != null && day && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(`${day}T00:00:00Z`));
+    const minutes = stopped == null ? null : (now - stopped) / 60_000;
+    const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
+    if (minutes == null || minutes >= DAY_MIN) {
+      return { state: "no_data", since: row.state === "no_data" ? row.since : at.slice(0, 10) || row.since,
+        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", day: false };
     }
-    if (delay > (row.gap ?? 60)) return { state: "gaps", since: minutesAgo(now, delay).slice(0, 10),
-      detail: `Nereus finds it ${Math.round(delay)} minutes behind now`, day: false };
+    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, day: false };
     return base;
   }
   if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")) {
@@ -52,7 +55,7 @@ export function currentState(row, live, now = Date.now()) {
 // Every watched sensor's state now, by sensor id.
 export function watchStates(report, live, now = Date.now()) {
   const out = {};
-  for (const row of report?.sensors || []) out[row.id] = { ...row, ...currentState(row, live, now) };
+  for (const row of report?.sensors || []) out[row.id] = { ...row, ...currentState(row, live, now, report.day) };
   return out;
 }
 

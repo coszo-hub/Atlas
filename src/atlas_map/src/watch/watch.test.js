@@ -10,12 +10,18 @@ describe("the Watcher's state now: the day's report, with Nereus's live check la
     expect(currentState(row(), live("GOOD", 7), NOW)).toMatchObject({ state: "ok", day: true });
     expect(currentState(row({ state: "gaps" }), null, NOW).state).toBe("gaps");
   });
-  it("turns a sensor that stopped since the report red, from when it stopped", () => {
-    expect(currentState(row(), live("BAD", 2 * 1440), NOW)).toMatchObject({ state: "no_data", since: "2026-11-14", day: false });
+  it("turns a sensor that stopped since the report red, from its last data in the report", () => {
+    // Nereus's delay for the broadband hydrophones read 148 days; the report has them good until 11:00 on the 15th
+    const hydbb = row({ state: "gaps", lastData: "2026-11-15T11:00:00Z" });
+    expect(currentState(hydbb, live("BAD", 213690), NOW, "2026-11-15")).toMatchObject({ state: "no_data", since: "2026-11-15", day: false,
+      detail: "Nereus finds no data now; the last was 2026-11-15 11:00 UTC" });
+    // without a last data time, the delay; never before the day the report saw it recording
+    expect(currentState(row(), live("BAD", 213690), NOW, "2026-11-15").since).toBe("2026-11-15");
+    expect(currentState(row(), live("BAD", 2 * 1440), NOW).since).toBe("2026-11-14");
   });
-  it("turns one behind by more than its normal gap yellow", () => {
-    expect(currentState(row(), live("BAD", 300), NOW)).toMatchObject({ state: "gaps", day: false });
-    expect(currentState(row(), live("BAD", 30), NOW).state).toBe("ok");
+  it("turns one stopped for longer than its normal gap yellow", () => {
+    expect(currentState(row({ lastData: "2026-11-16T14:00:00Z" }), live("BAD", 300), NOW, "2026-11-15")).toMatchObject({ state: "gaps", day: false });
+    expect(currentState(row({ lastData: "2026-11-16T18:40:00Z" }), live("BAD", 20), NOW, "2026-11-15").state).toBe("ok");
   });
   it("shows a red day Nereus graded as recording again once Nereus is good", () => {
     expect(currentState(row({ state: "no_data" }), live("GOOD", 5), NOW)).toMatchObject({ state: "ok", day: false });

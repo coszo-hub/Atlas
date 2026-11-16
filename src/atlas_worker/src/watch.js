@@ -64,19 +64,23 @@ export function isWatchQuestion(question) {
 }
 
 const DAY_MIN = 1440;
-export function currentState(row, live, now = Date.now()) {
+// As the map's (src/atlas_map/src/watch/watch.js): when a sensor stopped is the report's last data time, Nereus's delay
+// only without one (it read 148 days for hydrophones good until the day before), never before the day the report saw
+// it recording.
+export function currentState(row, live, now = Date.now(), day = null) {
   const nereus = row.refdes && live?.instruments?.[row.refdes];
   const base = { state: row.state, since: row.since, detail: row.detail || null, live: false };
   if (!nereus || !nereus.check || nereus.check === "UNMONITORED" || row.state === "diverted") return base;
-  const delay = nereus.delayMin;
   if (nereus.check === "BAD") {
-    if (delay == null || delay >= DAY_MIN) {
-      const since = delay == null ? row.since : new Date(now - delay * 60_000).toISOString().slice(0, 10);
-      return { state: "no_data", since: row.state === "no_data" && row.since < since ? row.since : since,
-        detail: delay == null ? "Nereus finds no data now" : `Nereus finds no data for ${Math.round(delay / 60)} hours`, live: true };
+    let stopped = row.lastData ? Date.parse(row.lastData) : nereus.delayMin != null ? now - nereus.delayMin * 60_000 : null;
+    if (stopped != null && day && row.state !== "no_data") stopped = Math.max(stopped, Date.parse(`${day}T00:00:00Z`));
+    const minutes = stopped == null ? null : (now - stopped) / 60_000;
+    const at = stopped == null ? "" : new Date(stopped).toISOString().slice(0, 16).replace("T", " ");
+    if (minutes == null || minutes >= DAY_MIN) {
+      return { state: "no_data", since: row.state === "no_data" ? row.since : at.slice(0, 10) || row.since,
+        detail: at ? `Nereus finds no data now; the last was ${at} UTC` : "Nereus finds no data now", live: true };
     }
-    if (delay > (row.gap ?? 60)) return { state: "gaps", since: new Date(now - delay * 60_000).toISOString().slice(0, 10),
-      detail: `Nereus finds it ${Math.round(delay)} minutes behind now`, live: true };
+    if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, live: true };
     return base;
   }
   if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")) {
@@ -87,7 +91,7 @@ export function currentState(row, live, now = Date.now()) {
 
 // The evidence record: the day, the counts, and every sensor not recording, under diversion, or with gaps.
 export function watchHit(report, live, now = Date.now()) {
-  const rows = (report?.sensors || []).map((row) => ({ ...row, ...currentState(row, live, now) }));
+  const rows = (report?.sensors || []).map((row) => ({ ...row, ...currentState(row, live, now, report.day) }));
   const of = (state) => rows.filter((r) => r.state === state);
   const id = (r) => r.refdes || r.id.replace(/^EARTHSCOPE-OO-/, "OO.");
   const words = (st) => (st ? st.toLowerCase().replaceAll("_", " ") : "");
