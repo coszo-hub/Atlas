@@ -34,7 +34,7 @@ describe("the Watcher", () => {
     expect(key).toHaveTextContent(/Navy diversion\s*1/);
     expect(key).toHaveTextContent(/Gaps\s*1/);
     expect(key).toHaveTextContent("4 sensors watched");
-    expect(key).toHaveTextContent("200 Hz data under Navy Diversion");
+    expect(key).toHaveTextContent("200 Hz data under Navy diversion");
   });
   it("a sensor's card says its state, since when, Nereus's word and the check", async () => {
     mockFetch();

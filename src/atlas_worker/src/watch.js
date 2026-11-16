@@ -99,7 +99,9 @@ export function watchHit(report, live, now = Date.now()) {
     down.length ? `Not recording (no data for a day or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}`).join("\n")}` : "No watched sensor is without data.",
     diverted.length ? `Navy diversion (8 Hz seismic data reaching EarthScope, 200 Hz not): ${diverted.map((r) => `${r.name} (${id(r)})`).join("; ")}.` : "",
     gaps.length ? `Recording with gaps:\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",
-    report.axial200Hz ? `The Axial Seamount earthquake catalog page says: "Status of 200 Hz waveform data - ${report.axial200Hz}".` : "",
+    // The report keeps one of two fixed values for the page's line (check.py, axial_200hz), never its text.
+    report.axial200Hz === "Navy Diversion" ? "The Axial Seamount earthquake catalog page lists its 200 Hz waveform data as under Navy diversion."
+      : report.axial200Hz === "No diversion stated" ? "The Axial Seamount earthquake catalog page does not list its 200 Hz waveform data as under Navy diversion." : "",
   ].filter(Boolean);
   return { chunk_id: `WATCHER-${report.day}`, collection_id: "watcher", title: `Watcher report: sensors not recording (${report.day})`,
     text: lines.join("\n"), citations: [{ source_id: "WATCHER", title: "RCA Atlas Watcher daily report", url: WATCH_REPORT_URL }] };
