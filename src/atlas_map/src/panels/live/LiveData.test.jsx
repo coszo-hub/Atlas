@@ -48,6 +48,20 @@ describe("LiveData", () => {
     expect(Math.abs(Date.parse(p.get("end")) - Date.now())).toBeLessThan(120e3);
     expect(Date.parse(p.get("end")) - Date.parse(p.get("start"))).toBe(864e5);
   });
+  it("an ERDDAP copy that stopped while the instrument records on says so, and opens the QA/QC plots", async () => {
+    const fetchMock = vi.fn(async url => {
+      const u = String(url);
+      if (u.includes("/variables")) return { ok: true, status: 200, json: async () => ({ variables: [{ name: "t", units: "C", longName: "T" }], coverage: { end: "2026-10-01T03:27:00Z" } }) };
+      if (u.includes("/plots/")) return { ok: true, status: 200, json: async () => ({ plots: [] }) };
+      return { ok: true, status: 200, json: async () => ({ points: [], units: null, rawCount: 0, downloadUrl: "x", latest: "2026-10-01T03:27:00Z" }) };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const sensor = { ...b.sensorById["base-ctd"], access: [...b.sensorById["base-ctd"].access.filter(a => a.kind !== "qaqc"), { kind: "qaqc", refdes: b.sensorById["base-ctd"].refdes }] };
+    render(<LiveData sensor={sensor} />);
+    await waitFor(() => expect(screen.getByText(/OOI ERDDAP has this sensor's data only to Oct 1, 2026, 03:27 UTC\. Its recent data are in the RCA QA\/QC plots below\./)).toBeInTheDocument());
+    await waitFor(() => expect(fetchMock.mock.calls.some(([u]) => String(u).includes("/plots/"))).toBe(true));   // opened, not behind a summary
+    expect(screen.queryByText("Recent QA/QC plots")).toBeNull();
+  });
   it("custom range longer than 31 days is blocked without a request", async () => {
     const f = routes([["/api/series/RS03AXBS-LJ03A-12-CTDPFB301/variables", { variables: [{ name: "t", units: "C" }], coverage: {} }],
                       ["/api/series/RS03AXBS-LJ03A-12-CTDPFB301?", { points: [], rawCount: 0, message: null }]]);

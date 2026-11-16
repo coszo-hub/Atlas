@@ -589,7 +589,21 @@ def earthscope_route(station: str, info: dict, route: dict) -> tuple[str, str]:
 # the pressure across Slope Base's UDO-to-LDO change (2018-06-26 10:00), and the currents against the Gold Copy's
 # rotated velocities (one-minute means identical at Axial Base on 2025-03-01, within 1.5 mm/s at Slope Base, rotation
 # 0.0 degrees). ERDDAP's means match east and up, not north, which there is the uncorrected magnetic-frame value.
-PRODUCT_EXAMPLE = {"pressure": ("2025-03-01T00:00:00", "2025-03-02T00:00:00"), "currents": ("2025-03-01T00:00:00", "2025-03-01T06:00:00")}
+# What is particular to each VEL3D-C at EarthScope.
+VEL3DC_NOTES = {
+    "CZSHF": ("EarthScope lists this instrument's deployments since September 2014 (the epochs above) and holds its data "
+              "for parts of them (readings on 1 June 2015 and 1 January 2024, none on 1 June 2020 or 15 August 2026), so "
+              "an asked timeframe may come back empty; OOI ERDDAP's copy ends in March 2024. "),
+    "CZOFF": "EarthScope lists this instrument's deployments since August 2014 (the epochs above); OOI ERDDAP's copy ends on 1 October 2026. ",
+}
+PRODUCT_EXAMPLE = {"pressure": ("2025-03-01T00:00:00", "2025-03-02T00:00:00"), "currents": ("2025-03-01T00:00:00", "2025-03-01T06:00:00"),
+                   "currents_c": ("2026-09-01T00:00:00", "2026-09-01T01:00:00")}
+# The Oregon Shelf benthic package's Nortek Vector (VEL3D-C) at OO.CZSHF location 20: 13 deployment epochs from 10 Sep 2014,
+# with data for parts of them (1 Jun 2015 and 1 Jan 2024, not 1 Jun 2020 or 15 Aug 2026); MOU, MOV and MOW at 8 Hz, LKO
+# at 1 Hz. The station metadata gives MOU azimuth 90, MOV 0 and MOW dip -90, m/s with gain 1; checked
+# 2026-11-16 in the sandbox (1 Sep 2026: -0.26 to 0.19 m/s, 8.51 C). Unlike the VEL3D-B there is no Gold Copy to say
+# whether north is true or magnetic, so the recipe says the axes are the metadata's. EarthScope's copy ran about a week
+# behind (10 Nov 00:00 on 16 Nov).
 
 
 def product_epochs(info: dict, loc: str, codes: list[str]) -> str:
@@ -642,6 +656,39 @@ def earthscope_product_route(route: dict, info: dict) -> tuple[str, str]:
                 'out = f"{NET}.{STA}.{LOC}_pressure_{t1.date}_{t2.date}.csv"\n'
                 "data.to_csv(out)\n"
                 'print(f"wrote {out}: {len(data)} rows, {data.pressure_pa.min():.0f} to {data.pressure_pa.max():.0f} Pa")\n```')
+    elif product == "currents_c":
+        epochs = product_epochs(info, loc, ["MOU", "MOV", "MOW", "LKO"])
+        text = (head + f"Point current meter (VEL3D-C, Nortek Vector): {epochs}; MOU, MOV and MOW are east, north and up "
+                "velocity in m/s at 8 samples a second (the station metadata's azimuths 90 and 0 and dip -90; whether "
+                "north is true or magnetic is not stated), LKO the water temperature in degrees C at 1 Hz (the response's "
+                "gain is 1, so the values are already in these units). "
+                + VEL3DC_NOTES.get(sta, "") +
+                "EarthScope does not yet have these channels day by day (in November 2026 the Shelf's arrived about a "
+                "week late), but is to. "
+                "The script drops only values faster than 5 m/s, keeps the 8 Hz samples, and also writes one-minute means. "
+                "Source: https://coszo.org/current-meter.html\n"
+                f"```python\n# pip install obspy pandas numpy\nimport numpy as np\nimport pandas as pd\nfrom obspy import UTCDateTime\n"
+                f"from obspy.clients.fdsn import Client\n\nclient = Client({FDSN!r})\nNET, STA, LOC = {net!r}, {sta!r}, {loc!r}\n"
+                f't1, t2 = UTCDateTime("{t1}"), UTCDateTime("{t2}")   # the timeframe, UTC\n'
+                'NAMES = {"MOU": "east_m_s", "MOV": "north_m_s", "MOW": "up_m_s", "LKO": "temperature_c"}\n\n'
+                'st = client.get_waveforms(NET, STA, LOC, ",".join(NAMES), t1, t2)\n'
+                "st.merge(method=1, fill_value=None)   # gaps stay gaps\n"
+                "columns = {}\n"
+                "for tr in st:\n"
+                '    t = pd.to_datetime(tr.times("timestamp"), unit="s", utc=True)\n'
+                "    columns[NAMES[tr.stats.channel]] = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan), index=t)\n"
+                'velocity = pd.DataFrame({k: v for k, v in columns.items() if k != "temperature_c"})\n'
+                'velocity.index.name = "time_utc"\n'
+                'for c in ["east_m_s", "north_m_s", "up_m_s"]:\n'
+                "    velocity.loc[velocity[c].abs() > 5, c] = np.nan   # not a current: bad values the instrument wrote\n"
+                'velocity["speed_m_s"] = np.hypot(velocity.east_m_s, velocity.north_m_s)\n'
+                'velocity.to_csv(f"{NET}.{STA}.{LOC}_currents_8Hz_{t1.date}.csv")\n'
+                'minute = velocity.resample("1min").mean()\n'
+                'if "temperature_c" in columns:\n'
+                '    minute["temperature_c"] = columns["temperature_c"].resample("1min").mean()\n'
+                'minute["speed_m_s"] = np.hypot(minute.east_m_s, minute.north_m_s)\n'
+                'minute.to_csv(f"{NET}.{STA}.{LOC}_currents_1min_{t1.date}.csv")\n'
+                'print(f"{len(velocity)} samples; mean speed {minute.speed_m_s.mean():.3f} m/s over {len(minute)} minutes")\n```')
     else:
         epochs = product_epochs(info, loc, ["LOE", "LON", "LOZ", "LKO"])
         slope = (" At Slope Base the 1 Hz samples scatter widely (north often 0.3 to 1.5 m/s on a day in November "

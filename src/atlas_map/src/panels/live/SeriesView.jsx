@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { series, variables } from "../../api/gateway.js";
 import { fmtUtc } from "../../data/format.js";
 import Chart from "./Chart.jsx";
@@ -9,11 +9,13 @@ import { useLive } from "./useLive.js";
 
 const RANGE_WORDS = { "24h": "24 hours", "7d": "7 days", "30d": "30 days" };
 
-export default function SeriesView({ refdes }) {
+export default function SeriesView({ refdes, onCoverage }) {
   const vars = useLive(`vars:${refdes}`, o => variables(refdes, o));
   const [varName, setVar] = useState(null), [range, setRange] = useState("24h"), [custom, setCustom] = useState(null);
   const [draft, setDraft] = useState({ from: "", to: "" }), [draftErr, setDraftErr] = useState(null);
   const listed = vars.data?.variables ?? [];
+  const coverageEnd = vars.data?.coverage?.end ?? null;
+  useEffect(() => { if (coverageEnd) onCoverage?.(coverageEnd); }, [coverageEnd, onCoverage]);
   const chosen = varName ?? defaultMeasurement(refdes, listed.map(v => v.name));
   // A preset is fixed when chosen (so re-renders do not refetch as the clock ticks) and ends then: the last 24 hours,
   // 7 or 30 days. A sensor that has stopped shows an empty range and its newest reading.

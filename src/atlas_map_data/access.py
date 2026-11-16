@@ -62,10 +62,17 @@ EARTHSCOPE_PRODUCTS = {
     "RS01SLBS-MJ01A-12-VEL3DB101": ("HYSB1", "20", "currents"),
     "RS01SUM1-LJ01B-12-VEL3DB104": ("HYS14", "20", "currents"),
     "RS03AXBS-MJ03A-12-VEL3DB301": ("AXBA1", "20", "currents"),
+    # The Oregon Shelf benthic package's Nortek Vector (VEL3D-C) is at EarthScope under COSZO's shelf station, location
+    # 20 (8 Hz east, north and up, MOU/MOV/MOW): its deployments since September 2014, with data for parts of them, where
+    # ERDDAP's copy ends in March 2024.
+    "CE02SHBP-LJ01D-07-VEL3DC108": ("CZSHF", "20", "currents_c"),
+    # The Oregon Offshore benthic package's (VEL3D-C) is under COSZO's offshore station, location 21, from August 2014;
+    # ERDDAP's copy ends on 1 Oct 2026.
+    "CE04OSBP-LJ01C-07-VEL3DC107": ("CZOFF", "21", "currents_c"),
 }
-EARTHSCOPE_PRODUCT_CHANNELS = {"pressure": "UDO,LDO,UK1,LK1", "currents": "LOE,LON,LOZ,LKO"}
+EARTHSCOPE_PRODUCT_CHANNELS = {"pressure": "UDO,LDO,UK1,LK1", "currents": "LOE,LON,LOZ,LKO", "currents_c": "MOU,MOV,MOW,LKO"}
 EARTHSCOPE_PRODUCT_PAGES = {"pressure": "https://coszo.org/absolute-seafloor-pressure.html",
-                            "currents": "https://coszo.org/current-meter.html"}
+                            "currents": "https://coszo.org/current-meter.html", "currents_c": "https://coszo.org/current-meter.html"}
 
 
 def earthscope_product(refdes: str) -> dict | None:
@@ -75,6 +82,7 @@ def earthscope_product(refdes: str) -> dict | None:
     sta, loc, product = EARTHSCOPE_PRODUCTS[refdes]
     cha = EARTHSCOPE_PRODUCT_CHANNELS[product]
     what = ("absolute pressure (Pa) and housing temperature" if product == "pressure"
+            else "east, north and up current velocity (m/s, 8 samples a second) and water temperature" if product == "currents_c"
             else "east, north and up current velocity (m/s) and water temperature")
     return {"kind": "earthscope", "label": f"EarthScope FDSN ({'absolute pressure' if product == 'pressure' else 'currents'})",
             "network": "OO", "station": sta, "location": loc, "channel": cha, "product": product,

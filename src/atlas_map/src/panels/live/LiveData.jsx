@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { fmtUtc } from "../../data/format.js";
 import FileBrowser from "./FileBrowser.jsx";
 import OsuPlots from "./OsuPlots.jsx";
 import PlotGallery from "./PlotGallery.jsx";
@@ -17,11 +18,18 @@ export default function LiveData({ sensor }) {
   // each folder: the SCPR's five routes listed only their year folders. One with nothing else keeps the browser; Get
   // this data lists every route.
   const piLink = (erddap || es || scpr || qaqc) && pi.length ? (pi.find(r => /combined/i.test(r.label)) ?? pi[0]) : null;
+  // ERDDAP's copy can stop while the instrument records on (the Oregon Offshore current meter's ends 1 Oct 2026, the
+  // Shelf one's in March 2024; Nereus has both recording, and their QA/QC plots are redrawn daily): say so, and show the
+  // QA/QC plots as the current view.
+  const [erddapEnd, setErddapEnd] = useState(null);
+  const stale = !!erddapEnd && Date.now() - Date.parse(erddapEnd) > 2 * 864e5;
   return (
     <section className="live-data"><h3>Live data</h3>
-      {erddap ? <SeriesView refdes={sensor.refdes} /> : es ? <WaveformView route={es} /> : scpr ? <ScprSeries route={scpr} />
+      {erddap ? <SeriesView refdes={sensor.refdes} onCoverage={setErddapEnd} /> : es ? <WaveformView route={es} /> : scpr ? <ScprSeries route={scpr} />
         : qaqc ? <PlotGallery refdes={plotsRef} /> : null}
-      {(erddap || es) && qaqc && <Lazy summary="Recent QA/QC plots">{() => <PlotGallery refdes={plotsRef} />}</Lazy>}
+      {erddap && stale && <p className="series-empty">OOI ERDDAP has this sensor's data only to {fmtUtc(erddapEnd)}.
+        {qaqc ? " Its recent data are in the RCA QA/QC plots below." : " Its recent data are not on ERDDAP; see Get this data for OOI's other routes."}</p>}
+      {(erddap || es) && qaqc && (stale ? <PlotGallery refdes={plotsRef} /> : <Lazy summary="Recent QA/QC plots">{() => <PlotGallery refdes={plotsRef} />}</Lazy>)}
       {osu && <Lazy summary="OSU Axial monitoring plots">{() => <OsuPlots route={osu} />}</Lazy>}
       {piLink ? <p className="pi-link"><a href={piLink.url} target="_blank" rel="noreferrer">Data files on the PI data portal ↗</a></p>
         : pi.map(r => <FileBrowser key={r.endpointId ?? r.url} route={r} />)}
