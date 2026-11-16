@@ -45,6 +45,15 @@ class AccessTest(unittest.TestCase):
         other = access.build_access(rec(refdes="RS03CCAL-MJ03F-05-BOTPTA301"), EXT, PI, {})
         self.assertNotIn("scpr_hourly", [r["kind"] for r in other])
 
+    def test_cabled_pressure_and_currents_lead_with_earthscope(self):
+        p = access.build_access(rec(refdes="RS01SLBS-MJ01A-06-PRESTA101"), EXT, PI, {})[0]
+        self.assertEqual((p["kind"], p["station"], p["location"], p["product"]), ("earthscope", "HYSB1", "10", "pressure"))
+        self.assertEqual(p["channel"], "UDO,LDO,UK1,LK1")
+        v = access.build_access(rec(refdes="RS03AXBS-MJ03A-12-VEL3DB301"), EXT, PI, {})[0]
+        self.assertEqual((v["station"], v["location"], v["channel"]), ("AXBA1", "20", "LOE,LON,LOZ,LKO"))
+        other = access.build_access(rec(refdes="RS03INT2-MJ03D-12-VEL3DB304"), EXT, PI, {})   # not on EarthScope
+        self.assertNotIn("product", {k for r in other for k in r})
+
     def test_earthscope_station(self):
         r = rec(id="EARTHSCOPE-OO-AXCC1")
         self.assertEqual(access.earthscope_station(r), ("OO", "AXCC1"))

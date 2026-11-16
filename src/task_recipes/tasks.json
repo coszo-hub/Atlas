@@ -738,7 +738,8 @@
    "Vector samples with a beam correlation under 70 % were 16 % of January 2023 at Oregon Offshore; median near-bed speed there was 7.2 cm/s, at International District 1.2 cm/s (January-February 2025) and at Southern Hydrate Ridge 6.2 cm/s (September-October 2023).",
    "The Gold Copy holds the Oregon Shelf Vector from 2014 to now; ERDDAP's copy ends on 19 March 2024. The deep profilers' current meters (VEL3D-A) are other datasets, with velocities named _profiler_depth_enabled, and this script does not read them.",
    "Direction is where the water goes. A month of hourly means separates M2 from S2 but not K1 from P1, which needs about a year (UTide warns of the Rayleigh criterion).",
-   "Some Gold Copy files fail on the server (DAP error 500), such as the Oregon Offshore Vector's of 1-2 January 2023; the script names them and goes on."
+   "Some Gold Copy files fail on the server (DAP error 500), such as the Oregon Offshore Vector's of 1-2 January 2023; the script names them and goes on.",
+   "EarthScope also has the MAVS at Axial Base, Southern Hydrate Ridge and Slope Base (not International District), as OO.AXBA1, OO.HYS14 and OO.HYSB1 location 20: LOE, LON and LOZ at 1 Hz in m/s and LKO in degrees C, since 2014 (coszo.org/current-meter.html). They are the Gold Copy's rotated velocities (identical one-minute means at Axial Base on 1 March 2025) and the quicker download, but carry no QARTOD results, beam values or pitch and roll, so this script's cleaning needs the Gold Copy."
   ],
   "sources": [
    {

@@ -582,6 +582,104 @@ def earthscope_route(station: str, info: dict, route: dict) -> tuple[str, str]:
     return text, f"{FDSN}/fdsnws/station/1/query?net={net}&sta={sta}&level=channel&format=text"
 
 
+# The cabled absolute pressure gauges and VEL3D-B current meters on EarthScope (atlas_map_data.access.EARTHSCOPE_PRODUCTS).
+# Their values are already in physical units: pascals, m/s and degrees C. The pressure channels' response says pascals
+# to psia (gain 1.450377e-4), which the data do not follow (Slope Base reads 29.6e6, its 2,900 m of water in pascals),
+# so the scripts leave out remove_sensitivity, which would divide them by 1.45e-4. Checked 2026-11-16 in the sandbox:
+# the pressure across Slope Base's UDO-to-LDO change (2018-06-26 10:00), and the currents against the Gold Copy's
+# rotated velocities (one-minute means identical at Axial Base on 2025-03-01, within 1.5 mm/s at Slope Base, rotation
+# 0.0 degrees). ERDDAP's means match east and up, not north, which there is the uncorrected magnetic-frame value.
+PRODUCT_EXAMPLE = {"pressure": ("2025-03-01T00:00:00", "2025-03-02T00:00:00"), "currents": ("2025-03-01T00:00:00", "2025-03-01T06:00:00")}
+
+
+def product_epochs(info: dict, loc: str, codes: list[str]) -> str:
+    rows = sorted({(c["channel"], c["start"], c["end"]) for c in info["channels"] if c["location"] == loc and c["channel"] in codes},
+                  key=lambda r: (r[1], r[0]))
+    rates = {c["channel"]: float(c["rate"]) for c in info["channels"] if c["location"] == loc}
+    spans = {}
+    for cha, start, end in rows:
+        a, b = spans.get(cha, (start, end))
+        spans[cha] = (min(a, start), "" if not end or not b else max(b, end))
+    return "; ".join(f"{cha} ({rates[cha]:g} Hz) {a} to {b or 'now'}" for cha, (a, b) in sorted(spans.items(), key=lambda x: x[1][0]))
+
+
+def earthscope_product_route(route: dict, info: dict) -> tuple[str, str]:
+    net, sta, loc, product = route["network"], route["station"], route["location"], route["product"]
+    t1, t2 = PRODUCT_EXAMPLE[product]
+    head = (f"EarthScope FDSN web services: every sample as MiniSEED, public, no login. Network {net}, station {sta}, "
+            f"location {loc}. ")
+    if product == "pressure":
+        epochs = product_epochs(info, loc, ["UDO", "LDO"])
+        text = (head + f"Absolute pressure: {epochs}; each with its housing temperature (UK1 with UDO, LK1 with LDO). "
+                "The script finds which channel recorded the asked timeframe and downloads each over its own part, so a "
+                "timeframe across a change of channel gets both. The values are already pascals: the metadata's response "
+                "says pascals to psia, which the data do not follow, so do not remove the sensitivity or response "
+                "(it would divide the pascals by 1.45e-4). Source: https://coszo.org/absolute-seafloor-pressure.html\n"
+                f"```python\n# pip install obspy pandas\nimport pandas as pd\nfrom obspy import UTCDateTime\n"
+                f"from obspy.clients.fdsn import Client\n\nclient = Client({FDSN!r})\nNET, STA, LOC = {net!r}, {sta!r}, {loc!r}\n"
+                f't1, t2 = UTCDateTime("{t1}"), UTCDateTime("{t2}")   # the timeframe, UTC\n'
+                'TEMPERATURE = {"UDO": "UK1", "LDO": "LK1"}   # each pressure channel\'s housing temperature\n\n'
+                '# Which pressure channel recorded which part of the timeframe (UDO every 15 s, LDO at 1 Hz).\n'
+                'inv = client.get_stations(network=NET, station=STA, location=LOC, channel="UDO,LDO", starttime=t1, endtime=t2, level="channel")\n'
+                "parts = []\n"
+                "for cha in inv[0][0]:\n"
+                "    a, b = max(t1, cha.start_date), min(t2, cha.end_date) if cha.end_date else t2\n"
+                "    if a >= b:\n        continue\n"
+                '    st = client.get_waveforms(NET, STA, LOC, f"{cha.code},{TEMPERATURE[cha.code]}", a, b)\n'
+                "    st.merge(method=1, fill_value=None)\n"
+                "    # Already pascals and degrees C: no remove_sensitivity or remove_response (see above).\n"
+                "    columns = {}\n"
+                "    for tr in st:\n"
+                '        name = "pressure_pa" if tr.stats.channel == cha.code else "housing_temperature_c"\n'
+                '        t = pd.to_datetime(tr.times("timestamp"), unit="s", utc=True).round("s")\n'
+                "        columns[name] = pd.Series(tr.data.astype(float), index=t)\n"
+                "    df = pd.DataFrame(columns)\n"
+                '    df["channel"] = cha.code\n'
+                "    parts.append(df)\n"
+                '    print(f"{cha.code} ({cha.sample_rate:g} Hz): {a} to {b}, {len(df)} samples")\n\n'
+                "data = pd.concat(parts).sort_index()\n"
+                'data.index.name = "time_utc"\n'
+                'out = f"{NET}.{STA}.{LOC}_pressure_{t1.date}_{t2.date}.csv"\n'
+                "data.to_csv(out)\n"
+                'print(f"wrote {out}: {len(data)} rows, {data.pressure_pa.min():.0f} to {data.pressure_pa.max():.0f} Pa")\n```')
+    else:
+        epochs = product_epochs(info, loc, ["LOE", "LON", "LOZ", "LKO"])
+        slope = (" At Slope Base the 1 Hz samples scatter widely (north often 0.3 to 1.5 m/s on a day in November "
+                 "2026, and the one-minute means about 0.3 m/s north in ERDDAP too), so treat its currents with care."
+                 if sta == "HYSB1" else "")
+        text = (head + f"Point current meter (VEL3D-B): {epochs}; LOE, LON and LOZ are east, north and up velocity in "
+                "m/s, LKO the water temperature in degrees C (the response's gain is 1, so the values are already in "
+                "these units). They are the OOI Gold Copy's velocities, east and north already rotated to true north "
+                "(identical one-minute means at Axial Base on 1 March 2025); ERDDAP's northward velocity is instead the "
+                "uncorrected magnetic-frame value. EarthScope has no QC flags, beam values or pitch and roll, so the "
+                "script drops only values faster than 5 m/s (Southern Hydrate Ridge has isolated 9.99 and 12 m/s), keeps "
+                "the 1 Hz samples as they are, and also writes one-minute means; for QARTOD-cleaned hourly currents and "
+                "tides, use the VEL3D task recipe, which reads the Gold Copy."
+                f"{slope} Source: https://coszo.org/current-meter.html\n"
+                f"```python\n# pip install obspy pandas numpy\nimport numpy as np\nimport pandas as pd\nfrom obspy import UTCDateTime\n"
+                f"from obspy.clients.fdsn import Client\n\nclient = Client({FDSN!r})\nNET, STA, LOC = {net!r}, {sta!r}, {loc!r}\n"
+                f't1, t2 = UTCDateTime("{t1}"), UTCDateTime("{t2}")   # the timeframe, UTC\n'
+                'NAMES = {"LOE": "east_m_s", "LON": "north_m_s", "LOZ": "up_m_s", "LKO": "temperature_c"}\n\n'
+                'st = client.get_waveforms(NET, STA, LOC, ",".join(NAMES), t1, t2)\n'
+                "st.merge(method=1, fill_value=None)   # gaps stay gaps\n"
+                "columns = {}\n"
+                "for tr in st:\n"
+                '    t = pd.to_datetime(tr.times("timestamp"), unit="s", utc=True).round("s")\n'
+                "    columns[NAMES[tr.stats.channel]] = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan), index=t)\n"
+                "df = pd.DataFrame(columns)\n"
+                'df.index.name = "time_utc"\n'
+                'for c in ["east_m_s", "north_m_s", "up_m_s"]:\n'
+                "    df.loc[df[c].abs() > 5, c] = np.nan   # not a current: bad values the instrument wrote\n"
+                'df["speed_m_s"] = np.hypot(df.east_m_s, df.north_m_s)\n'
+                'df["direction_deg"] = np.degrees(np.arctan2(df.east_m_s, df.north_m_s)) % 360   # towards, clockwise from north\n'
+                'df.to_csv(f"{NET}.{STA}.{LOC}_currents_1Hz_{t1.date}.csv")\n'
+                'minute = df[["east_m_s", "north_m_s", "up_m_s", "temperature_c"]].resample("1min").mean()\n'
+                'minute["speed_m_s"] = np.hypot(minute.east_m_s, minute.north_m_s)\n'
+                'minute.to_csv(f"{NET}.{STA}.{LOC}_currents_1min_{t1.date}.csv")\n'
+                'print(f"{len(df)} samples; mean speed {minute.speed_m_s.mean():.3f} m/s over {len(minute)} minutes")\n```')
+    return text, f"{FDSN}/fdsnws/station/1/query?net={net}&sta={sta}&loc={loc}&level=channel&format=text"
+
+
 def portal_route(url: str, label: str, info: dict) -> tuple[str, str]:
     sample = ", ".join(f"{n} ({s})" if s else n for n, s in zip(info["sample"], info["sample_sizes"]))
     where = f"{url}{info['newest_path']}" if info["newest_path"] else url
@@ -673,6 +771,12 @@ def recipe(sensor: dict, src: dict, retrieved: str, results: dict | None = None)
         station_routes = [{"network": own.group(1), "station": own.group(2)}]
     for a in station_routes:
         info = src["earthscope"].get(f"{a['network']}.{a['station']}")
+        if a.get("product") and info and info.get("channels"):
+            t1, t2 = PRODUCT_EXAMPLE[a["product"]]
+            routes.append((0, *earthscope_product_route(a, info),
+                           {"kind": "earthscope", "start": t1, "end": t2,
+                            "summary": f"EarthScope station {a['network']}.{a['station']}, location {a['location']} ({a['product']})"}))
+            continue
         if info and info.get("channel") and info["check"]["status"] == 200:
             route = {**a, "channel": a.get("channel") or info["channel"]}
             routes.append((0, *earthscope_route(f"{a['network']}.{a['station']}", info, route),

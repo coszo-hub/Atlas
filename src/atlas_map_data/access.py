@@ -50,6 +50,37 @@ SCPR_HOURLY = {"kind": "scpr_hourly", "label": "SCPR hourly pressure and uplift 
                "how": "Hourly means of both gauges since July 2018: raw and drift-corrected pressure (Pa) and estimated "
                       "seafloor uplift (m), as CSV, regenerated daily. Lines starting with # describe the columns."}
 
+# The cabled absolute pressure gauges and point current meters (VEL3D-B) at Slope Base, Southern Hydrate Ridge and Axial
+# Base are on EarthScope under their node's seismic station: pressure and housing temperature at location 10, currents
+# and water temperature at location 20 (coszo.org/absolute-seafloor-pressure.html, coszo.org/current-meter.html).
+# EarthScope's 1 Hz samples are the instrument's own, where ERDDAP has one-minute means, so it is the first route.
+EARTHSCOPE_PRODUCTS = {
+    "RS01SLBS-MJ01A-06-PRESTA101": ("HYSB1", "10", "pressure"),
+    "RS01SUM1-LJ01B-09-PRESTB102": ("HYS14", "10", "pressure"),
+    "RS03AXBS-MJ03A-06-PRESTA301": ("AXBA1", "10", "pressure"),
+    "RS01SLBS-MJ01A-12-VEL3DB101": ("HYSB1", "20", "currents"),
+    "RS01SUM1-LJ01B-12-VEL3DB104": ("HYS14", "20", "currents"),
+    "RS03AXBS-MJ03A-12-VEL3DB301": ("AXBA1", "20", "currents"),
+}
+EARTHSCOPE_PRODUCT_CHANNELS = {"pressure": "UDO,LDO,UK1,LK1", "currents": "LOE,LON,LOZ,LKO"}
+EARTHSCOPE_PRODUCT_PAGES = {"pressure": "https://coszo.org/absolute-seafloor-pressure.html",
+                            "currents": "https://coszo.org/current-meter.html"}
+
+
+def earthscope_product(refdes: str) -> dict | None:
+    """The EarthScope route of a cabled pressure gauge or current meter, or None."""
+    if refdes not in EARTHSCOPE_PRODUCTS:
+        return None
+    sta, loc, product = EARTHSCOPE_PRODUCTS[refdes]
+    cha = EARTHSCOPE_PRODUCT_CHANNELS[product]
+    what = ("absolute pressure (Pa) and housing temperature" if product == "pressure"
+            else "east, north and up current velocity (m/s) and water temperature")
+    return {"kind": "earthscope", "label": f"EarthScope FDSN ({'absolute pressure' if product == 'pressure' else 'currents'})",
+            "network": "OO", "station": sta, "location": loc, "channel": cha, "product": product,
+            "channelSource": EARTHSCOPE_PRODUCT_PAGES[product],
+            "url": f"https://service.earthscope.org/fdsnws/station/1/query?net=OO&sta={sta}&loc={loc}&cha={cha}&level=channel&format=text",
+            "how": f"Public {what} as MiniSEED, every sample, from station OO.{sta} location {loc}; no login."}
+
 
 def erddap_dataset_id(refdes: str) -> str:
     return "ooi-" + refdes.lower()
@@ -167,6 +198,8 @@ def build_access(record: dict, external: dict, pi_endpoints: dict[str, list[dict
         if refdes in external["qaqc"]:
             routes.append({"kind": "qaqc", "label": "RCA QA/QC plots", "refdes": refdes,
                            "url": f"{QAQC}/", "how": "Pre-rendered charts of recent data, updated by the RCA team."})
+        if (product := earthscope_product(refdes)):
+            routes.insert(0, product)
         if refdes in external.get("osu_axial", {}):
             routes.append(external["osu_axial"][refdes])
         if refdes == SCPR_REFDES:
