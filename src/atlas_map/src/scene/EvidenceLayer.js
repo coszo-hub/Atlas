@@ -16,7 +16,7 @@ const SINK_MS = 300, EVENT_MS = 3000, ORDER = 30;
 const HIT_GAP = 12;   // px: a spike's hit strip starts above its base, so the site ring beneath stays clickable
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-const beamVert = `
+export const beamVert = `
   attribute vec2 corner;
   uniform vec3 uBase; uniform float uHeight, uWidth; uniform vec2 uRes;
   varying vec2 vC;
@@ -30,7 +30,7 @@ const beamVert = `
     p.xy += vec2(-dir.y, dir.x) * corner.x * uWidth / uRes * p.w;   // a constant width in pixels
     gl_Position = p; vC = corner;
   }`;
-const beamFrag = `
+export const beamFrag = `
   uniform vec3 uColor; uniform float uGlow, uAlpha;
   varying vec2 vC;
   void main() {

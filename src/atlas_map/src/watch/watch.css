@@ -22,22 +22,7 @@
 .watch-key .hint, .watch-line .hint { font-size: 11.5px; color: var(--text-secondary); margin: 6px 0 0; line-height: 1.4; }
 .watch-line p { margin: 4px 0 0; }
 .dock-btn.watch[aria-pressed="true"] { color: var(--surface-0); background: var(--text-primary); }
-/* A site with a problem sensor: a vertical flare in the worst problem's colour, rising from its marker (behind it). */
-.site[data-watch] { isolation: isolate; }
-.site[data-watch] svg { position: relative; z-index: 1; }
-.site[data-watch]::before {
-  content: ""; position: absolute; left: 50%; bottom: 50%; width: 3px; height: 64px; transform: translateX(-50%);
-  border-radius: 2px; pointer-events: none; transform-origin: bottom center;
-  background: linear-gradient(to top, var(--w) 0%, color-mix(in srgb, var(--w) 55%, transparent) 45%, transparent 100%);
-  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--w) 70%, transparent);
-  animation: watch-flare 2.4s ease-in-out infinite;
-}
-.site[data-watch]::after {   /* the glow where the flare leaves the marker */
-  content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; transform: translate(-50%, -50%);
-  border-radius: 50%; pointer-events: none; background: radial-gradient(circle, color-mix(in srgb, var(--w) 75%, transparent), transparent 70%);
-}
-@keyframes watch-flare { 0%, 100% { opacity: 0.85; transform: translateX(-50%) scaleY(0.92); } 50% { opacity: 1; transform: translateX(-50%) scaleY(1); } }
-@media (prefers-reduced-motion: reduce) { .site[data-watch]::before { animation: none; } }
-.site[data-watch="no_data"] { --w: var(--watch-red); }
-.site[data-watch="diverted"] { --w: var(--watch-blue); }
-.site[data-watch="gaps"] { --w: var(--watch-yellow); }
+/* The Watcher's beam tags (WatchLayer), over the map like the evidence layer's. */
+#atlas-watch { position: fixed; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+#atlas-watch > div { position: absolute; left: 0; top: 0; will-change: transform; transition: opacity 180ms ease; }
+.watch-tag > span { min-width: 9px; text-align: center; }

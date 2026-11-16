@@ -19,7 +19,7 @@ import { EvidenceLayer } from "./scene/EvidenceLayer.js";
 import { frameView, hypoMeters } from "./scene/evidenceMath.js";
 import { tourOf } from "./evidence/resolve.js";
 import { WatchProvider, useWatch } from "./watch/WatchProvider.jsx";
-import { siteProblem } from "./watch/watch.js";
+import { WatchLayer, watchBeams } from "./watch/WatchLayer.js";
 
 
 export default function App() {
@@ -42,7 +42,7 @@ export default function App() {
 
 function Atlas({ bundle, onError }) {
   const canvasRef = useRef(null), overlayRef = useRef(null), layerRef = useRef(null), hudRef = useRef(null), rightRef = useRef(null);
-  const evidenceRef = useRef(null), evLayerRef = useRef(null);
+  const evidenceRef = useRef(null), evLayerRef = useRef(null), watchRef = useRef(null), watchLayerRef = useRef(null);
   const [scene, setScene] = useState(null);
   const [regionKey, setRegionKey] = useState("overview");
   const [focus, setFocus] = useState(new Set());
@@ -88,7 +88,7 @@ function Atlas({ bundle, onError }) {
   }, [bundle]);
 
   useEffect(() => {
-    let sc, layer, evLayer, cancelled = false;
+    let sc, layer, evLayer, watchLayer, cancelled = false;
     loadGrids(bundle.terrainMeta).then(async grids => {
       if (cancelled) return;
       sc = new AtlasScene(canvasRef.current, bundle, grids);
@@ -114,11 +114,14 @@ function Atlas({ bundle, onError }) {
         onSelect: n => askActions.current.select(n),
       });
       evLayerRef.current = evLayer;
-      sc.onFrame = () => { layer.update(); evLayer.update(); };
+      watchLayer = new WatchLayer(watchRef.current, sc, { onSite: site => openSite(site, sc) });
+      watchLayerRef.current = watchLayer;
+      sc.onFrame = () => { layer.update(); evLayer.update(); watchLayer.update(); };
       // Test hook for the browser tests: fly to a view, or open a site or a sensor by id.
       window.__atlas = {
         scene: sc, layer, flyTo: view => sc.flyTo(view), lod: () => sc.auv?.stats(),
         evidence: () => ({ ...evLayer.snapshot(), located: askActions.current.evidence?.located ?? [] }),
+        watch: () => watchLayer.snapshot(),
         open: id => {
           if (bundle.sensorById[id]) return openSensor(id, sc);
           if (!bundle.siteById[id]) return false;
@@ -128,7 +131,7 @@ function Atlas({ bundle, onError }) {
       };
       setScene(sc);
     }).catch(err => { if (!cancelled) onError?.(err); });
-    return () => { cancelled = true; evLayer?.dispose(); layer?.dispose(); sc?.dispose(); };
+    return () => { cancelled = true; watchLayer?.dispose(); evLayer?.dispose(); layer?.dispose(); sc?.dispose(); };
   }, [bundle, openSite, openSensor, selectRegion, onError]);
 
   // The answer's evidence is on the map only while Ask Atlas is open: closing it clears the map, reopening restores it.
@@ -164,7 +167,8 @@ function Atlas({ bundle, onError }) {
   }, [onMap, scene]);   // deep is read here, not followed
   useEffect(() => {
     if (!scene) return;
-    layerRef.current?.setWatch(watch.on ? Object.fromEntries(bundle.sites.map(s => [s.id, siteProblem(s, watch.states)])) : null);
+    const names = Object.fromEntries(bundle.sensors.map(s => [s.id, s.name]));
+    watchLayerRef.current?.show(watch.on ? watchBeams(bundle.sites, watch.states) : null, names);
   }, [scene, bundle, watch.on, watch.states]);
   useEffect(() => { evLayerRef.current?.setActive(ask.activeN); }, [ask.activeN, scene]);
   useEffect(() => { evLayerRef.current?.setHover(ask.hoverN); }, [ask.hoverN, scene]);
@@ -230,6 +234,7 @@ function Atlas({ bundle, onError }) {
       <canvas ref={canvasRef} className="atlas-scene" aria-label="3D map of the seafloor off Oregon" />
       <div id="atlas-overlay" ref={overlayRef} />
       <div id="atlas-evidence" ref={evidenceRef} />
+      <div id="atlas-watch" ref={watchRef} />
       {scene && (
         <>
           {/* The top row spans the map between the side panels: header and regions on the left, and on the
