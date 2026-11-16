@@ -8,6 +8,7 @@ const askTarget = loadEnv("development", process.cwd(), "VITE_ATLAS_ASK").VITE_A
 const apiProxy = {
   "/api/ask": { target: askTarget, changeOrigin: true, rewrite: () => "/v1/answer",
     configure: proxy => proxy.on("proxyReq", req => req.setHeader("origin", "https://coszo.org")) },
+  "/api/watch-live": { target: askTarget, changeOrigin: true, rewrite: () => "/v1/watch/live" },
   "/api": { target: "http://127.0.0.1:8787", rewrite: p => p.replace(/^\/api/, "") },
 };
 

@@ -3,6 +3,7 @@ import GetThisData from "./GetThisData.jsx";
 import LiveStatus from "./live/LiveStatus.jsx";
 import LiveData from "./live/LiveData.jsx";
 import { fmtDepth, fmtRange } from "../data/format.js";
+import { WatchLine } from "../watch/WatchPanel.jsx";
 
 // `backLabel` names where the back control returns (a site, or the unplaced list); it defaults to the sensor's site.
 export default function SensorDetail({ sensor, bundle, onBack, backLabel }) {
@@ -16,6 +17,7 @@ export default function SensorDetail({ sensor, bundle, onBack, backLabel }) {
         {sensor.manufacturer ? ` · ${sensor.manufacturer}${sensor.model ? " " + sensor.model : ""}` : ""}</div>
       {sensor.lat == null && <div className="meta">No recorded position, so it is not drawn on the map.</div>}
       <LiveStatus sensor={sensor} manifest={bundle.manifest} />
+      <WatchLine id={sensor.id} />
       {hasLive ? <LiveData sensor={sensor} /> :
         <section className="no-feed"><h3>Live data</h3><p>No live feed. {sensor.statusGroup === "planned" ? "This sensor is planned for COSZO. All data streams will be available to download through EarthScope once all systems are operational." : sensor.access.some(a => a.kind === "ucsd_ascpr") ? "Its data are short ROV visits, one file each; see Get this data." : "No public data service is known for this sensor."}</p></section>}
       <GetThisData sensor={sensor} />

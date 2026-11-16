@@ -8,6 +8,7 @@ import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, with
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
+import { watchLive, isWatchQuestion, watchRecords } from "./watch.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -229,7 +230,7 @@ function selectedEvidenceHits(context, question) {
   const product = namedDataProduct(question);
   let hits = prioritizedHits(context, question, isInstrumentInventoryQuestion(question) ? 16 : answerMode(question) === "compact" ? 8 : 6);
   // Live status checks lead a status question; each DAS experiment's own record leads a question about them all.
-  const lead = [...(context.orientation || []), ...(context.live || []), ...(context.experiments || []), ...(context.access || []), ...(context.assets || []), ...(context.inventory || []),
+  const lead = [...(context.watch || []), ...(context.orientation || []), ...(context.live || []), ...(context.experiments || []), ...(context.access || []), ...(context.assets || []), ...(context.inventory || []),
     ...(context.papers || [])];
   if (lead.length) {
     const ids = new Set(lead.map((hit) => hit.chunk_id));
@@ -839,13 +840,14 @@ async function liveAxialCount(question, tz) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get("origin") || "";
     const cors = corsHeaders(env, origin);
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method === "GET" && url.pathname === "/health") return response({ status: "ok" }, 200, cors);
     if (request.method === "GET" && url.pathname.startsWith("/v1/live/")) return proxyLiveData(env, url, cors);
+    if (request.method === "GET" && url.pathname === "/v1/watch/live") return watchLive(cors, ctx);
     if (request.method !== "POST" || url.pathname !== "/v1/answer") return response({ error: "not found" }, 404, cors);
     if (!validOrigin(origin, env)) return response({ error: "origin not allowed" }, 403, cors);
     const body = await readJson(request);
@@ -875,6 +877,7 @@ export default {
       if (isPaperUsageQuestion(query)) context.papers = await papersFor(query, env);
       if (isAssetQuestion(query)) context.assets = await assetRecords(query, env);
       if (isOrientationQuestion(query)) context.orientation = await orientationRecords(query, env);
+      if (isWatchQuestion(query)) context.watch = await watchRecords(ctx);
       // Download recipes reach the evidence only through the data access lookup: in the general results they named
       // other instruments' routes beside an answer ("AXBA1" brought the HPIES and current meter recipes).
       context.hits = (context.hits || []).filter((hit) => hit.collection_id !== RECIPE_COLLECTION && hit.collection_id !== TASK_COLLECTION);
@@ -891,7 +894,7 @@ export default {
         context.hits = context.hits.filter((hit) => !offMargin(hit));
         if (context.assets) context.assets = context.assets.filter((hit) => !offMargin(hit)).map(marginAssets);
       }
-      const routed = isDasOverview(query) || isStatusQuestion(query) || context.access?.length || context.assets?.length || context.inventory?.length || context.papers?.length;
+      const routed = isDasOverview(query) || isStatusQuestion(query) || context.watch?.length || context.access?.length || context.assets?.length || context.inventory?.length || context.papers?.length;
       if (!routed && answerMode(query) !== "compact") {
         // Evidence that already holds papers gets only the best one more: near-tied papers can fill the main search
         // (a dataset's DOI counts too) without the one that answers, and three more took the answering paper's passages.

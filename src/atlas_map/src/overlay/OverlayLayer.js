@@ -72,6 +72,14 @@ export class OverlayLayer {
   // The sites an answer's evidence cites (null: no evidence shown). The others fade like an unfocused family.
   setEvidence(siteIds) { this.evidence = siteIds; }
 
+  // The Watcher view: a site id -> its worst problem ("no_data", "diverted", "gaps", or null); null turns it off.
+  setWatch(problems) {
+    for (const s of this.sites) {
+      const p = problems?.[s.site.id];
+      if (p) s.d.dataset.watch = p; else delete s.d.dataset.watch;
+    }
+  }
+
   setSelected(id) { this.selected = id; for (const s of this.sites) s.d.classList.toggle("selected", s.site.id === id); }
 
   update() {

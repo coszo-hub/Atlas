@@ -1,0 +1,19 @@
+:root { --watch-red: #d03b3b; --watch-blue: #4d7fe0; --watch-yellow: #e0b13a; --watch-ok: #6f6d66; }
+.watch-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: 0; flex: none; background: var(--watch-ok); }
+.watch-dot.no_data { background: var(--watch-red); }
+.watch-dot.diverted { background: var(--watch-blue); }
+.watch-dot.gaps { background: var(--watch-yellow); }
+.watch-dot.ok { background: var(--good); }
+.watch-dot.unchecked, .watch-dot.failed { background: transparent; border: 1px solid var(--text-muted); }
+.watch-key { padding: 10px 12px; min-width: 220px; max-width: 280px; }
+.watch-key .row { display: flex; align-items: center; gap: 0; font-size: 12.5px; padding: 2px 0; }
+.watch-key .row b { margin-left: auto; padding-left: 12px; }
+.watch-key .row.muted { color: var(--text-secondary); }
+.watch-key .hint, .watch-line .hint { font-size: 11.5px; color: var(--text-secondary); margin: 6px 0 0; line-height: 1.4; }
+.watch-line p { margin: 4px 0 0; }
+.dock-btn.watch[aria-pressed="true"] { color: var(--surface-0); background: var(--text-primary); }
+/* A site with a problem sensor: a ring in the worst problem's colour around its marker. */
+.site[data-watch]::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--w); box-shadow: 0 0 9px var(--w); pointer-events: none; }
+.site[data-watch="no_data"] { --w: var(--watch-red); }
+.site[data-watch="diverted"] { --w: var(--watch-blue); }
+.site[data-watch="gaps"] { --w: var(--watch-yellow); }

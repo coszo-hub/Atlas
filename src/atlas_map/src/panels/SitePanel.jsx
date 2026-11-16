@@ -4,6 +4,7 @@ import Glyph from "../ui/Glyph.jsx";
 import { fmtDate, fmtDepth, fmtRange, statusLabel } from "../data/format.js";
 import { status as fetchStatus } from "../api/gateway.js";
 import { useLive } from "./live/useLive.js";
+import { WatchDot } from "../watch/WatchPanel.jsx";
 
 // A row's status. Sensors Nereus does not track have no snapshot status ("Status unknown"); for those with an ERDDAP
 // dataset or QA/QC plots the gateway reports how recent their data are, as the sensor card does. Others make no request.
@@ -37,7 +38,7 @@ export default function SitePanel({ site, bundle, elevAt, onClose, onBack, onSen
               <h3><Glyph glyph={f.glyph} color={f.color} /> {f.label}</h3>
               {inFam.map(s => (
                 <button key={s.id} className="sp-row" onClick={() => onSensor(s.id)} aria-label={`${s.name}, ${statusLabel(s.status)}`}>
-                  <span className="nm">{s.name}</span>
+                  <span className="nm"><WatchDot id={s.id} />{s.name}</span>
                   <span className="mono d"><RowStatus sensor={s} /> · {s.depthRange ? fmtRange(...s.depthRange) : fmtDepth(s.depth)}</span>
                 </button>
               ))}

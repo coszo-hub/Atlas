@@ -18,6 +18,8 @@ import AskPanel, { askStartsOpen } from "./ask/AskPanel.jsx";
 import { EvidenceLayer } from "./scene/EvidenceLayer.js";
 import { frameView, hypoMeters } from "./scene/evidenceMath.js";
 import { tourOf } from "./evidence/resolve.js";
+import { WatchProvider, useWatch } from "./watch/WatchProvider.jsx";
+import { siteProblem } from "./watch/watch.js";
 
 
 export default function App() {
@@ -35,7 +37,7 @@ export default function App() {
     );
   }
   if (!bundle) return <div className="app-message">Loading the atlas…</div>;
-  return <Atlas bundle={bundle} onError={setError} />;
+  return <WatchProvider><Atlas bundle={bundle} onError={setError} /></WatchProvider>;
 }
 
 function Atlas({ bundle, onError }) {
@@ -56,6 +58,7 @@ function Atlas({ bundle, onError }) {
   const [deep, setDeep] = useState(false);   // Axial's subsurface (earthquakes, magma chamber, faults) is shown
   const [quakeColor, setQuakeColor] = useState("time");   // its earthquakes coloured by time or by faulting ("fault")
   const evidenceDeep = useRef(false);   // the subsurface was turned on to show an answer's earthquakes
+  const watch = useWatch();   // the Watcher: the owl button's view rings the sites with a sensor not recording well
 
   // One right-hand panel at a time: a site (with its sensors) or the unplaced list (with theirs).
   const showSite = useCallback(site => {
@@ -159,6 +162,10 @@ function Atlas({ bundle, onError }) {
       scene.flyTo(scene.fit(frameView(ev.located.map(x => [x.lon, x.lat]), { az: Math.atan2(off.x, off.z), exag: scene.U.exag.value, polar })));
     }
   }, [onMap, scene]);   // deep is read here, not followed
+  useEffect(() => {
+    if (!scene) return;
+    layerRef.current?.setWatch(watch.on ? Object.fromEntries(bundle.sites.map(s => [s.id, siteProblem(s, watch.states)])) : null);
+  }, [scene, bundle, watch.on, watch.states]);
   useEffect(() => { evLayerRef.current?.setActive(ask.activeN); }, [ask.activeN, scene]);
   useEffect(() => { evLayerRef.current?.setHover(ask.hoverN); }, [ask.hoverN, scene]);
 
