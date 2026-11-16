@@ -714,11 +714,12 @@ def ascpr_route(route: dict) -> tuple[str, str]:
     """A bottom pressure recorder site's campaign visits (Cook et al., 2023): the script takes the visits that overlap
     the timeframe, since a timeframe between visits has no data, and says which visits there are when none does."""
     sta, files = route["station"], route["files"]
-    visits = "; ".join(f"{f['start'][:16].replace('T', ' ')} to {f['end'][11:16]} UTC" for f in files)
+    visits = "; ".join(f"{f['start'][:16].replace('T', ' ')} to "
+                       f"{f['end'][11:16] if f['end'][:10] == f['start'][:10] else f['end'][:16].replace('T', ' ')} UTC" for f in files)
     rows = "\n".join(f'    ({f["start"][:19].replace("T", " ")!r}, {f["end"][:19].replace("T", " ")!r}, {f["url"]!r}),' for f in files)
     first = files[0]
     text = (f"{route['label']}: station {sta} is a seafloor benchmark that an ROV occupied with an Absolute "
-            f"Self-Calibrating Pressure Recorder for about two hours a survey, so its data are short visits, not a "
+            f"Self-Calibrating Pressure Recorder for about 2 to 6 hours at a time, so its data are short visits, not a "
             f"continuous record: {visits}. A timeframe between visits has no data. The UC San Diego Library holds one "
             f"CSV a visit, public, no login ({route['url']}; cite {route['doi']}). Per the dataset's readme, each "
             f"row is time1, time2 (each gauge's timestamp, a MATLAB datenumber), pressure1, pressure2 (calibrated "

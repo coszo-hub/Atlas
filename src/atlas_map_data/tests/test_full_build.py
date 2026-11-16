@@ -20,8 +20,9 @@ class FullBuildTest(unittest.TestCase):
             self.assertEqual(summary["errors"], [])
             # 171 + 9 CE04OSBP + 11 CE02SHBP + VADCPB301, D1000A301 + 23 from OOI asset management (16 CE04OSPS,
             # 5 CE04OSPD, the Central Caldera's PADCPA301 and FETCHA301) + SCPR unit 001 (2013-2015, from its paper)
-            self.assertEqual(summary["total"], 217)
-            self.assertEqual(summary["located"], 201)
+            # + the absolute pressure benchmarks O1 and O2 (Cook et al., 2023; O1 joins Slope Base, O2 the O2B site)
+            self.assertEqual(summary["total"], 219)
+            self.assertEqual(summary["located"], 203)
             self.assertEqual(summary["unlocated"], 16)
             self.assertEqual(summary["unplaced"], 5)
             self.assertEqual(summary["sites"], 35)    # + the Oregon Offshore profiler moorings, SCPR unit 001's site

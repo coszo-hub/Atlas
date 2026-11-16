@@ -105,13 +105,20 @@ def planned_route(record: dict) -> dict:
             "url": url, "how": PLANNED_HOW}
 
 
-# The bottom pressure recorder sites O2B-O6 are the benchmarks of Cook et al. (2023, JGR Solid Earth,
-# doi:10.1029/2023JB026413): an ROV set an Absolute Self-Calibrating Pressure Recorder on each for about two hours a
-# survey (2015-2017). Their calibrated absolute sea pressure is in the UC San Diego Library, one CSV a visit; each file's
+# The bottom pressure recorder sites O1-O6 are the benchmarks of Cook et al. (2023, JGR Solid Earth,
+# doi:10.1029/2023JB026413): an ROV set an Absolute Self-Calibrating Pressure Recorder on each for a few hours a
+# survey (2014-2017). Their calibrated absolute sea pressure is in the UC San Diego Library, one CSV a visit; each file's
 # station and times were read from the file (its pressure matches the station's depth).
 ASCPR_DATASET = "https://library.ucsd.edu/dc/object/bb6529640g"
 ASCPR_DOI = "https://doi.org/10.6075/J0F18ZXJ"
 ASCPR_VISITS = {   # station -> (component, first and last sample, UTC)
+    "O1": [(5, "2014-10-01T22:43:55Z", "2014-10-02T00:33:39Z"), (6, "2014-10-02T06:15:30Z", "2014-10-02T08:06:38Z"),
+           (7, "2014-10-03T21:25:31Z", "2014-10-04T03:28:48Z"), (15, "2015-10-21T05:05:30Z", "2015-10-21T07:08:14Z"),
+           (23, "2016-06-04T15:57:15Z", "2016-06-04T18:22:44Z"), (42, "2017-09-06T10:58:00Z", "2017-09-06T12:56:44Z")],
+    "O2": [(10, "2014-10-02T19:09:00Z", "2014-10-02T20:58:54Z"), (11, "2014-10-03T01:21:06Z", "2014-10-03T03:17:09Z"),
+           (12, "2014-10-03T09:31:35Z", "2014-10-03T11:20:58Z"), (18, "2015-10-19T23:56:00Z", "2015-10-20T01:46:04Z"),
+           (19, "2015-10-20T06:50:50Z", "2015-10-20T08:40:54Z"), (26, "2016-06-05T21:44:45Z", "2016-06-05T23:30:13Z"),
+           (45, "2017-09-05T20:47:30Z", "2017-09-05T22:39:24Z")],
     "O2B": [(20, "2015-10-20T04:10:30Z", "2015-10-20T06:00:14Z"), (27, "2016-06-05T19:11:35Z", "2016-06-05T21:32:58Z")],
     "O3": [(30, "2016-06-06T05:05:35Z", "2016-06-06T07:19:59Z"), (48, "2017-09-05T05:46:50Z", "2017-09-05T07:55:24Z")],
     "O4": [(33, "2016-06-08T08:05:45Z", "2016-06-08T09:52:04Z"), (51, "2017-09-04T17:35:50Z", "2017-09-04T19:42:23Z")],
@@ -127,11 +134,11 @@ def ascpr_route(record: dict) -> dict | None:
     visits = ASCPR_VISITS.get(m.group(1)) if m else None
     if not visits:
         return None
-    days = ", ".join(v[1][:10] for v in visits)
+    days = ", ".join(dict.fromkeys(v[1][:10] for v in visits))
     return {"kind": "ucsd_ascpr", "label": "UC San Diego Library: calibrated absolute seafloor pressure (Cook et al., 2023)",
             "url": ASCPR_DATASET, "doi": ASCPR_DOI, "station": m.group(1),
             "files": [{"url": f"{ASCPR_DATASET}/_{c}_1.csv/download", "start": a, "end": b} for c, a, b in visits],
-            "how": f"Calibrated absolute seafloor pressure (kPa, two gauges) from ROV visits of about two hours on {days}; "
+            "how": f"Calibrated absolute seafloor pressure (kPa, two gauges) from ROV visits of a few hours on {days}; "
                    "one CSV a visit, no login. Ocean tides are not removed."}
 
 
