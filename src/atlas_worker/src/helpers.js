@@ -443,7 +443,9 @@ export const statusSearch = (question) => String(question || "").replace(STATUS_
 // asked are checked live ("the CTD at Southern Hydrate Ridge" checks no ADCP). A question naming none checks all.
 const INSTRUMENT_TYPES = [
   [/\bctds?\b|conductivity/i, /\bctd|conductivity/i], [/seismo|seismic station/i, /seismi/i], [/pressure|\bbpr|\bbotpt|tide gauge/i, /pressure|tidal|\bbotpt|\bprest/i],
-  [/hydrophone/i, /hydrophone/i], [/\badcps?\b|current meter|currents/i, /\badcp|velocity|current/i], [/camera/i, /camera/i],
+  // The VEL3D point current meters ("where are the VEL3D sensors") before the ADCPs, which "current meter" also asks.
+  [/hydrophone/i, /hydrophone/i], [/\bvel3d|\b3-?d current|three[- ]dimensional current/i, /\b3-?d current|three-dimensional current|\bvel3d/i],
+  [/\badcps?\b|current meter|currents/i, /\badcp|velocity|current/i], [/camera/i, /camera/i],
   [/fluorometer|chlorophyll|cdom/i, /fluorometer|chlorophyll|cdom/i], [/oxygen|\bdo\b/i, /oxygen|\bdosta|\bctd-do/i], [/tilt/i, /tilt/i],
   [/thermistor|temperature/i, /thermistor|temperature|\btmpsf/i], [/sonar|covis/i, /sonar|covis/i], [/\bph\b/i, /\bph\b|\bphsen/i],
   [/spectrometer|mass spec/i, /spectrometer/i], [/profiler/i, /profiler/i], [/\bdas\b|fiber|fibre/i, /\bdas\b|fiber|fibre|distributed acoustic/i],
@@ -457,7 +459,7 @@ export function askedType(question) {
 // about the cruise CTD rosette and none of the 16 CTD records; such a question gets every record of the type
 // (typeRecords in the Worker). A question naming a site is left to the inventory search, which keeps to the site.
 const SPECIFIC_PLACE = /southern hydrate ridge|hydrate ridge|axial|caldera|ashes|international district|oregon shelf|oregon offshore|slope base|summit|mid slope|endurance|newport|\bshr\b|\bosb\b/i;
-const TYPE_SEARCH = ["CTD", "seismometer seismic station", "pressure", "hydrophone", "ADCP current", "camera", "fluorometer", "oxygen",
+const TYPE_SEARCH = ["CTD", "seismometer seismic station", "pressure", "hydrophone", "3D current meter", "ADCP current", "camera", "fluorometer", "oxygen",
   "tilt", "temperature", "sonar", "pH", "spectrometer", "profiler", null];   // in INSTRUMENT_TYPES order; DAS has its own (isDasOverview)
 export function typeInventory(question) {
   const q = String(question || "");
@@ -468,7 +470,7 @@ export function typeInventory(question) {
   // temperature", "what depths were the hydrophones", "papers used COVIS data".
   const listed = (asked) => new RegExp(`\\b(?:which|what|list|all|every|how many|where are)\\W+(?:[\\w-]+\\W+){0,2}?(?:${asked.source})[\\w-]*?(?:s\\b|\\s+(?:sensors?|instruments?|gauges?|stations?|recorders?|meters?|probes?|packages?|devices?)\\b)`, "i").test(q);
   const i = INSTRUMENT_TYPES.findIndex(([asked]) => listed(asked));
-  return i >= 0 && TYPE_SEARCH[i] ? { search: `${TYPE_SEARCH[i]} instrument`, record: INSTRUMENT_TYPES[i][1], margin: MARGIN.test(q),
+  return i >= 0 && TYPE_SEARCH[i] ? { search: `${TYPE_SEARCH[i]} instrument`, record: INSTRUMENT_TYPES[i][1], margin: isMarginQuestion(q),
     coszo: /\bcoszo\b/i.test(q) } : null;
 }
 
@@ -481,6 +483,25 @@ const AXIAL_PLACE = /\baxial\b|\bashes\b|\binternational district\b|\b(?:central
 // pressure records, left out the Slope Base and Hydrate Ridge tidal gauges, which COSZO shares with the RCA.
 export function isCoszoRecord(hit) {
   return /\bCOSZO\b/.test((String(hit.text || "").match(/^Projects: (.*)$/m) || [])[1] || "");
+}
+
+// A question about the margin that also names Axial ("is Axial part of the Cascadia margin?") is left alone.
+export const isMarginQuestion = (question) => MARGIN.test(String(question || "")) && !AXIAL_PLACE.test(String(question || ""));
+// The records a margin question drops when they are Axial's: instrument and asset records, and site pages.
+const PLACED_COLLECTIONS = new Set(["instruments", "ooi_asset_management", "websites"]);
+export const offMargin = (hit) => PLACED_COLLECTIONS.has(hit.collection_id) && isAxialRecord(hit);
+
+// An asset-management type summary (every VEL3D, by make and model, then one line an instrument) on the margin: the
+// Axial instruments' lines (RS03) go, and the count and makes are those left. Gemma, given the whole summary, listed
+// Axial's current meters for "the VEL3D sensors at Cascadia slope", one as the Slope Base deep profiler's.
+export function marginAssets(hit) {
+  const text = String(hit.text || "");
+  const head = /^The RCA has \d+ cabled (.+?) instruments in OOI asset-management\..*$/m.exec(text);
+  if (!String(hit.chunk_id || "").startsWith("ooi_assets_type_") || !head) return hit;
+  const lines = text.split("\n").filter((line) => !/^- RS03/.test(line));
+  const kept = lines.filter((line) => line.startsWith("- ")).length;
+  const summary = `The RCA has ${kept} cabled ${head[1]} instruments on the Cascadia margin in OOI asset-management; those at Axial Seamount, on the Juan de Fuca Ridge, are left out.`;
+  return { ...hit, text: lines.map((line) => (line === head[0] ? summary : line)).join("\n") };
 }
 
 export function isAxialRecord(hit) {

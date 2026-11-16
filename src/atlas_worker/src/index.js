@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -886,6 +886,11 @@ export default {
       }
       const inventory = !context.papers?.length && typeInventory(query);
       if (inventory) context.inventory = await typeRecords(inventory, env);
+      // The Cascadia margin is not Axial Seamount: its records give way in the assets and the main results too.
+      if (isMarginQuestion(query)) {
+        context.hits = context.hits.filter((hit) => !offMargin(hit));
+        if (context.assets) context.assets = context.assets.filter((hit) => !offMargin(hit)).map(marginAssets);
+      }
       const routed = isDasOverview(query) || isStatusQuestion(query) || context.access?.length || context.assets?.length || context.inventory?.length || context.papers?.length;
       if (!routed && answerMode(query) !== "compact") {
         // Evidence that already holds papers gets only the best one more: near-tied papers can fill the main search

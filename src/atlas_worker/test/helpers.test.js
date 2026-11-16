@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord } from "../src/helpers.js";
+import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -1201,4 +1201,21 @@ test("a list of COSZO's instruments keeps the records COSZO names among their pr
   assert.ok(isCoszoRecord(record("Bottom pressure recorder O1", "COSZO")));
   assert.ok(!isCoszoRecord(record("Axial Seamount Base Seafloor Pressure Sensor (Tidal Pressure Gauge)", "Regional Cabled Array")));
   assert.ok(!isCoszoRecord({ title: "Data · COSZO", text: "COSZO data" }));
+});
+
+test("a Cascadia margin question leaves out Axial's records, and Axial's lines of a type summary", () => {
+  assert.ok(isMarginQuestion("where are the vel3d sensors at cascadia slope"));
+  assert.ok(!isMarginQuestion("is Axial part of the Cascadia margin?"));
+  assert.ok(!isMarginQuestion("where are the VEL3D sensors?"));
+  assert.ok(typeInventory("where are the vel3d sensors at cascadia slope").record.test("Oregon Mid Slope three-dimensional current meter"));
+  assert.ok(!typeInventory("where are the vel3d sensors at cascadia slope").record.test("Oregon Offshore Benthic Package ADCP (75 kHz)"));
+  assert.equal(typeInventory("which current meters are on the RCA?").search, "ADCP current instrument");
+  assert.ok(offMargin({ collection_id: "ooi_asset_management", title: "Axial Seamount Base Seafloor 3D Current Meter (RS03AXBS-MJ03A-12-VEL3DB301)", text: "" }));
+  assert.ok(!offMargin({ collection_id: "literature", title: "Axial Seamount inflation", text: "" }));
+  const summary = { chunk_id: "ooi_assets_type_3_D_Single_Point_Velocity_Meter", collection_id: "ooi_asset_management", title: "Every RCA 3-D Single Point Velocity Meter instrument",
+    text: "Every RCA 3-D Single Point Velocity Meter instrument\nThe RCA has 3 cabled 3-D Single Point Velocity Meter instruments in OOI asset-management. By make and model: Nobska MAVS-4: RS01SLBS-MJ01A-12-VEL3DB101, RS03AXBS-MJ03A-12-VEL3DB301; Nortek VECTOR: CE02SHBP-LJ01D-07-VEL3DC108.\n- CE02SHBP-LJ01D-07-VEL3DC108 (Oregon Shelf Benthic Package 3D Current Meter), Nortek VECTOR: deployed now.\n- RS01SLBS-MJ01A-12-VEL3DB101 (Oregon Slope Base Seafloor 3D Current Meter), Nobska MAVS-4: deployed now.\n- RS03AXBS-MJ03A-12-VEL3DB301 (Axial Seamount Base Seafloor 3D Current Meter), Nobska MAVS-4: deployed now." };
+  const text = marginAssets(summary).text;
+  assert.ok(!/RS03|Axial Seamount Base/.test(text));
+  assert.match(text, /The RCA has 2 cabled 3-D Single Point Velocity Meter instruments on the Cascadia margin/);
+  assert.match(text, /- RS01SLBS-MJ01A-12-VEL3DB101/);
 });
