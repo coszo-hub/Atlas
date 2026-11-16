@@ -5,7 +5,7 @@ PLANNED_ROLES = {"new_sensor_suite", "Oregon_Shelf_suite"}
 STATUS_GROUP = {
     "OPERATIONAL": "operating", "PARTIALLY_FUNCTIONAL": "operating",
     "NOT_DEPLOYED": "offline", "RETIRED": "offline", "SUPERSEDED": "offline",
-    "RECOVERED": "offline", "UNCABLED": "offline",
+    "RECOVERED": "offline", "UNCABLED": "offline", "FAILED": "offline", "OFFLINE": "offline",
     "PLANNED": "planned", "UNKNOWN": "unknown",
 }
 

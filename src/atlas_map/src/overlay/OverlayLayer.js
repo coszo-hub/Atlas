@@ -72,6 +72,15 @@ export class OverlayLayer {
   // The sites an answer's evidence cites (null: no evidence shown). The others fade like an unfocused family.
   setEvidence(siteIds) { this.evidence = siteIds; }
 
+  // Redraw each site's ring after its sensors' statuses change (the live Nereus status, applyStatuses).
+  refreshRings() {
+    for (const s of this.sites) {
+      const svg = s.d.querySelector("svg");
+      if (svg) svg.outerHTML = ringSvg(s.site, this.b.sensorById, this.b.familyByKey, s.size);
+    }
+    this.setFocus(this.focus);
+  }
+
   setSelected(id) { this.selected = id; for (const s of this.sites) s.d.classList.toggle("selected", s.site.id === id); }
 
   update() {

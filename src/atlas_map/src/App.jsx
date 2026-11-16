@@ -20,6 +20,7 @@ import { frameView, hypoMeters } from "./scene/evidenceMath.js";
 import { tourOf } from "./evidence/resolve.js";
 import { WatchProvider, useWatch } from "./watch/WatchProvider.jsx";
 import { WatchLayer, watchBeams } from "./watch/WatchLayer.js";
+import { applyStatuses } from "./watch/statuses.js";
 
 
 export default function App() {
@@ -165,6 +166,13 @@ function Atlas({ bundle, onError }) {
       scene.flyTo(scene.fit(frameView(ev.located.map(x => [x.lon, x.lat]), { az: Math.atan2(off.x, off.z), exag: scene.U.exag.value, polar })));
     }
   }, [onMap, scene]);   // deep is read here, not followed
+  // Every sensor's status from Nereus's live answer (and the Watcher), where the bundle's snapshot has none or an old one.
+  const [, setStatusVersion] = useState(0);
+  useEffect(() => {
+    if (!applyStatuses(bundle, watch.live, watch.states)) return;
+    layerRef.current?.refreshRings();
+    setStatusVersion(v => v + 1);
+  }, [bundle, watch.live, watch.states, scene]);
   useEffect(() => {
     if (!scene) return;
     const names = Object.fromEntries(bundle.sensors.map(s => [s.id, s.name]));
