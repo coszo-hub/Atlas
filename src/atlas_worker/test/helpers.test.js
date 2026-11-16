@@ -1232,3 +1232,12 @@ test("a type list is marked in the evidence and listed whole, the planned ones a
   assert.doesNotMatch(network, /Cascadia margin/);
   assert.doesNotMatch(answerPrompt({ question: "where are the vel3d sensors at cascadia slope", evidence: "A page\nx", sources: [], mode: "research" }), /List every one of them/);
 });
+
+test("a passage found by a range of station codes says which code it names", async () => {
+  const { withRangeNote } = await import("../src/helpers.js");
+  const hit = { text: "four located at the ridge summit at a water depth of ∼800 m (HYS11‐14) and one at the slope base (HYSB1)." };
+  assert.match(withRangeNote(hit, ["HYS14"]).text, /^\(This passage names HYS14 within the range "HYS11‐14"\.\)\n/);
+  assert.equal(withRangeNote(hit, ["HYSB1"]), hit);                   // named as it is
+  assert.equal(withRangeNote(hit, ["HYS15"]), hit);                   // outside the range
+  assert.equal(withRangeNote({ text: "AXEC1–AXEC3 recorded it" }, ["AXEC2"]).text.split("\n")[0], '(This passage names AXEC2 within the range "AXEC1–AXEC3".)');
+});

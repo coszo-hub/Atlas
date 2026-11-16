@@ -975,6 +975,22 @@ export function liveStatusHit(hit, refdes, live) {
   return { chunk_id: `LIVE-${refdes}`, collection_id: "live_status", title: `Live status: ${name}`, text, citations: hit.citations || [], live: true };
 }
 
+// A passage the paper search found by a range of station codes ("HYS11‐14" for HYS14): the model reads only the
+// range, and left the paper out as not naming the station. The passage leads with the code it names, and how.
+export function withRangeNote(hit, codes) {
+  const text = String(hit.text || "");
+  for (const code of codes || []) {
+    const m = /^([A-Z]+)(\d+)$/.exec(code);
+    if (!m || new RegExp(`(^|[^A-Za-z0-9])${code}($|[^A-Za-z0-9])`).test(text)) continue;
+    const range = new RegExp(`${m[1]}(\\d+)\\s?[-‐‑–—]\\s?(?:${m[1]})?(\\d+)`, "g");
+    for (const r of text.matchAll(range)) {
+      const [lo, hi, n] = [Number(r[1]), Number(r[2]), Number(m[2])];
+      if (lo < hi && hi - lo < 50 && n >= lo && n <= hi) return { ...hit, text: `(This passage names ${code} within the range "${r[0]}".)\n${text}` };
+    }
+  }
+  return hit;
+}
+
 export function answerPrompt({ question, evidence, sources, mode, product = null, access = false, stations = [], today = new Date().toISOString().slice(0, 10) }) {
   const recipes = /\(download recipe\) \| sources:/.test(evidence);
   const task = /\(task recipe\) \| sources:/.test(evidence);
@@ -995,7 +1011,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
       ? " (the Cascadia margin, slope and shelf alike: the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites; Axial Seamount, on the Juan de Fuca Ridge, is not part of it)" : ""}. List every one of them, each by name and identifier with its site; say that one whose record says Planned is planned and not yet operating.`
     : "";
   const papersInstruction = isPaperUsageQuestion(question)
-    ? "The question asks which papers used an instrument. Full-text passages from papers that name it or describe it are in the evidence. List each paper whose passage shows it used or analyzed that instrument's data, by title with its citation and a few words on how it used it; list papers that only mention the instrument separately as mentions; leave out papers whose passages are about something else."
+    ? "The question asks which papers used an instrument. Full-text passages and abstracts from papers that name it or describe it are in the evidence; a passage may name a station within a range of stations (it says so). List each paper whose passage shows it used or analyzed that instrument's data, by title with its citation and a few words on how it used it, saying which of the station's instruments it used (its seismometer, or its hydrophone) when the passage says; list papers that only mention the instrument separately as mentions; leave out papers whose passages are about something else. Only scientific papers count as papers: never list an instrument record, station metadata or a web page as a paper."
     : "";
   // The orientation summary lists every OO station; a question about one place is answered for that place's stations.
   // Where an instrument is: OOI asset management and a paper can each give its position, metres apart.
