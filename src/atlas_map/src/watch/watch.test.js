@@ -25,6 +25,8 @@ describe("the Watcher's state now: the day's report, with Nereus's live check la
   });
   it("shows a red day Nereus graded as recording again once Nereus is good", () => {
     expect(currentState(row({ state: "no_data" }), live("GOOD", 5), NOW)).toMatchObject({ state: "ok", day: false });
+    // nor one that ERDDAP's check made yellow against Nereus
+    expect(currentState(row({ state: "gaps", agree: false }), live("GOOD", 5), NOW).state).toBe("gaps");
     // a red ERDDAP-checked sensor is not cleared by Nereus
     expect(currentState(row({ state: "no_data", source: "OOI ERDDAP" }), live("GOOD", 5), NOW).state).toBe("no_data");
   });

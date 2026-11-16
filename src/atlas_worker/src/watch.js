@@ -83,7 +83,8 @@ export function currentState(row, live, now = Date.now(), day = null) {
     if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, live: true };
     return base;
   }
-  if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")) {
+  if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")
+      && row.agree !== false) {   // a state ERDDAP's independent check set (it disagreed with Nereus) is not Nereus's to clear
     return { state: "ok", since: null, detail: "recording again by Nereus's live check", live: true };
   }
   return base;
@@ -99,7 +100,7 @@ export function watchHit(report, live, now = Date.now()) {
   const recording = rows.length - down.length - unchecked;
   const lines = [
     `Watcher report for ${report.day} (UTC): each watched sensor graded from Nereus's hourly data checks, OOI ERDDAP and EarthScope${live?.fetchedAt ? `, with Nereus's live status at ${live.fetchedAt.slice(0, 16).replace("T", " ")} UTC laid over it` : ""}.`,
-    `${rows.length} sensors watched: ${recording} recording (${recording - gaps.length - diverted.length} normally, ${gaps.length} with gaps longer than normal, ${diverted.length} with their 200 Hz data diverted by the Navy), ${down.length} not recording, ${unchecked} not checked (no public data check). Temporary, campaign, planned and not-deployed sensors are not watched.`,
+    `${rows.length} sensors watched: ${recording} recording (${recording - gaps.length - diverted.length} normally, ${gaps.length} with gaps longer than normal, ${diverted.length} under the Navy's diversion of their high-rate data), ${down.length} not recording, ${unchecked} not checked (no public data check). Temporary, campaign, planned and not-deployed sensors are not watched.`,
     down.length ? `Not recording (no data for a day or more):\n${down.map((r) => `- ${r.name} (${id(r)}), since ${String(r.since || "").slice(0, 10)}${r.nereusStatus && r.nereusStatus !== "OPERATIONAL" ? `; Nereus lists it as ${words(r.nereusStatus)}` : ""}${r.live ? `; ${r.detail}` : ""}`).join("\n")}` : "No watched sensor is without data.",
     diverted.length ? `Navy diversion (the high-rate data held back: a seismometer's or low-frequency hydrophone's 8 Hz data reaching EarthScope without its 200 Hz; a broadband hydrophone without its files on the raw data server since they stopped together): ${diverted.map((r) => `${r.name} (${id(r)})`).join("; ")}.` : "",
     gaps.length ? `Recording with gaps:\n${gaps.map((r) => `- ${r.name} (${id(r)})${r.detail ? `: ${r.detail}` : r.longestGapMin ? `: a ${r.longestGapMin}-minute gap` : ""}`).join("\n")}` : "",

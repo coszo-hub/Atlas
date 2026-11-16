@@ -47,7 +47,8 @@ export function currentState(row, live, now = Date.now(), day = null) {
     if (minutes > (row.gap ?? 60)) return { state: "gaps", since: at.slice(0, 10), detail: `Nereus finds no data since ${at} UTC`, day: false };
     return base;
   }
-  if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")) {
+  if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")
+      && row.agree !== false) {   // a state ERDDAP's independent check set (it disagreed with Nereus) is not Nereus's to clear
     return { state: "ok", since: null, detail: `Recording again (Nereus, ${String(nereus.checkedAt || "").slice(11, 16)} UTC)`, day: false };
   }
   return base;
