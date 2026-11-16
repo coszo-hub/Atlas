@@ -621,6 +621,21 @@ export function coszoSensorIds(question) {
   return [...benchmarks, ...types.slice(0, 1)];
 }
 
+// A download recipe with no OOI service among its routes (a UC San Diego pressure benchmark, a planned COSZO sensor, a
+// seismometer EarthScope serves) names every way to its data. General pages on getting OOI data beside it (the M2M API, "accessible
+// through the OOI data portal", BOTPT data "now available online") led answers to say its data are there too; they
+// give way to it. Papers stay.
+const OOI_ACCESS = /\b(?:OOI|M2M)\b|oceanobservatories/i;
+const ACCESS_WORDS = /\bM2M\b|\bAPI\b|\bdata (?:portal|explorer)\b|\bdownload\w*|\baccessible through\b|\bavailable (?:online|through|via)\b/i;
+export function withoutOffRouteAccess(hits, access) {
+  const recipes = (access || []).filter((hit) => hit.collection_id === RECIPE_COLLECTION && !String(hit.chunk_id).startsWith("recipe_type_"));
+  if (!recipes.length || recipes.some((hit) => /oceanobservatories/i.test(hit.text || ""))) return hits;
+  return (hits || []).filter((hit) => {
+    const text = `${hit.title || ""}\n${hit.text || ""}`;
+    return sourceKind(hit) === "scientific literature" || !OOI_ACCESS.test(text) || !ACCESS_WORDS.test(text);
+  });
+}
+
 export function isDataAccessQuestion(question) {
   const q = String(question || "");
   // Or a request for code ("a Python script for the Axial Base CTD temperature in March 2025"), which may name no data.

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript } from "../src/helpers.js";
+import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -1149,4 +1149,20 @@ test("a day the catalog has not reached, with the seismic data flowing, keeps th
   }), {})).json();
   assert.match(data.answer, /^The live Axial catalog cannot count .* yet: its earthquake locations reach only 2026-11-12 01:00 UTC/);
   assert.doesNotMatch(data.answer, /EarthScope/);
+});
+
+test("general pages on getting OOI data give way to a recipe with no OOI route", () => {
+  const m2m = { chunk_id: "A", collection_id: "arcada", title: "Accessing OOI M2M API data (Python)", text: "How to download OOI Regional Cabled Array data via the M2M REST API." };
+  const coszo = { chunk_id: "B", collection_id: "websites", title: "Data · COSZO", text: "Each data product is served as a continuous real-time stream and as archived records, accessible through the OOI data portal." };
+  const botpt = { chunk_id: "C", collection_id: "websites", title: "OOI Bottom Pressure Preliminary Data Now Available Online", text: "bottom pressure sensor data from the OOI BOTPT instruments" };
+  const science = { chunk_id: "D", collection_id: "websites", title: "Axial inflation", text: "OOI pressure records show Axial Seamount inflating." };
+  const paper = { chunk_id: "E", collection_id: "literature", title: "Cook et al. 2023", text: "Data are available through the OOI data portal." };
+  const hits = [m2m, coszo, botpt, science, paper];
+  const ucsd = { chunk_id: "recipe_COSZO-BPR-O1", collection_id: "data_recipes", text: "Easiest: UC San Diego Library ... https://library.ucsd.edu/dc/object/bb6529640g" };
+  assert.deepEqual(withoutOffRouteAccess(hits, [ucsd]).map((hit) => hit.chunk_id), ["D", "E"]);
+  // An OOI instrument's recipe, a type overview or no recipe leaves them.
+  const ctd = { chunk_id: "recipe_RS03AXBS-LJ03A-12-CTDPFB301", collection_id: "data_recipes", text: "https://erddap.dataexplorer.oceanobservatories.org/erddap/" };
+  assert.equal(withoutOffRouteAccess(hits, [ucsd, ctd]).length, 5);
+  assert.equal(withoutOffRouteAccess(hits, [{ ...ucsd, chunk_id: "recipe_type_bottom_pressure_recorder" }]).length, 5);
+  assert.equal(withoutOffRouteAccess(hits, [{ chunk_id: "S", collection_id: "websites", title: "Slope Base" }]).length, 5);
 });
