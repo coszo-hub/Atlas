@@ -15,7 +15,15 @@ describe("SensorDetail", () => {
       String(url).includes("/status/") ? { refdes: "R", status: "OPERATIONAL", data: { code: "OK", checkedAt: "2026-09-23T11:58:00Z" }, evidenceMode: "live", source: "Nereus" }
         : { variables: [], coverage: {} } })));
     render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
-    await waitFor(() => expect(screen.getByText(/Operating · checked live/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Operating, per Nereus · its data check was good at Sep 23, 11:58 UTC")).toBeInTheDocument());
+  });
+  it("a failed instrument whose data Nereus does not check says so, with no live data check claimed", async () => {
+    vi.stubGlobal("fetch", vi.fn(async url => ({ ok: true, status: 200, json: async () =>
+      String(url).includes("/status/") ? { refdes: "R", status: "FAILED", data: { code: "UNMONITORED", checkedAt: "2026-11-16T21:00:00Z" }, evidenceMode: "live", source: "Nereus" }
+        : { variables: [], coverage: {} } })));
+    render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
+    await waitFor(() => expect(screen.getByText("Failed, per Nereus · Nereus does not check its data")).toBeInTheDocument());
+    expect(screen.queryByText(/checked live|UNMONITORED/)).toBeNull();
   });
   it("a sensor Nereus does not track shows its newest ERDDAP reading instead of an unknown status", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ refdes: "x", status: null, evidenceMode: "data_age",
@@ -50,7 +58,7 @@ describe("SensorDetail", () => {
   it("names the lower-rate channel shown when the high-rate one is stalled", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ recording: true, station: "OO.AXCC1", channel: "MHZ", requestedChannel: "HHZ", rate: 8, delayMinutes: 2 }) })));
     render(<SensorDetail sensor={b.sensorById["axcc1"]} bundle={b} onBack={() => {}} />);
-    await waitFor(() => expect(screen.getByText("Waveform available on MHZ (8 samples/s); HHZ delayed at EarthScope · EarthScope checked live")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Waveform available on MHZ (8 samples/s); no recent HHZ at EarthScope · EarthScope checked live")).toBeInTheDocument());
   });
   it("says how far EarthScope's archive trails real time instead of reporting no waveform", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ recording: true, station: "OO.AXCC1", channel: "HHZ", delayMinutes: 83 }) })));
@@ -89,7 +97,7 @@ describe("SensorDetail", () => {
     render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
     await waitFor(() => expect(screen.getByText(/Nereus failed: Nereus did not answer in time\./)).toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
-    await waitFor(() => expect(screen.getByText(/Operating · checked live/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/^Operating, per Nereus/)).toBeInTheDocument());
   });
   const statusReply = (status, body) => vi.fn(async () => ({ ok: status < 400, status, json: async () => body }));
   it("404 from Nereus: not tracked live", async () => {
@@ -106,12 +114,12 @@ describe("SensorDetail", () => {
   it("live status without a status word reads Status unknown", async () => {
     vi.stubGlobal("fetch", statusReply(200, { refdes: "R", status: null, data: null, evidenceMode: "live", source: "Nereus" }));
     render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
-    await waitFor(() => expect(screen.getByText(/^Status unknown · checked live/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/^Status unknown, per Nereus/)).toBeInTheDocument());
   });
   it("a Nereus snapshot answer says so and does not claim a live check", async () => {
     vi.stubGlobal("fetch", statusReply(200, { refdes: "R", status: "OPERATIONAL", data: null, evidenceMode: "snapshot", source: "Nereus" }));
     render(<SensorDetail sensor={b.sensorById["base-ctd"]} bundle={b} onBack={() => {}} />);
-    await waitFor(() => expect(screen.getByText("Operating · from Nereus snapshot")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Operating, from Nereus snapshot")).toBeInTheDocument());
     expect(screen.queryByText(/checked live/)).toBeNull();
   });
   it("works without a site: the back control names where it returns and calls back", () => {

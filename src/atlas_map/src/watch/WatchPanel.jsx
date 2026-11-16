@@ -49,7 +49,7 @@ export function WatchKey({ bundle, onSensor }) {
       ))}
       <div className="row muted"><span className="watch-dot ok" aria-hidden="true" />Recording<b className="mono">{counts.recording - counts.gaps - counts.diverted}</b></div>
       <p className="hint">{counts.watched} sensors watched; those recording normally are not highlighted.
-        {live?.fetchedAt ? ` Nereus live status ${live.fetchedAt.slice(11, 16)} UTC.` : ""}
+        {live?.fetchedAt ? ` Nereus live status ${fmtTime(live.fetchedAt)} UTC.` : ""}
         {report.axial200Hz === "Navy Diversion" ? " Axial catalog: 200 Hz data under Navy diversion." : ""}</p>
     </div>
   );

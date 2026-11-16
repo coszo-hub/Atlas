@@ -1,5 +1,5 @@
 import { status as fetchStatus, waveformHealth } from "../../api/gateway.js";
-import { fmtDate, fmtMinutes, statusLabel } from "../../data/format.js";
+import { fmtDate, fmtMinutes, fmtUtc, statusLabel } from "../../data/format.js";
 import { useLive } from "./useLive.js";
 
 export default function LiveStatus({ sensor, manifest }) {
@@ -16,7 +16,7 @@ export default function LiveStatus({ sensor, manifest }) {
       const lag = d.recording && d.delayMinutes >= 5 ? ` · EarthScope archive ${fmtMinutes(d.delayMinutes)} behind` : "";
       // A stalled high-rate channel (HHZ) gave way to a current lower-rate one (MHZ): say which, so 8 samples/s is not taken for the full stream.
       const via = d.recording && d.requestedChannel && d.requestedChannel !== d.channel
-        ? ` on ${d.channel}${d.rate ? ` (${d.rate} samples/s)` : ""}; ${d.requestedChannel} delayed at EarthScope` : "";
+        ? ` on ${d.channel}${d.rate ? ` (${d.rate} samples/s)` : ""}; no recent ${d.requestedChannel} at EarthScope` : "";
       return <div className="live-status">{d.recording ? `Waveform available${via}${lag}` : (d.message ?? "No recent waveform")} · EarthScope checked live</div>;
     }
     if (waveform.error.kind === "unreachable") return <div className="live-status degraded">EarthScope live check unavailable <button onClick={waveform.retry}>Retry</button></div>;
@@ -36,10 +36,15 @@ export default function LiveStatus({ sensor, manifest }) {
   }
   if (live.state === "ok") {
     const d = live.data;
-    // Nereus answers live, or falls back to its snapshot when the instrument check fails; never claim both.
-    const how = !d.evidenceMode || d.evidenceMode === "live" ? "checked live"
+    // Nereus's operational status (an operator's call), then its data check in words. "Checked live, data UNMONITORED"
+    // read as a live data check for the Central Caldera BOTPT, whose data Nereus does not check (the Watcher, below,
+    // says what its data show). Nereus answers live, or falls back to its snapshot; never claim both.
+    const who = !d.evidenceMode || d.evidenceMode === "live" ? "per Nereus"
       : d.evidenceMode === "snapshot" ? "from Nereus snapshot" : `from Nereus (${d.evidenceMode})`;
-    return <div className="live-status">{statusLabel(d.status ?? "UNKNOWN")} · {how}{d.data?.checkedAt ? `, data ${d.data.code} at ${new Date(d.data.checkedAt).toUTCString().slice(17, 22)} UTC` : ""}</div>;
+    const code = d.data?.code, at = d.data?.checkedAt ? ` at ${fmtUtc(d.data.checkedAt)}` : "";
+    const check = !d.data ? "" : !code || code === "UNMONITORED" ? " · Nereus does not check its data"
+      : ` · its data check was ${({ GOOD: "good", OK: "good", BAD: "bad", WARN: "a warning" })[code] ?? code.toLowerCase()}${at}`;
+    return <div className="live-status">{statusLabel(d.status ?? "UNKNOWN")}, {who}{check}</div>;
   }
   if (live.error.kind === "unreachable") {
     return <div className="live-status degraded"><span>Live data unavailable. Showing snapshot from {fmtDate(sensor.statusAsOf ?? manifest?.corpusSnapshot)}.</span>

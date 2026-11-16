@@ -50,7 +50,7 @@ export function currentState(row, live, now = Date.now(), from = null) {
   }
   if ((nereus.check === "GOOD" || nereus.check === "WARN") && (row.state === "no_data" || row.state === "gaps") && /^Nereus/.test(row.source || "")
       && row.agree !== false) {   // a state ERDDAP's independent check set (it disagreed with Nereus) is not Nereus's to clear
-    return { state: "ok", since: null, detail: `Recording again (Nereus, ${String(nereus.checkedAt || "").slice(11, 16)} UTC)`, day: false };
+    return { state: "ok", since: null, detail: `Recording again (Nereus, ${String(nereus.checkedAt || "").slice(0, 16).replace("T", " ")} UTC)`, day: false };
   }
   return base;
 }

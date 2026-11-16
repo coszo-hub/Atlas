@@ -1,16 +1,19 @@
 const LABEL = {
   OPERATIONAL: "Operating", PARTIALLY_FUNCTIONAL: "Partially functional", NOT_DEPLOYED: "Not deployed", RETIRED: "Retired",
-  SUPERSEDED: "Superseded", RECOVERED: "Recovered", UNCABLED: "Uncabled", PLANNED: "Planned (COSZO)", UNKNOWN: "Status unknown",
+  SUPERSEDED: "Superseded", RECOVERED: "Recovered", UNCABLED: "Uncabled", FAILED: "Failed", OFFLINE: "Offline", PLANNED: "Planned (COSZO)",
+  UNKNOWN: "Status unknown",
 };
 const GROUP = {
   OPERATIONAL: "operating", PARTIALLY_FUNCTIONAL: "operating", NOT_DEPLOYED: "offline", RETIRED: "offline",
-  SUPERSEDED: "offline", RECOVERED: "offline", UNCABLED: "offline", PLANNED: "planned", UNKNOWN: "unknown",
+  SUPERSEDED: "offline", RECOVERED: "offline", UNCABLED: "offline", FAILED: "offline", OFFLINE: "offline", PLANNED: "planned", UNKNOWN: "unknown",
 };
 const n = v => Math.round(v).toLocaleString("en-US");
 
 export const fmtDepth = m => (m == null ? "—" : `${n(m)} m`);
 export const fmtRange = (a, b) => (a == null || b == null ? "—" : a === b ? `${n(a)} m` : `${n(a)}–${n(b)} m`);
 export const statusLabel = raw => LABEL[raw] ?? raw;
+// A moment with its day, in UTC ("Nov 16, 21:00 UTC"): a time alone does not say which day.
+export const fmtUtc = iso => `${new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "UTC" })} UTC`;
 export const statusGroup = raw => GROUP[raw] ?? "unknown";
 export const fmtDate = iso => {
   const d = iso ? new Date(iso) : null;
