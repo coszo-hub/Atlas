@@ -1,7 +1,7 @@
 import LiveStatus from "../panels/live/LiveStatus.jsx";
 import { fmtUtc } from "../data/format.js";
 import { useWatch } from "./WatchProvider.jsx";
-import { reportSpan } from "./WatchPanel.jsx";
+import { WatchMark, reportSpan } from "./WatchPanel.jsx";
 
 // A sensor card's one status: what the Watcher found its data doing over the 24 hours (with Nereus's live status laid
 // over it), in a sentence, then what the operators say (Nereus's status, and their open note on it), then where the
@@ -40,7 +40,7 @@ export default function SensorStatus({ sensor, manifest }) {
   const word = OPERATIONAL[s.nereusStatus];
   return (
     <section className="sensor-status">
-      <p className="state"><span className={`watch-dot ${s.state}`} aria-hidden="true" /><b>{head}</b>{rest ? `: ${rest}` : ""}</p>
+      <p className="state"><WatchMark state={s.state} /><b>{head}</b>{rest ? `: ${rest}` : ""}</p>
       {s.detail && <p className="hint">{s.detail}.</p>}
       {s.note ? (
         <details className="note">

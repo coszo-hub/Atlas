@@ -91,3 +91,19 @@ describe("which check a status is from", () => {
       .toBe("Checked live: Nov 16, 2026, 21:30 UTC · by Nereus (daily check, Nov 16, 2026, 01:20 UTC: Recording normally)");
   });
 });
+
+describe("a not-recording sensor's mark", () => {
+  it("is an italic X in the problem's colour; recording normally is a check; never a circle", async () => {
+    const { WatchMark } = await import("./WatchPanel.jsx");
+    const { container: x } = render(<WatchMark state="no_data" label />);
+    expect(x.querySelector(".watch-x")).toHaveTextContent("X");
+    expect(x.querySelector(".watch-x")).toHaveAttribute("aria-label", "Not recording");
+    const { container: blue } = render(<WatchMark state="diverted" />);
+    expect(blue.querySelector(".watch-x.diverted")).toHaveTextContent("X");
+    const { container: yellow } = render(<WatchMark state="gaps" />);
+    expect(yellow.querySelector(".watch-x.gaps")).toHaveTextContent("X");
+    const { container: ok } = render(<WatchMark state="ok" />);
+    expect(ok.querySelector(".watch-ok")).toHaveTextContent("✓");
+    expect(document.querySelector(".watch-dot")).toBeNull();
+  });
+});

@@ -33,7 +33,7 @@ export function WatchKey({ bundle, onSensor }) {
         <div key={k}>
           <button className="row" title={MEANING[k]} aria-expanded={open === k} disabled={!counts[k]}
             onClick={() => setOpen(open === k ? null : k)}>
-            <span className={`watch-dot ${k}`} aria-hidden="true" />{WATCH_LABEL[k]}<b className="mono">{counts[k]}</b>
+            <WatchMark state={k} />{WATCH_LABEL[k]}<b className="mono">{counts[k]}</b>
           </button>
           {open === k && (
             <ul className="watch-list" aria-label={`${WATCH_LABEL[k]}: sensors`}>
@@ -47,7 +47,7 @@ export function WatchKey({ bundle, onSensor }) {
           )}
         </div>
       ))}
-      <div className="row muted"><span className="watch-dot ok" aria-hidden="true" />Recording<b className="mono">{counts.recording - counts.gaps - counts.diverted}</b></div>
+      <div className="row muted"><WatchMark state="ok" />Recording<b className="mono">{counts.recording - counts.gaps - counts.diverted}</b></div>
       <p className="hint">{counts.watched} sensors watched; those recording normally are not highlighted.
         {live?.fetchedAt ? ` Checked live by Nereus: ${fmtTime(live.fetchedAt)} UTC (marked "checked live" where it changed the daily check).` : ""}
         {report.axial200Hz === "Navy Diversion" ? " Axial catalog: 200 Hz data under Navy diversion." : ""}</p>
@@ -55,9 +55,17 @@ export function WatchKey({ bundle, onSensor }) {
   );
 }
 
+// A state's mark, never a circle (coloured circles are the instrument families): an italic X in the problem's colour
+// (red no data, purple Navy diversion, yellow gaps), a check for recording normally.
+export function WatchMark({ state, label = false }) {
+  const a11y = label ? { title: WATCH_LABEL[state], "aria-label": WATCH_LABEL[state], role: "img" } : { "aria-hidden": "true" };
+  if (["no_data", "diverted", "gaps"].includes(state)) return <span className={`watch-x ${state}`} {...a11y}>X</span>;
+  return state === "ok" ? <span className="watch-ok" {...a11y}>✓</span> : null;
+}
+
 export function WatchDot({ id }) {
   const { on, states } = useWatch();
   const st = states[id]?.state;
-  if (!on || !["no_data", "diverted", "gaps"].includes(st)) return null;
-  return <span className={`watch-dot ${st}`} title={WATCH_LABEL[st]} aria-label={WATCH_LABEL[st]} />;
+  if (!on || !["no_data", "diverted", "gaps", "ok"].includes(st)) return null;
+  return <WatchMark state={st} label />;
 }

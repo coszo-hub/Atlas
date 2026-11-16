@@ -1,10 +1,10 @@
-:root { --watch-red: #d03b3b; --watch-blue: #4d7fe0; --watch-yellow: #e0b13a; --watch-ok: #6f6d66; }
-.watch-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: 0; flex: none; background: var(--watch-ok); }
-.watch-dot.no_data { background: var(--watch-red); }
-.watch-dot.diverted { background: var(--watch-blue); }
-.watch-dot.gaps { background: var(--watch-yellow); }
-.watch-dot.ok { background: var(--good); }
-.watch-dot.unchecked, .watch-dot.failed { background: transparent; border: 1px solid var(--text-muted); }
+:root { --watch-red: #d03b3b; --watch-purple: #a56ee8; --watch-yellow: #e0b13a; --watch-ok: #6f6d66; }
+/* A problem: an italic X in its colour, not a dot. */
+.watch-x { display: inline-block; width: 8px; margin-right: 7px; flex: none; text-align: center; font-style: italic; font-weight: 700;
+  font-size: 12px; line-height: 1; color: var(--watch-red); }
+.watch-x.diverted { color: var(--watch-purple); }
+.watch-x.gaps { color: var(--watch-yellow); }
+.watch-ok { display: inline-block; width: 8px; margin-right: 7px; flex: none; text-align: center; font-size: 11px; line-height: 1; color: var(--good); }
 .watch-key { padding: 10px 12px; min-width: 240px; max-width: 320px; }
 .watch-key .row { display: flex; align-items: center; gap: 0; font-size: 12.5px; padding: 3px 4px; margin: 0 -4px; width: calc(100% + 8px);
   background: none; border: 0; border-radius: 4px; color: inherit; font: inherit; text-align: left; }

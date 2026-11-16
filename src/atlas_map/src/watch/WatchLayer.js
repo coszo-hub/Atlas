@@ -6,11 +6,12 @@ import { PROBLEM, WATCH_LABEL } from "./watch.js";
 
 // The Watcher view in the scene: glowing beams rising from the seafloor at each site with a sensor not recording well,
 // as an Ask Atlas answer's evidence rises. A site gets one beam for each problem among its sensors, side by side, so a
-// site with one sensor under Navy diversion and another not recording shows a blue beam and a red one; the taller the
-// worse (red, blue, yellow). Each beam's tag counts its sensors; a beam opens its site. Beams rise one after another
+// site with one sensor under Navy diversion and another not recording shows a purple beam and a red one; the taller the
+// worse (red, purple, yellow). Each beam's tag counts its sensors; a beam opens its site. Beams rise one after another
 // when the view turns on and sink together when it turns off.
 
-export const COLORS = { no_data: "#d03b3b", diverted: "#4d7fe0", gaps: "#e0b13a" };
+// Purple for the diversion: blue is the Water properties family's colour.
+export const COLORS = { no_data: "#d03b3b", diverted: "#a56ee8", gaps: "#e0b13a" };
 const HEIGHT = { no_data: 1, diverted: 0.82, gaps: 0.66 };
 const SPACING = 11;   // px between a site's beams
 const ORDER = 29;     // drawn just under the evidence's beams
