@@ -536,10 +536,15 @@ const TASK_REQUEST = /\b(?:scripts?|code|python|programs?|notebooks?|functions?|
 // Words any task may draw ("plot the noise at AXCC1") count only between tasks with the same specific words.
 const GENERIC_TASK_WORD = /^(?:plot\w*|figures?|graphs?|visuali[sz]\w*)$/;
 // In code mode (the chat's Code toggle) every question asks for code, in whatever words.
+// Words that only name an instrument are not a task: OOI calls its absolute pressure gauges "Tidal Pressure Gauge",
+// whose "tidal" sent "download the Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) data" to the de-tiding task.
+const INSTRUMENT_NAME_WORDS = /\btidal (?:seafloor )?pressure(?: (?:gauges?|sensors?|recorders?))?\b/gi;
+
 export function taskRecipeIds(question, tasks, { code = false } = {}) {
   const q = String(question || "");
   if (!code && !TASK_REQUEST.test(q)) return [];
-  const found = (pattern) => [...new Set((q.match(new RegExp(pattern, "gi")) || []).map((w) => w.toLowerCase()))];
+  const asked = q.replace(INSTRUMENT_NAME_WORDS, "pressure gauge");
+  const found = (pattern) => [...new Set((asked.match(new RegExp(pattern, "gi")) || []).map((w) => w.toLowerCase()))];
   const score = (words) => { const specific = words.filter((w) => !GENERIC_TASK_WORD.test(w)).length; return specific ? specific * 100 : words.length; };
   // Its instrument words count too: "the noise PSD of the AXCC1 hydrophone" is the hydrophone's task, not the seismometer's.
   const scored = (tasks || []).filter((t) => new RegExp(t.about, "i").test(q))

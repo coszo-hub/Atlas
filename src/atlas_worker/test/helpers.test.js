@@ -939,6 +939,9 @@ test("a location question gives an instrument's position from each source that h
 test("a request for code for a task gets that task's recipe: its task and instrument words, the most task words", async () => {
   const TASKS = (await import("../src/task_recipes.json", { with: { type: "json" } })).default;
   const wave = ["task_earthquake_waveform"];
+  assert.deepEqual(taskRecipeIds("Give me Python code to download Oregon Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) "
+    + "(RS01SLBS-MJ01A-06-PRESTA101) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC", TASKS), []);   // its name, not a task
+  assert.deepEqual(taskRecipeIds("Write code to remove the tides from the Slope Base tidal pressure gauge", TASKS), ["task_botpt_detide"]);
   assert.deepEqual(taskRecipeIds("Write a script to plot the waveform of an Axial earthquake at AXCC1", TASKS), wave);
   assert.deepEqual(taskRecipeIds("how do I remove the instrument response from a seismometer and bandpass it?", TASKS), wave);
   assert.deepEqual(taskRecipeIds("Plot yesterday's biggest earthquake at AXEC2", TASKS), wave);
