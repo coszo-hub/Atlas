@@ -242,7 +242,8 @@ function Atlas({ bundle, onError }) {
             </div>
             <div className="right-stack" ref={rightRef}>
               <HudDock scene={scene} deep={deep} onDeep={setDeep} credit={bundle.terrainMeta.credit} auv={!!scene.auv}
-                subsurface={deep ? scene.subsurface?.credit : null} quakeColor={quakeColor} onQuakeColor={setQuakeColor} />
+                subsurface={deep ? scene.subsurface?.credit : null} quakeColor={quakeColor} onQuakeColor={setQuakeColor}
+                bundle={bundle} onSensor={id => openSensor(id, scene)} />
             </div>
           </div>
           <Credit credit={bundle.terrainMeta.credit} auv={!!scene.auv} subsurface={deep} />

@@ -30,7 +30,7 @@ function Help() {
 // The terrain controls stay mounted while closed so their switches keep their state; the legend and help are
 // stateless and mount only while open (the legend fits its height from where it opens).
 // quakeColor: how Axial's earthquakes are coloured, "time" or "fault" (App owns it; the bottom bar follows it).
-export default function HudDock({ scene, deep = false, onDeep, credit, auv = false, subsurface = null, quakeColor = "time", onQuakeColor }) {
+export default function HudDock({ scene, deep = false, onDeep, credit, auv = false, subsurface = null, quakeColor = "time", onQuakeColor, bundle = null, onSensor }) {
   const [open, setOpen] = useState(() => new Set());
   const watch = useWatch();
   const [whaleDay, setWhaleDay] = useState(null);   // the fin whale day on the map (Controls picks it; Legend shows its key)
@@ -52,7 +52,7 @@ export default function HudDock({ scene, deep = false, onDeep, credit, auv = fal
         ))}
       </div>
       <div className="dock-pops">
-        {watch.on && <div className="dock-pop" role="group" aria-label="Watcher"><WatchKey /></div>}
+        {watch.on && <div className="dock-pop" role="group" aria-label="Watcher"><WatchKey bundle={bundle} onSensor={onSensor} /></div>}
         <div id={pop("terrain")} className="dock-pop" role="group" aria-label="Terrain controls" hidden={!open.has("terrain")}>
           <Controls scene={scene} deep={deep} onDeep={onDeep} whaleDay={whaleDay} onWhaleDay={setWhaleDay} quakeColor={quakeColor} onQuakeColor={onQuakeColor} />
         </div>

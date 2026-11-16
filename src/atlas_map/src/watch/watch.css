@@ -5,15 +5,39 @@
 .watch-dot.gaps { background: var(--watch-yellow); }
 .watch-dot.ok { background: var(--good); }
 .watch-dot.unchecked, .watch-dot.failed { background: transparent; border: 1px solid var(--text-muted); }
-.watch-key { padding: 10px 12px; min-width: 220px; max-width: 280px; }
-.watch-key .row { display: flex; align-items: center; gap: 0; font-size: 12.5px; padding: 2px 0; }
+.watch-key { padding: 10px 12px; min-width: 240px; max-width: 320px; }
+.watch-key .row { display: flex; align-items: center; gap: 0; font-size: 12.5px; padding: 3px 4px; margin: 0 -4px; width: calc(100% + 8px);
+  background: none; border: 0; border-radius: 4px; color: inherit; font: inherit; text-align: left; }
+.watch-key button.row { cursor: pointer; }
+.watch-key button.row:hover:not(:disabled), .watch-key button.row[aria-expanded="true"] { background: var(--surface-2); }
+.watch-key button.row:disabled { cursor: default; opacity: 0.6; }
+.watch-list { list-style: none; margin: 2px 0 6px; padding: 0 0 0 15px; max-height: 260px; overflow-y: auto; }
+.watch-list button { display: block; width: 100%; text-align: left; background: none; border: 0; color: inherit; font: inherit;
+  padding: 3px 4px; border-radius: 4px; cursor: pointer; }
+.watch-list button:hover { background: var(--surface-2); }
+.watch-list .nm { display: block; font-size: 12px; line-height: 1.3; }
+.watch-list .d { display: block; font-size: 11px; color: var(--text-secondary); }
 .watch-key .row b { margin-left: auto; padding-left: 12px; }
 .watch-key .row.muted { color: var(--text-secondary); }
 .watch-key .hint, .watch-line .hint { font-size: 11.5px; color: var(--text-secondary); margin: 6px 0 0; line-height: 1.4; }
 .watch-line p { margin: 4px 0 0; }
 .dock-btn.watch[aria-pressed="true"] { color: var(--surface-0); background: var(--text-primary); }
-/* A site with a problem sensor: a ring in the worst problem's colour around its marker. */
-.site[data-watch]::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--w); box-shadow: 0 0 9px var(--w); pointer-events: none; }
+/* A site with a problem sensor: a vertical flare in the worst problem's colour, rising from its marker (behind it). */
+.site[data-watch] { isolation: isolate; }
+.site[data-watch] svg { position: relative; z-index: 1; }
+.site[data-watch]::before {
+  content: ""; position: absolute; left: 50%; bottom: 50%; width: 3px; height: 64px; transform: translateX(-50%);
+  border-radius: 2px; pointer-events: none; transform-origin: bottom center;
+  background: linear-gradient(to top, var(--w) 0%, color-mix(in srgb, var(--w) 55%, transparent) 45%, transparent 100%);
+  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--w) 70%, transparent);
+  animation: watch-flare 2.4s ease-in-out infinite;
+}
+.site[data-watch]::after {   /* the glow where the flare leaves the marker */
+  content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; transform: translate(-50%, -50%);
+  border-radius: 50%; pointer-events: none; background: radial-gradient(circle, color-mix(in srgb, var(--w) 75%, transparent), transparent 70%);
+}
+@keyframes watch-flare { 0%, 100% { opacity: 0.85; transform: translateX(-50%) scaleY(0.92); } 50% { opacity: 1; transform: translateX(-50%) scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .site[data-watch]::before { animation: none; } }
 .site[data-watch="no_data"] { --w: var(--watch-red); }
 .site[data-watch="diverted"] { --w: var(--watch-blue); }
 .site[data-watch="gaps"] { --w: var(--watch-yellow); }

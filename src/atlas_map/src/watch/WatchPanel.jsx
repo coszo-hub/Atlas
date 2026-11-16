@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useWatch } from "./WatchProvider.jsx";
 import { WATCH_LABEL } from "./watch.js";
 import "./watch.css";
@@ -10,16 +11,37 @@ const MEANING = {
 };
 
 // The Watcher view's key, under the dock while the owl button is on: what each colour means and how many sensors
-// show it, the day the report graded, and when Nereus's live status was read.
-export function WatchKey() {
-  const { report, live, counts } = useWatch();
+// show it, the day the report graded, and when Nereus's live status was read. A colour's row opens the list of its
+// sensors (site, since when); a sensor in it opens its card.
+export function WatchKey({ bundle, onSensor }) {
+  const { report, live, counts, states } = useWatch();
+  const [open, setOpen] = useState(null);
   if (!report) return <div className="panel watch-key"><div className="eyebrow">Watcher</div><p className="hint">The daily report is not available just now.</p></div>;
+  const site = id => bundle?.siteById?.[bundle?.sensorById?.[id]?.site]?.label;
+  const of = k => Object.entries(states).filter(([, s]) => s.state === k)
+    .map(([id, s]) => ({ id, name: bundle?.sensorById?.[id]?.name || s.name, site: site(id) || s.site || "", since: s.since }))
+    // The site is on its own line: a name that starts with it ("Oregon Offshore Cabled Shallow Profiler Mooring CTD") drops it.
+    .map(r => ({ ...r, short: r.site && r.name.startsWith(`${r.site} `) ? r.name.slice(r.site.length + 1) : r.name }))
+    .sort((a, b) => a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
   return (
     <div className="panel watch-key">
       <div className="eyebrow">Watcher · {fmtDay(report.day)} UTC</div>
       {["no_data", "diverted", "gaps"].map(k => (
-        <div key={k} className="row" title={MEANING[k]}>
-          <span className={`watch-dot ${k}`} aria-hidden="true" />{WATCH_LABEL[k]}<b className="mono">{counts[k]}</b>
+        <div key={k}>
+          <button className="row" title={MEANING[k]} aria-expanded={open === k} disabled={!counts[k]}
+            onClick={() => setOpen(open === k ? null : k)}>
+            <span className={`watch-dot ${k}`} aria-hidden="true" />{WATCH_LABEL[k]}<b className="mono">{counts[k]}</b>
+          </button>
+          {open === k && (
+            <ul className="watch-list" aria-label={`${WATCH_LABEL[k]}: sensors`}>
+              {of(k).map(r => (
+                <li key={r.id}><button onClick={() => onSensor?.(r.id)}>
+                  <span className="nm" title={r.name}>{r.short}</span>
+                  <span className="d">{r.site}{r.since && k !== "diverted" ? ` · since ${fmtDay(r.since.slice(0, 10))}` : ""}</span>
+                </button></li>
+              ))}
+            </ul>
+          )}
         </div>
       ))}
       <div className="row muted"><span className="watch-dot ok" aria-hidden="true" />Recording<b className="mono">{counts.recording - counts.gaps - counts.diverted}</b></div>

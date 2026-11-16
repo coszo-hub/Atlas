@@ -36,6 +36,23 @@ describe("the Watcher", () => {
     expect(key).toHaveTextContent("4 sensors watched");
     expect(key).toHaveTextContent("200 Hz data under Navy diversion");
   });
+  it("a colour's row lists its sensors, and a sensor in the list opens its card", async () => {
+    mockFetch();
+    const onSensor = vi.fn();
+    const bundle = { sensorById: { POD: { name: "Oregon Offshore Cabled Shallow Profiler Mooring CTD", site: "osps" } }, siteById: { osps: { label: "Oregon Offshore Cabled Shallow Profiler Mooring" } } };
+    await mount(<HudDock scene={{ U: { exag: { value: 6 } } }} credit="GMRT" bundle={bundle} onSensor={onSensor} />);
+    fireEvent.click(screen.getByRole("button", { name: /Watcher/ }));
+    const row = screen.getByRole("button", { name: /Not recording\s*1/ });
+    expect(row).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(row);
+    expect(row).toHaveAttribute("aria-expanded", "true");
+    const list = screen.getByRole("list", { name: "Not recording: sensors" });
+    expect(list).toHaveTextContent("CTD");   // its site is on the line below
+    expect(list).toHaveTextContent("Oregon Offshore Cabled Shallow Profiler Mooring");
+    expect(list).toHaveTextContent("since Aug 3, 2026");
+    fireEvent.click(screen.getByRole("button", { name: /^CTD/ }));
+    expect(onSensor).toHaveBeenCalledWith("POD");
+  });
   it("a sensor's card says its state, since when, Nereus's word and the check", async () => {
     mockFetch();
     await mount(<WatchLine id="POD" />);
