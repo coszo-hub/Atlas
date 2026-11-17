@@ -18,9 +18,11 @@ info = pd.read_csv(f"{ERDDAP}/info/{dataset}/index.csv")
 attrs = info[info["Row Type"] == "attribute"]
 units = attrs[attrs["Attribute Name"] == "units"].set_index("Variable Name")["Value"]
 names = info.loc[info["Row Type"] == "variable", "Variable Name"].tolist()
-if VARIABLES is None:   # the measurements, not coordinates, QC flags or test records
+if VARIABLES is None:   # the measurements, not coordinates, QC flags or test records; a profiler's measurements all
+    # end in _profiler_depth_enabled, which is a copy only where the plain name is there too
     VARIABLES = [v for v in names if v not in ("time", "latitude", "longitude", "z", "station", "deployment")
-                 and not v.endswith(("_qc_agg", "_qc_tests", "_qc_executed", "_qc_results", "_profiler_depth_enabled"))]
+                 and not v.endswith(("_qc_agg", "_qc_tests", "_qc_executed", "_qc_results"))
+                 and not (v.endswith("_profiler_depth_enabled") and v.removesuffix("_profiler_depth_enabled") in names)]
 stop = pd.Timestamp(END) if END else pd.Timestamp.now("UTC").tz_localize(None).normalize() + pd.Timedelta(days=1)
 
 # One request: for each day, how many values of each variable are not missing (ERDDAP's orderByCount), a year at a

@@ -103,7 +103,7 @@ def run(test: dict, img: str) -> dict:
     inside = (f"cat > recipe.py && timeout {TIMEOUT_S} python recipe.py; rc=$?; echo @@FILES@@; "
               "find . -maxdepth 1 -type f ! -name recipe.py -size +0 -printf '%s %f\\n'; exit $rc")
     cmd = ["docker", "run", "--rm", "-i", "--name", name, "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
-           "--memory", "4g", "--cpus", "2", "--pids-limit", "256", "--tmpfs", "/tmp:size=256m",
+           "--memory", "4g", "--cpus", "2", "--pids-limit", "256", "--tmpfs", "/tmp:size=1g",
            "--mount", f"type=tmpfs,destination=/work,tmpfs-size={WORK_CAP},tmpfs-mode=1777",
            *account, img, "sh", "-c", inside]
     try:

@@ -23,6 +23,9 @@ if HYDROPHONE in ("AXBA1", "AXCC1", "AXEC2", "HYS14", "HYSB1"):   # a station: i
     data = ooipy.get_acoustic_data_LF(START, end, HYDROPHONE)
 else:
     data = ooipy.get_acoustic_data(START, end, HYDROPHONE)
+if data is None:   # before the calibration below, which needs the data (the archive has gaps)
+    raise SystemExit(f"no data from {HYDROPHONE} between {START} and {end}: try another time, or check the raw-data archive's days")
+if HYDROPHONE not in ("AXBA1", "AXCC1", "AXEC2", "HYS14", "HYSB1"):
     # OOIPy 1.3.0 finds a broadband hydrophone's calibration by its deployment, but fails for the current one (its end
     # time is blank): find the hydrophone (asset ID) deployed then from OOI's deployments list instead.
     deployments = pd.read_csv("https://raw.githubusercontent.com/OOI-CabledArray/deployments/main/HYDBBA_deployments.csv")
@@ -31,8 +34,6 @@ else:
                      & (pd.to_datetime(deployments["endTime"]).isna() | (pd.to_datetime(deployments["endTime"]) > pd.Timestamp(START)))]
     asset = on["assetID"].iloc[-1]
     data.get_asset_ID = lambda: asset
-if data is None:
-    raise SystemExit(f"no data from {HYDROPHONE} between {START} and {end}")
 
 # Each column: Welch's PSD of AVERAGE seconds with the median of its periodograms (not the mean, which the broadband
 # hydrophones' ADCP pings would dominate), corrected by the hydrophone's frequency-dependent sensitivity from its

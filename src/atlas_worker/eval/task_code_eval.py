@@ -14,18 +14,19 @@ sys.path.insert(0, str(ROOT / "src/data_recipes"))
 import test_recipes   # noqa: E402
 
 WORKER = "https://rca-atlas.quakehunt.workers.dev/v1/answer"
-# (task, question, what the script must carry as the question set it)
+# (task, question, what the script must carry as the question set it). Each window has data (checked 17 Nov 2026): the
+# first run asked for a hydrophone gap (12 Oct), a profiler CTD past its last data (Sept) and a CTD not on ERDDAP.
 CASES = [
     ("earthquake_waveform", "Write Python code to plot the waveform at AXCC1 from 2026-10-20 03:10 to 03:14 UTC with the instrument response removed and a 4-30 Hz bandpass", [r"AXCC1", r"2026-10-20"]),
     ("seismic_noise_psd", "Write a script to compute the noise PSD of the AXEC2 seismometer for 2 days starting 1 October 2026", [r"AXEC2", r"2026-10-01|2026, 10, 1\b"]),
     ("sta_lta_detection", "Write code to detect earthquakes at Axial with STA/LTA on 5 October 2026 from 02:00 to 04:00 UTC", [r"2026-10-05"]),
-    ("hydrophone_spectrogram", "Python code for a spectrogram of the Axial Base broadband hydrophone for 30 minutes from 2026-10-12 06:00 UTC", [r"2026-10-12"]),
+    ("hydrophone_spectrogram", "Python code for a spectrogram of the Axial Base broadband hydrophone for 30 minutes from 2026-11-01 06:00 UTC", [r"2026-11-01|2026, 11, 1\b"]),
     ("axial_uplift", "Write code to plot Axial Seamount's uplift from March to October 2026 with uplift rates", [r"2026-03"]),
-    ("profiler_ctd_section", "Python code for a T-S diagram and depth-time section from the Slope Base shallow profiler CTD for 10-14 September 2026", [r"2026-09-1[04]", r"rs01sbps"]),
+    ("profiler_ctd_section", "Python code for a T-S diagram and depth-time section from the Slope Base shallow profiler CTD for 10-14 August 2026", [r"2026-08-1[04]|2026, 8, 1[04]", r"rs01sbps"]),
     ("qc_time_series", "Write a script for daily mean temperature at the Slope Base seafloor CTD in 2025, without QARTOD failed data", [r"2025", r"rs01slbs"]),
     ("adcp_currents", "How do I plot current speed and direction from the Slope Base seafloor ADCP on 15 September 2026? Give me code", [r"2026-09-15", r"RS01SLBS"]),
     ("earthscope_availability", "Write code to find which days in October 2026 the Hydrate Ridge seismometers HYS11 to HYS14 had data", [r"HYS1", r"2026-10"]),
-    ("erddap_coverage", "Write code showing which days the Axial Base deep profiler CTD has data on ERDDAP in 2026", [r"RS03AXPD", r"2026"]),
+    ("erddap_coverage", "Write code showing which days the Slope Base deep profiler CTD has data on ERDDAP in 2023", [r"RS01SBPD", r"2023"]),
     ("event_waveform_package", "Write code to save the waveforms of M4.5 or larger earthquakes within 500 km of Axial in September 2026 at AXCC1 and AXAS1, response removed, as MiniSEED", [r"2026-09", r"AXCC1"]),
     ("botpt_detide", "Write code to remove the tides from the eastern caldera BOTPT pressure for August 2026, hour by hour", [r"BOTPTA302", r"2026-08"]),
     ("station_response", "Write code to list HYSB1's channels, epochs, orientations and instrument responses", [r"HYSB1"]),
