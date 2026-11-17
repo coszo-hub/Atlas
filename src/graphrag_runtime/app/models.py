@@ -36,6 +36,12 @@ class PapersNamingRequest(StrictModel):
     limit: int = Field(default=10, ge=1, le=20)
 
 
+class PapersLinkedRequest(StrictModel):
+    """A sensor's identities (station code, designator, inventory ID, instrument-record node) whose linked papers are wanted."""
+    terms: list[Annotated[str, Field(pattern=r"^[A-Za-z0-9._-]{3,60}$")]] = Field(min_length=1, max_length=12)
+    limit: int = Field(default=30, ge=1, le=50)
+
+
 class ChunksByIdRequest(StrictModel):
     """Chunks of one collection by id, in the order asked (the OOI asset-management chunks the Worker knows by name)."""
     collection_id: str = Field(pattern=r"^[a-z0-9_]{2,60}$")

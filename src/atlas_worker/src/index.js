@@ -475,9 +475,11 @@ async function dataAccessRecords(question, env, code = false) {
 }
 
 // The papers that used the instrument a question names (isPaperUsageQuestion): its records first (the codes the
-// question gives, else a search among instrument records), then the whole full-text layer, by the codes papers name
-// it by (papers_naming, the passages' MENTIONS of the sensor) and by its name's meaning. One passage a paper, the
-// literal matches first, eight papers at most. A failure leaves the question to the main evidence.
+// question gives, else a search among instrument records), then every paper the literature links tie to it
+// (papers_linked: naming it by code, range or designator, or describing its site and kind, in abstract or full text,
+// each with the link's evidence passage), then papers the full-text layer finds by its codes (papers_naming) and by its
+// name's meaning, for any the links miss. One passage a paper, links first, 25 papers at most. A failure leaves the
+// question to the main evidence.
 async function papersFor(question, env) {
   const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
   try {
@@ -489,7 +491,14 @@ async function papersFor(question, env) {
     const byCode = found.filter((hit) => asked.some((code) => new RegExp(`\\b${code}\\b`).test(`${hit.title || ""}\n${hit.text || ""}`)));
     const records = (byCode.length ? byCode : found.filter((hit) => !types.length || types.some((type) => type.test(hit.title || "")))).slice(0, 3);
     const codes = [...new Set([...asked, ...instrumentCodes(records.map((hit) => `${hit.title}\n${hit.text}`))])].slice(0, 6);
-    const named = codes.length ? (await postJson(`${api}/v1/papers-naming`, { terms: codes, limit: 12 }, headers)).hits || [] : [];
+    // The sensor's identities: the codes, and its records' nodes (INSTRUMENT-…), which reach the links through the
+    // identifiers they share (its inventory ID, designators, station code).
+    const identities = [...new Set([...codes, ...records.map((hit) => hit.metadata?.node_local_id).filter(Boolean)])]
+      .filter((term) => /^[A-Za-z0-9._-]{3,60}$/.test(term)).slice(0, 12);
+    const [linked, named] = await Promise.all([
+      identities.length ? postJson(`${api}/v1/papers-linked`, { terms: identities, limit: 30 }, headers).then((r) => r.hits || []).catch(() => []) : [],
+      codes.length ? postJson(`${api}/v1/papers-naming`, { terms: codes, limit: 12 }, headers).then((r) => r.hits || []) : [],
+    ]);
     // By meaning: the question's own words for the instrument ("Slope Base pressure gauge") and each record's name.
     const descriptions = [searchText(instrumentSearch(question)), ...records.map((hit) => String(hit.title || "").replace(/\s*\((?:description|params)\)$/i, ""))];
     const described = (await Promise.all([...new Set(descriptions.filter(Boolean))].map((query) => postJson(`${api}/v1/search`, {
@@ -497,10 +506,10 @@ async function papersFor(question, env) {
     }, headers).then((r) => r.hits || [])))).flat();
     const place = askedPlace(question).toLowerCase();
     const seen = new Set();
-    const papers = [...named.map((hit) => withRangeNote(hit, codes)), ...described.filter((hit) => !place || String(hit.text || "").toLowerCase().includes(place))].filter((hit) => {
+    const papers = [...linked, ...named.map((hit) => withRangeNote(hit, codes)), ...described.filter((hit) => !place || String(hit.text || "").toLowerCase().includes(place))].filter((hit) => {
       const key = paperKey(hit);
       return key && !seen.has(key) && seen.add(key);
-    }).slice(0, 8).map((hit) => ({ ...hit, layer: true }));
+    }).slice(0, 25).map((hit) => ({ ...hit, layer: true }));
     return [...records.map(withRouteCitations), ...papers];
   } catch (error) {
     console.error("paper lookup failed", error instanceof Error ? error.message : "unknown");

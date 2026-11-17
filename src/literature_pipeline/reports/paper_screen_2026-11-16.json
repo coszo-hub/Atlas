@@ -1,0 +1,3881 @@
+{
+"kept": [
+{
+"key": "10.5670/oceanog.2011.79",
+"title": "A 20-Year Hydroacoustic Time Series of Seismic and Volcanic Events in the Northeast Pacific Ocean",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.48550/arxiv.2607.28306",
+"title": "A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1007/978-3-032-32643-0_24",
+"title": "A Hybrid CNN-BiLSTM Approach for Whale Monitoring Using Distributed Acoustic Sensing System",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3061739135",
+"title": "A Regional Vulnerability Assessment for the Dungeness Crab (Metacarcinus magister) to Changing Ocean Conditions: Insights From Model Projections and Empirical Experiments",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3019274524",
+"title": "A Review of the Regional Cabled Array in the Northeast Pacific",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceanse.2019.8867218",
+"title": "A Rotary Sonar for Long-Term Acoustic Monitoring of Deep-Sea Gas Emissions",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2024.1358591",
+"title": "A model for community-driven development of best practices: the Ocean Observatories Initiative Biogeochemical Sensor Data Best Practices and User Guide",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.22541/essoar.170365180.02276553/v1",
+"title": "AGU 2023 - Chadwick iPoster",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2018.106",
+"title": "Accessing OOI Data",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.10501596.1",
+"title": "Acoustic and In-situ Observations of Hydrothermal Discharge at ASHES Vent Field: an OOI Cabled Array Case Study",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.23919/oceans.2015.7401808",
+"title": "An in-situ chemical sensor system for cabled ocean observatory applications at hydrothermal vents",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2901095933",
+"title": "Analysis of Microearthquake Sequences from the 2015 Eruption of Axial Seamount using Ocean Bottom Seismometer Data.",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/2015gc005955",
+"title": "Analysis of bubble plume distributions to evaluate methane hydrate decomposition on the continental slope",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceans.2016.7761396",
+"title": "Automated QA/QC and time series analysis on OOI high-definition video data",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1121/10.0040855",
+"title": "Automated localization of fin whale calls on four days of Ocean Observatories Initiative distributed acoustic sensing data",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceanse.2017.8084602",
+"title": "Autonomous sensors powered by a benthic microbial fuel cell provide long-term monitoring of the northeast pacific oxygen minimum zone",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceans.2016.7761484",
+"title": "Axial Seamount - wired and restless: A cabled submarine network enables real-time, tracking of a Mid-Ocean Ridge eruption and live video of an active hydrothermal system Juan de Fuca Ridge, NE Pacific",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2018.119",
+"title": "Axial Seamount Biology Catalog",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.48550/arxiv.2511.06128",
+"title": "Axial Seamount Eruption Forecasting Experiment",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3017040745",
+"title": "Bottom focused cameras on the OOI Endurance Array and their potential value to ocean ecology",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2510264809",
+"title": "Chronic shallow seawater circulation driven by subsurface gas dynamics, at the Southern Hydrate Ridge seep system, Cascadia",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2782174888",
+"title": "Cloud-accelerated analysis of subsea high-definition camera data",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.7284/911147",
+"title": "Cruise AT50-29 on RV Atlantis",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/2016gl069430",
+"title": "Crustal magnetization and the subseafloor structure of the ASHES vent field, Axial Seamount, Juan de Fuca Ridge: Implications for the investigation of hydrothermal sites",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.26443/seismica.v2i1.368",
+"title": "Curated Pacific Northwest AI-ready Seismic Dataset",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2782071862",
+"title": "Deriving quantitative metrics from OOI high-definition video data for the purpose of automated QA/QC",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3207004786",
+"title": "Determining Fin Whale Call Counts in the Northeast Pacific using Hydrophone Data",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1785/0320260023",
+"title": "Distributed Acoustic Sensing Beyond Optical Repeaters Offshore Oregon",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.25080/jxdk4427",
+"title": "Echodataflow: Recipe-based Fisheries Acoustics Workflow Orchestration",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1029/2022jc019588",
+"title": "El Niño‐Related Stratification Anomalies Over the Continental Slope Off Oregon in Summer 2014 and 2015: The Potential Vorticity Advection Mechanism",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2024.124",
+"title": "Expanding Access to Ocean Science Through Inclusively Designed Data Sonifications",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.10504760.1",
+"title": "Forecasting the Next Eruption at Axial Seamount Based on an Inflation-Predictable Pattern of Deformation",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2562269670",
+"title": "Interpretation of the relationship between benthic fauna, geologic distributions, and methane seeps at Southern Hydrate Ridge, Oregon continental margin",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.21785/icad2024.002",
+"title": "Iterative Design of Auditory Displays Involving Data Sonifications and Authentic Ocean Data",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W62547678",
+"title": "Legacy of Hydrate Ridge: an illustrated account",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.48550/arxiv.2603.14844",
+"title": "Long-term marine acoustic and seismic monitoring using distributed acoustic sensing and deep learning",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmicb.2013.00153",
+"title": "Microbiological characterization of post-eruption “snowblower” vents at Axial Seamount, Juan de Fuca Ridge",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3133/sir20245062i",
+"title": "Monitoring marine eruptions",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceans.2016.7761469",
+"title": "Monitoring methane emissions at Southern Hydrate Ridge using an OOI Cabled Array Acoustic Doppler Current Profiler",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.apor.2026.105281",
+"title": "Multispectral representation of Distributed Acoustic Sensing data: A framework for physically interpretable feature extraction and visualisation",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.b8ca5006b4256b34.3745ac673d8f4f8a.1",
+"title": "M³: Towards Long-Term Acoustic Monitoring of Gas Emissions using Underwater Cabled Observatory Technology",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceans.2016.7761398",
+"title": "NSF's Cabled Array: A wired tectonic plate and overlying ocean",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.10501923.1",
+"title": "Observing and interpreting seafloor tilt at Axial Seamount",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1038/s41467-026-70033-x",
+"title": "Oceanic upper crustal accretion by melt sill and lava flow interaction at Axial volcano",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3015718451",
+"title": "Plugged In: Novel Sensor Development by External Researchers for Deployment on the Ocean Observatories Initiative Regional Cabled Array",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.48550/arxiv.2602.09295",
+"title": "Positive-Unlabelled Active Learning to Curate a Dataset for Orca Resident Interpretation",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3005171704",
+"title": "Protocol for the Assessment and Correction of Moored Surface Water and Air pCO2 Measurements from the Ocean Observatories Initiative Endurance Array",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.4043/27275-ms",
+"title": "Remote Real-Time Subsea Monitoring Systems",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5270/oceanobs09.cwp.10",
+"title": "Sensor Needs and Readiness Levels for Ocean Observing: An Example from the Ocean Observatories Initiative (OOI)",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1029/2025jc023821",
+"title": "Spatial Variability in Year‐to‐Year, Near‐Bottom Hypoxia Over the United States Pacific Northwest Continental Shelf",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1111/1462-2920.14011",
+"title": "Spatially distinct, temporally stable microbial populations mediate biogeochemical cycling at and below the seafloor in hydrothermal vent fluids",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2010.73",
+"title": "Spotlight: Axial Seamount",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W7167864258",
+"title": "Stoichiometry of Metabolite-Derived Particulate Organic Carbon and Nitrogen at Axial Seamount in the Northeastern Pacific Ocean",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.10509423.1",
+"title": "Synergistic Data Source Approach to Studying Keystone Marine Predators",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.22541/essoar.176598879.93584658/v1",
+"title": "The Cascadia Offshore Subduction Zone Observatory Infrastructure Project",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/essoar.10501952.1",
+"title": "The Next Decade of Observations at Axial Seamount: A Geophysical Perspective",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3188815384",
+"title": "Understanding the long-term Tidal Modulation on Methane Bubble Emissions using Acoustics, Southern Hydrate Ridge, Cascadia",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2026.1944587",
+"title": "Using active acoustics from an underwater glider to investigate the relationship between acoustic target locations and coastal ocean fronts off the Pacific Northwest coast",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W2512835649",
+"title": "Variations of fin whale vocalizations in the Northeast Pacific and the effects of environmental parameters on acoustic sensitivity",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.22541/essoar.176859110.06461171/v1",
+"title": "Visualization of Hydrothermal Plume Discharge Locations and Temporal Dynamics at ASHES Vent Field",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1121/1.5136607",
+"title": "Acoustic and in-situ observations of hydrothermal discharge at ASHES vent field",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0035099",
+"title": "Analysis of underwater radiated noise from ships using distributed acoustic sensing technology",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0037514",
+"title": "Analyzing underwater radiated noise from ships using distributed acoustic sensing",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/1.5136596",
+"title": "Applications for marine mammal studies using passive acoustic data from the Coastal Endurance array off Newport, Oregon",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0027063",
+"title": "Automated detection of fin whale calls recorded with distributed acoustic sensing",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu21-988",
+"title": "Axial Seamount: A Wired Submarine Volcano Observatory in the NE Pacific",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3176497734",
+"title": "Circulation, Hydrography, and Transport over the Summit of Axial-the Destination Node of OOI's Cabled Array",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0007591",
+"title": "Combined acoustical and seismic studies of Axial Seamount",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0016027",
+"title": "Detecting hydro-acoustic signals using Distributed Acoustics Sensing technology",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0035119",
+"title": "Distributed acoustic sensing for underwater passive acoustic monitoring of biophonic, geophonic, and anthropogenic sources—Universityof Washington Lab tour",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu23-5843",
+"title": "Dynamic magma movements beneath the Axial Seamount revealed by Rayleigh-wave Admittance Method",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0007697",
+"title": "Estimating ocean variables using ambient noise interferometry",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu26-15728",
+"title": "Evaluation of Self-Calibrating Pressure Gauges for Seafloor Geodesy: Instrument Comparison at Axial Seamount, Barkley Canyon, and the Endeavour Segment",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3084426984",
+"title": "In-situ and Acoustic Observations of Hydrothermal Discharge at ASHES Vent Field: preliminary results from an OOI Cabled Array Case Study",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/1.5068549",
+"title": "Low-frequency acoustic observations with cabled observatories on the Juan de Fuca Ridge",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3135001328",
+"title": "Magnitude and Drivers of the Seasonal Cycle and Interannual Variability of pCO 2 in the Washington Coast OOI Endurance Array",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W2991839404",
+"title": "Ocean Observing at Axial Seamount: Details of the Current OOI-RSN Design Within the Context of the April 2011 Eruption",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu26-16018",
+"title": "Seismic observation of magma mixing inside the magma reservoir after the 2015 eruption of Axial Seamount",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0007848",
+"title": "Ship detection from passive underwater acoustic recordings using machine learning",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0007593",
+"title": "Six years of low-frequency underwater noise off the Oregon coast from the OOI Regional Cabled Array System (RCA) and interpretive linkage with RCA Oceanographic Data",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu26-15285",
+"title": "Sustained Cabled Seafloor Observations of the Cascadia Subduction Zone off Central Oregon",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3008879863",
+"title": "Telepresence and real-time data transmission from Axial Seamount: implications for education and community engagement utilizing the OOI-RSN cabled observatory",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu26-3598",
+"title": "Temporal Magnetic Surveys using Autonomous Underwater Vehicles",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3095586870",
+"title": "The NSF's Regional Cabled Array Submarine Observatory: New Results from Five years of Operations",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3015446366",
+"title": "The relationship between post- 2015 eruption deformation and seismicity rates since the 2015 eruption at Axial Seamount using OOI data",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.5194/egusphere-egu26-15142",
+"title": "Toward Global-Scale Submarine Fiber Sensing: Early Results from Multispan DAS at the OOI Regional Cabled Array",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0004599",
+"title": "Trends in low frequency ambient noise for a site 80 km off the Oregon coast over approximately four years ending August 2020",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1121/10.0007694",
+"title": "Using Axial Base cabled array sensor data to study the prediction of second-order pressures from nonlinear surface wave interactions associated with microseisms",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "https://openalex.org/W3085321614",
+"title": "Using the OOI Cabled Array HD Camera to Explore Geophysical and Oceanographic Problems at Axial Seamount",
+"tier": "5_meeting_abstract"
+},
+{
+"key": "10.1038/s41586-026-10785-0",
+"title": "Anatomy of a seafloor spreading event captured by in situ seismogeodesy",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2970842680",
+"title": "Cascadia Pilot Experiment Data Report",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2299141024",
+"title": "Descriptive acoustic analysis of a newly-discovered marine seep",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7167868285",
+"title": "Distribution of Megafaunal Taxa at the Pythia's Oasis Methane Seep",
+"tier": "3_text_place"
+},
+{
+"key": "10.7275/7403929.0",
+"title": "Energetic Limitations Of Thermophilic Methanogens And Thiosulfate Reducers In The Subsurface Biosphere At Deep-Sea Hydrothermal Vents",
+"tier": "3_text_place"
+},
+{
+"key": "10.7275/11912692.0",
+"title": "HYDROGEN STRESS AND SYNTROPHY OF HYPERTHERMOPHILIC HETEROTROPHS AND METHANOGENS",
+"tier": "3_text_place"
+},
+{
+"key": "10.5670/oceanog.2012.11",
+"title": "Hydrothermal Discharge During Submarine Eruptions: The Importance of Detection, Response, and New Technology",
+"tier": "3_text_place"
+},
+{
+"key": "10.31223/x5fh91",
+"title": "Mid-Ocean Ridge Volcanism (Encyclopedia of Volcanoes, 3rd edition, book chapter)",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7167862010",
+"title": "Signal Attenuation of Tectonic Tremor-like Signals due to Sediment in the Cascadia and Izu-Bonin-Mariana Subduction Zones",
+"tier": "3_text_place"
+},
+{
+"key": "10.1002/jgrc.20361",
+"title": "Temporal variability of near-bottom dissolved oxygen during upwelling off central Oregon",
+"tier": "3_text_place"
+},
+{
+"key": "10.1017/s002531540003931x",
+"title": "13C/12C of organisms from Juan de Fuca Ridge hydrothermal vents: a guide to carbon and food sources",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002328",
+"title": "1998 eruption of axial volcano: Multibeam anomalies and sea‐floor observations",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W7133280237",
+"title": "3D modeling of gas hydrates distribution in South Hydrate Ridge (Cascadia accretionary prism, offshore Oregon) through geological time",
+"tier": "2_rca_place"
+},
+{
+"key": "10.71548/4628",
+"title": "A Mineralogical and Fluid Inclusion Study of Massive Sulphide Samples from the Juan De Fuca Ridge, Northeast Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3997/2214-4609.202010338",
+"title": "A New Attribute of Identifying Gas Hydrate in Marine Sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/feart.2021.691699",
+"title": "A New Insight Into Seawater-Basalt Exchange Reactions Based on Combined δ18O—Δ′17O—87Sr/86Sr Values of Hydrothermal Fluids From the Axial Seamount Volcano, Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.13402480",
+"title": "A New Species Of Scale worm (Polychaeta : Polynoidae) From Axial Volcano, Juan De Fuca Ridge, Northeast Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.112.2006",
+"title": "A Test of the Temperature, Pressure, and Conductivity Tool Prototype at Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1469-7998.2000.tb00628.x",
+"title": "A deep-sea octopus (Graneledone cf. boreopacifica) as a shell-crushing hydrothermal vent predator",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/jgrb.50351",
+"title": "A kinetic model for the methane hydrate precipitated from venting gas at cold seep sites at Hydrate Ridge, Cascadia margin, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1365-246x.2011.05105.x",
+"title": "A marine electromagnetic survey to detect gas hydrate at Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2006jb004768",
+"title": "A mathematical model for the formation and dissociation of methane hydrates in the marine environment",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1785/bssa0770010160",
+"title": "A microseismicity survey of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s11001-020-09412-y",
+"title": "A new approach for the identification of gas hydrate in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12751",
+"title": "A seafloor and sea surface gravity survey of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jb01586",
+"title": "A seafloor long‐baseline tiltmeter",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/91gl00967",
+"title": "A search for hydroacoustic signals associated with the 2 June 1988 temperature anomaly at axial seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.chemgeo.2005.04.002",
+"title": "A study of the chemistry of pore fluids and authigenic carbonates in methane seep environments: Kodiak Trench, Hydrate Ridge, Monterey Bay, and Eel River Basin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.23860/diss-1677",
+"title": "ADVANCED DEFORMATION MODELING CONSTRAINED BY GEODESY: APPLICATIONS TO UNDERGROUND NUCLEAR TESTING AND SUBMARINE VOLCANOES",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gl013i009p00957",
+"title": "Acoustic noise measurements on Axial Seamount, Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5194/bg-9-4661-2012",
+"title": "Activity and abundance of denitrifying bacteria in the subsurface biosphere of diffuse hydrothermal vents of the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1080/01490450303896",
+"title": "Activity, Distribution, and Diversity of Sulfate Reducers and Other Bacteria in Sediments above Gas Hydrate (Cascadia Margin, Oregon)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02081",
+"title": "Alvin magnetic survey of zero‐age crust: CoAxial Segment Eruption, Juan de Fuca Ridge 1993",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/aem.00223-06",
+"title": "Anaerobic Respiration on Tellurate and Other Metalloids in Bacteria from Hydrothermal Vent Fields in the Eastern Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ismej.2012.159",
+"title": "Anaerobic degradation of propane and butane by sulfate-reducing bacteria enriched from marine hydrocarbon cold seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps264001",
+"title": "Anaerobic oxidation of methane above gas hydrates at Hydrate Ridge, NE Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1678647495",
+"title": "Anaerobic oxidation of methane at Hydrate Ridge (OR)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2780176558",
+"title": "Anaerobic oxidation of methane in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3997/2214-4609-pdb.168.arq_580",
+"title": "Analysis of OBS and MCS data offshore Oregon: Estimation of elastic properties of gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1887657558",
+"title": "Analysis of multicomponent seismic data from the Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2735947948",
+"title": "Analysis of the comparability of two 3D seismic data sets acquired at Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.23919/oceans.2009.5422179",
+"title": "Anisotropy of bottom loss in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3209472346",
+"title": "Annual and long-term seismic velocity variations at Axial Seamount observed with seismic ambient noise",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002330",
+"title": "Anomalous helium and heat signatures associated with the 1998 Axial Volcano Event, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.margeo.2007.05.003",
+"title": "Appearance and preservation of natural gas hydrate from Hydrate Ridge sampled during ODP Leg 204 drilling",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2172/1123503",
+"title": "Application of Crunch-Flow Routines to Constrain Present and Past Carbon Fluxes at Gas-Hydrate Bearing Sites",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ismej.2012.37",
+"title": "Archaea of the Miscellaneous Crenarchaeotal Group are abundant, diverse and widespread in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1260/0144598001492166",
+"title": "Are There Commercial Deposits of Methane Hydrates in Ocean Sediments?",
+"tier": "2_rca_place"
+},
+{
+"key": "10.31979/etd.jucq-3yj6",
+"title": "Assessing the Role of Steam Explosivity in Shallow and Deep Marine Environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1462-2920.2008.01653.x",
+"title": "Assimilation of methane and inorganic carbon by microbial communities mediating the anaerobic oxidation of methane",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/s41467-024-49188-y",
+"title": "Asymmetric magma plumbing system beneath Axial Seamount based on full waveform inversion of seismic data",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/0091-7613(1998)026<0647:acftcs>2.3.co;2",
+"title": "Authigenic carbonates from the Cascadia subduction zone and their relation to gas hydrate stability",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1360/02yd0069",
+"title": "Authigenic gypsum found in gas hydrate-associated sediments from Hydrate Ridge, the eastern� North Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509517",
+"title": "Automated Display and Statistical Analysis of Interpreted Deep-sea Bottom Photographs",
+"tier": "2_rca_place"
+},
+{
+"key": "10.22541/au.174405179.94193080/v1",
+"title": "Automatic Cataloging of Earthquakes in the Northeast Pacific Ocean based on Hydroacoustic T-phases Recorded by Cabled Seafloor Observatories",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2991570450",
+"title": "Avo Analysis of Gas Hydrates At Hydrate Ridge Off The Cascadia Margin Using Well-log Calibrated Ocean Bottom Seismometer (obs) Data",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23508896",
+"title": "Axial Volcano Awakes: Preliminary Report of the Detection of and Response to the January, 1998, Eruption at Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12689",
+"title": "Axial seamount: An active ridge axis volcano on the Central Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.2003.tb01080.x",
+"title": "Bacterial diversity in a subseafloor habitat following a deep-sea volcanic eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005jg000025",
+"title": "Biogeochemical investigations of marine methane seeps, Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3104054379",
+"title": "Biosignatures in authigenic carbonates from Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/0091-7613(2002)030<0503:botstc>2.0.co;2",
+"title": "Breathing of the seafloor: Tidal correlations of seismicity at Axial volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/0091-7613-31.1.e3",
+"title": "Breathing of the seafloor: Tidal correlations of seismicity at Axial volcano: Comment",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2963523557",
+"title": "Calibrated Ocean Bottom Pressure Measurements for Marine Geodesy",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2010gc003392",
+"title": "Capillary controls on methane hydrate distribution and fracturing in advective systems",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2010jb008143",
+"title": "Capillary effects on hydrate stability in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gm124p0115",
+"title": "Carbon Isotopes of Biomarkers Derived from Methane-Oxidizing Microbes at Hydrate Ridge, Cascadia Convergent Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g30986.1",
+"title": "Carbon isotope fractionation by circumneutral iron-oxidizing bacteria",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/gbi.12354",
+"title": "Carbon isotopic heterogeneity of coenzyme F430 and membrane lipids in methane‐oxidizing archaea",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1144/gsl.sp.1995.087.01.06",
+"title": "Characteristics of hydrothermal discharge following a magmatic intrusion",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1080/01490450303873",
+"title": "Characterization of Bacteriogenic Iron Oxide Deposits from Axial Volcano, Juan de Fuca Ridge, Northeast Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.31390/gradschool_dissertations.5864",
+"title": "Characterization of Gas Hydrate Formation and Its Impact on Slope Stability in Offshore Environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1080/01490450303894",
+"title": "Characterization of Specific Membrane Fatty Acids as Chemotaxonomic Markers for Sulfate-Reducing Bacteria Involved in Anaerobic Oxidation of Methane",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1439-0485.2007.00151.x",
+"title": "Characterization of bacterial community structure in vestimentiferan tubewormRidgeia piscesaetrophosomes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/segam2017-17799758.1",
+"title": "Characterization of gas-charged sediments from joint inversion of Qp and Qs with sonic logs",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2018gc007708",
+"title": "Chemical Variations in the 1998, 2011, and 2015 Lava Flows From Axial Seamount, Juan de Fuca Ridge: Cooling During Ascent, Lateral Transport, and Flow",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.palaeo.2005.04.029",
+"title": "Chemoherms on Hydrate Ridge — Unique microbially-mediated carbonate build-ups growing into the water column",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12823",
+"title": "Circulation near Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g21317.1",
+"title": "Clathrites: Archives of near-seafloor pore-fluid evolution (δ44/40Ca, δ13C, δ18O) in gas hydrate environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0012-821x(04)00212-2",
+"title": "Co-existence of gas hydrate, free gas, and brine within the regional gas hydrate stability zone at Hydrate Ridge (Oregon margin): evidence from prolonged degassing of a pressurized core",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmicb.2017.01042",
+"title": "Co-registered Geochemistry and Metatranscriptomics Reveal Unexpected Distributions of Microbial Activity within a Hydrothermal Vent Field",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/92jb02048",
+"title": "Comment on “Consequences of phase separation on the distribution of hydrothermal fluids at ASHES Vent Field, Axial Volcano, Juan de Fuca Ridge” by Christopher G. Fox",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2005.05.044",
+"title": "Comment on “Gas hydrate growth, methane transport, and chloride enrichment at the southern summit of Hydrate Ridge, Cascadia margin off Oregon” by Torres et al. [Earth Planet. Sci. Lett. 226 (2004) 225–241]",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2901613803",
+"title": "Community ecology of hydrothermal vents at Axial Volcano, Juan de Fuca Ridge, northeast Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s00248-015-0615-6",
+"title": "Comparison of Archaeal and Bacterial Diversity in Methane Seep Carbonate Nodules and Host Sediments, Eel River Basin and Hydrate Ridge, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2000gl012566",
+"title": "Complex flow patterns through Hydrate Ridge and their impact on seep biota",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W7113050096",
+"title": "Composition and Structure of Axial Seamount Microbial Mat Communities Following an Eruptive Event",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97gl02998",
+"title": "Conductive heat loss in recent eruptions at mid‐ocean ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12923",
+"title": "Consequences of phase separation on the distribution of hydrothermal fluids at ASHES Vent Field, Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2009gc003009",
+"title": "Contamination of basaltic lava by seawater: Evidence found in a lava pillar from Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2015.03.043",
+"title": "Contrasting styles of deep-marine pyroclastic eruptions revealed from Axial Seamount push core records",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1071/aseg2010ab212",
+"title": "Converted wave velocity model using 4C Ocean Bottom Seismometer data",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ismej.2015.258",
+"title": "Coupled RNA-SIP and metatranscriptomics of active chemolithoautotrophic communities at a deep-sea hydrothermal vent",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.engeos.2026.100603",
+"title": "Cross-well identification of gas hydrates based on well logging and machine learning: A case study from ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7284/902820",
+"title": "Cruise SP1128 on RV Robert Gordon Sproul",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4095/220810",
+"title": "Cryo-electron microscopic studies of structures and composition of Mallik gas-hydrate-bearing samples",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2234062983",
+"title": "Crystallite size distributions of marine gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1155/2006/710190",
+"title": "Cultivation of methanogens from shallow marine sediments at Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.107.2006",
+"title": "Data Report: 129I/I Ratios and Halogen Concentrations in Pore Water of Hydrate Ridge and Their Relevance for the Origin of Gas Hydrates: A Progress Report",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.126.2006",
+"title": "Data Report: Acetate and Hydrogen Concentrations in Pore Fluids Associated with a Large Gas Hydrate Reservoir, Southern Hydrate Ridge, offshore Oregon, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.127.2006",
+"title": "Data Report: Composition of Clay Minerals from Hemipelagic Sediments at Hydrate Ridge, Cascadia Subduction Zone",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.102.2006",
+"title": "Data Report: Consolidation and Strength Characteristics of Sediments from ODP Site 1244, Hydrate Ridge, Cascadia Continental Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.105.2006",
+"title": "Data Report: Dissolved Sulfide Concentration and Sulfur Isotopic Composition of Sulfide and Sulfate in Pore Waters, ODP Leg 204, Hydrate Ridge and Vicinity, Cascadia Margin, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.110.2006",
+"title": "Data Report: Grain-Size and Bulk and Clay Mineralogy of Sediments from the Summit and Flanks of Southern Hydrate Ridge, Sites 1244-1250, ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.106.2006",
+"title": "Data Report: Nuclear Magnetic Resonance Logging while Drilling, ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.122.2006",
+"title": "Data Report: Shapes and Structures of Gas Hydrates Imaged by Computed Tomographic Analyses, ODP Leg 204, Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.108.2006",
+"title": "Data Report: Stress Orientation in Gas Hydrate-Bearing Sediments near Hydrate Ridge: Evidence from Borehole Breakouts Observed from Logging-While-Drilling Resistivity Images",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1563142187",
+"title": "Data report : composition of clay minerals from hemiplegic sediments at Hydrate Ridge, Cascadia subduction zone",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003jb002618",
+"title": "Decay of hydrothermal output following the 1998 seafloor eruption at Axial Volcano: Observations and models",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3209661052",
+"title": "Deformation Models for the 2015-Eruption and Post-Eruption Inflation at Axial Seamount from Repeat AUV Bathymetry",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2608080518",
+"title": "Deformation Monitoring and the Magmatic Cycle at Axial Seamount, NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W7155456280",
+"title": "Deformation at Oceanic Plate Boundaries: Insights from Geophysical Observations",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W129600479",
+"title": "Deformation, fluid venting, and slope failure at an active margin gas hydrate province, Hydrate Ridge Cascadia accretionary wedge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2955525650",
+"title": "Degassing and Vesiculation during the 2011 eruption of Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g32635.1",
+"title": "Detecting hydrate and fluid flow from bottom simulating reflector depth anomalies",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4031/mtsj.50.2.2",
+"title": "Development and Application of a New Mobile pH Calibrator for Real-Time Monitoring of pH in Diffuse Flow Hydrothermal Vent Fluids",
+"tier": "2_rca_place"
+},
+{
+"key": "10.26153/tsw/11685",
+"title": "Development of a hydrate-gas-water static equilibrium model and analysis of three-phase stability",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7907/h9f5-t161",
+"title": "Diazotrophy in the Deep: An Analysis of the Distribution, Magnitude, Geochemical Controls, and Biological Mediators of Deep-Sea Benthic Nitrogen Fixation",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2305874067",
+"title": "Die Hydrothermalsysteme des Axial Seamount (Juan de Fuca-Rücken): Tracerausbreitung und Mineralpräzipitate - Forschungsarbeiten mit FS SONNE und dem kanadischen Tiefseeroboter ROPOS im Nordost-Pazifik",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W594905354",
+"title": "Die Hydrothermalsysteme des Axial Seamount - Tracerausbreitung und Mineralpräzipitate im Bereich des Juan de Fuca-Rückens; Forschungsarbeiten mit FS Sonne und dem kanadischen Tiefseeroboter ROPOS im Nordost-Pazifik",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W763301615",
+"title": "Diffuse, low-temperature hydrothermal deposits on the Juan de Fuca ridge and plate",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/ut61067.2025.10947277",
+"title": "Dimensional Uncertainty Quantification for Laser-Scanning-Based Underwater 3D Reconstructions",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/0012-821x(92)90074-6",
+"title": "Discrete and diffuse heat transfer atashes vent field, Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.118.2006",
+"title": "Dissolved Fluoride Concentrations in Methane-Charged Sediment Sequences",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12855",
+"title": "Distribution and composition of hydrothermal plume particles from the ASHES Vent Field at Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2288362355",
+"title": "Distribution and composition of buoyant and non-buoyant hydrothermal plume particles from the ASHES vent at Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003gl016974",
+"title": "Distribution and height of methane bubble plumes on the Cascadia Margin characterized by acoustic imaging",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1101/2020.06.04.125666",
+"title": "Diverse viruses in deep-sea hydrothermal vent fluids have restricted dispersal across ocean basins",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.5959693",
+"title": "Diversity & distribution of microeukaryotes at deep-sea hydrothermal vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.2001.tb00825.x",
+"title": "Diversity among three novel groups of hyperthermophilic deep-sea Thermococcus species from three sites in the northeastern Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/aem.71.1.467-479.2005",
+"title": "Diversity and Distribution of Methanotrophic Archaea at Cold Seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s13213-014-0813-3",
+"title": "Diversity and abundance of Bacteria and nirS-encoding denitrifiers associated with the Juan de Fuca Ridge hydrothermal system",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005jg000097",
+"title": "Diversity and distribution of subseafloor Thermococcales populations in diffuse hydrothermal vents at an active deep‐sea volcano in the northeast Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.15760/etd.8076",
+"title": "Diversity of Methanogens and other Archaea in Permanently Cold, Anoxic Marine Sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1439-0485.2009.00335.x",
+"title": "Diversity of bathyal macrofauna on the northeastern Pacific margin: the influence of methane seeps and oxygen minimum zones",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/ab00085",
+"title": "Diversity of invertebrate colonists on simple and complex substrates at hydrothermal vents on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/mra.00615-21",
+"title": "Draft Genome Sequence of Desulfurobacterium sp. Strain AV08, a Thermophilic Chemolithoautotroph Isolated from a Deep-Sea Hydrothermal Vent",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/mra.00607-20",
+"title": "Draft Genome Sequence of Streptomyces sp. Strain ventii, Isolated from a Microbial Mat near Hydrothermal Vents within the Axial Seamount in the Pacific Ocean, and Resequencing of the Type Strains Streptomyces lonarensis NCL 716 and Streptomyces bohaiensis 11A07",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2212458796",
+"title": "Drilling Gas Hydrate at Hydrate Ridge, ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1260/014459803773646968",
+"title": "Drilling Gashydrates on Hydrate Ridge, Cascadia Continental Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g34057.1",
+"title": "Drivers of focused fluid flow and methane seepage at south Hydrate Ridge, offshore Oregon, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "10.14288/1.0040983",
+"title": "EFFECT OF CHANGES IN SEAFLOOR TEMPERATURE AND SEA-LEVEL ON GAS HYDRATE STABILITY",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2608141121",
+"title": "Earthquake Stress Drop Before, During, and After the 2015 Eruption at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7916/d8-jm2y-1s64",
+"title": "Earthquake and volcanic processes at mid-ocean ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps243025",
+"title": "Ecological implications of surficial marine gas hydrates for the associated small-sized benthic biota at the Hydrate Ridge (Cascadia Convergent Margin, NE Pacific)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W294094324",
+"title": "Ecology, phylogeny and physiological adaptations of euryhaline and moderately halophilic bacteria from deep-sea and hydrothermal-vent environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005gc001207",
+"title": "Effect of massive gas hydrate formation on the water isotopic fractionation of the gas hydrate system at Hydrate Ridge, Cascadia margin, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.gca.2024.11.031",
+"title": "Effects of microbial alteration of oceanic crust on sulfur cycling in hydrothermal systems",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2010gl044970",
+"title": "Effects of multiphase methane supply on hydrate accumulation and fracture generation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gb002389",
+"title": "Efficiency of the benthic filter: Biological control of the emission of dissolved methane from sediments containing shallow gas hydrates at Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2000gb001391",
+"title": "Enhanced marine CH4 emissions to the atmosphere off Oregon caused by coastal upwelling",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1462-2920.2004.00669.x",
+"title": "Environmental regulation of the anaerobic oxidation of methane: a comparison of ANME‐I and ANME‐II communities",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/aem.02114-07",
+"title": "Estimates of Biogenic Methane Production Rates in Deep Marine Sediments at Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2000jb900390",
+"title": "Estimating the thickness of the free gas zone beneath Hydrate Ridge, Oregon continental margin, from seismic velocities and attenuation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1306/13201111m893349",
+"title": "Estimation of Gas-hydrate Saturation and Heterogeneity on Cascadia Margin from Ocean Drilling Project Leg 204 Logging-while-drilling Measurements",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/93gl01057",
+"title": "Estimation of seafloor roughness spectral parameters from multi‐beam sonar acoustic backscatter data: Axial Seamount, Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2023jb027123",
+"title": "Estimation of Seismic Attenuation and Gas Hydrate Concentration From Surface Seismic Data at Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.2147985",
+"title": "Estimation of gas-hydrate saturation using multicomponent seismic data",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2415949220",
+"title": "Estimation of the regional methane efflux on Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.orggeochem.2004.04.003",
+"title": "Ethane enrichment and propane depletion in subsurface gases indicate gas hydrate occurrence in marine sediments at southern Hydrate Ridge offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/gbi.70016",
+"title": "Evaluating Serpentinization as a Source of Phosphite to Microbial Communities in Hydrothermal Vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl900498",
+"title": "Evidence for deformation associated with the 1998 eruption of Axial Volcano, Juan de Fuca Ridge, from acoustic extensometer measurements",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002325",
+"title": "Evidence for iron and sulfur enrichments in hydrothermal plumes at Axial Volcano following the January–February 1998 eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509531",
+"title": "Evidence of Active Gground Deformation on the Mid-ocean Ridge: Axial Seamount, Juan de Fuca Ridge, AprilヨJune 1988",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12813",
+"title": "Evidence of active ground deformation on the mid‐ocean ridge: Axial Seamount, Juan de Fuca Ridge, April‐June 1988",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s00367-007-0080-4",
+"title": "Fabric of gas hydrate in sediments from Hydrate Ridge—results from ODP Leg 204 samples",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02280",
+"title": "Fate of event hydrothermal plumes on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2021gc010082",
+"title": "Faulting and Magmatic Accretion Across the Overlapping Spreading Center Between Vance Segment and Axial South Rift, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gl021286",
+"title": "Feeding methane vents and gas hydrate deposits at south Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2006gl029134",
+"title": "First determination of gas hydrate crystallite size distributions using high‐energy synchrotron radiation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005gl024896",
+"title": "First results from a marine controlled‐source electromagnetic survey to detect gas hydrates offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/01eo00358",
+"title": "Fishing trawler nets Massive “Catch” of methane hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gc000778",
+"title": "Fluid and chemical cycling at Bush Hill: Implications for gas‐ and hydrate‐rich environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0012-821x(02)00732-x",
+"title": "Fluid and chemical flux in and out of sediments hosting methane hydrate deposits on Hydrate Ridge, OR, II: Hydrological processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0012-821x(02)00733-1",
+"title": "Fluid and chemical fluxes in and out of sediments hosting methane hydrate deposits on Hydrate Ridge, OR, I: Hydrological provinces",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/essoar.10501465.1",
+"title": "Fluid composition or bottom currents: What drives extremes in behavior of plumes at ASHES vent field, Axial Volcano?",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0016-7037(03)00127-3",
+"title": "Fluid flow, methane fluxes, carbonate precipitation and biogeochemical turnover in gas hydrate-bearing sediments at Hydrate Ridge, Cascadia Margin: numerical modeling and mass balances",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003gl017104",
+"title": "Focused magma supply at the intersection of the Cobb hotspot and the Juan de Fuca ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2736827937",
+"title": "Fossilized biofilms from Hydrate Ridge (off Oregon, U.S.A.) idintified by spatiallly resolved biosignature analyses",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2006.03.012",
+"title": "Fracture networks and hydrate distribution at Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2335852975",
+"title": "Gas Hydrate Systems at Hydrate Ridge;Results from ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2501838730",
+"title": "Gas hydrate and free gas saturations estimated from velocity logs on Hydrate Ridge, offshore Oregon, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gm124p0099",
+"title": "Gas Hydrate-Associated Carbonates and Methane-Venting at Hydrate Ridge: Classification, Distribution, and Origin of Authigenic Lithologies",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2007jb004993",
+"title": "Gas hydrate concentration and characteristics within Hydrate Ridge inferred from multicomponent seismic reflection data",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1144/sp319.13",
+"title": "Gas hydrate crystallite size investigations with high-energy synchrotron radiation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s00367-007-0077-z",
+"title": "Gas hydrate disturbance fabrics of southern Hydrate Ridge sediments (ODP Leg 204): Relationship with texture and physical properties",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2004.07.029",
+"title": "Gas hydrate growth, methane transport, and chloride enrichment at the southern summit of Hydrate Ridge, Cascadia margin off Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.gca.2007.03.032",
+"title": "Gas hydrate measurements at Hydrate Ridge using Raman spectroscopy",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.gca.2004.08.021",
+"title": "Gas hydrate systems at Hydrate Ridge offshore Oregon inferred from molecular and isotopic properties of hydrate-bound and void gases",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2305664477",
+"title": "Gas trasport and Gas hydrate distribution characteristics of Southern Hydrate Ridge: Results from ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.60521/332558",
+"title": "GeoTIFF images of gridded near-bottom bathymetry data for the distal rift zones of Axial Seamount, version: December, 2025",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W176484302",
+"title": "Geochemical expression of volcanism in an on-axis and intraplate hotspot : Cobb and Marquesas",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W60273306",
+"title": "Geochemical observations on Hydrate Ridge, Cascadia Margin : July 1999",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W332007661",
+"title": "Geochemical observations on Hydrate Ridge, Cascadia Margin during R/V BROWN-ROPOS cruise : August 1998",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/1462-2920.12314",
+"title": "Geochemical, metagenomic and metaproteomic insights into trace metal utilization by methane‐oxidizing microbial consortia in sulphidic marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2747908466",
+"title": "Geochemistry and petrology of andesites from the north rift zone of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12895",
+"title": "Geochemistry of hydrothermal fluids from Axial Seamount hydrothermal emissions study vent field, Juan de Fuca Ridge: Subseafloor boiling and subsequent fluid‐rock interaction",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12713",
+"title": "Geochemistry of axial seamount lavas: Magmatic relationship between the Cobb Hotspot and the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/essoar.10507930.1",
+"title": "Geodetic Monitoring at Axial Seamount Since its 2015 Eruption Reveals Short-Term Deflation Events During Long-Term Re-inflation, a Waning Magma Supply, and Tightly Linked Rates of Deformation and Seismicity",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/ggge.20240",
+"title": "Geologic history of the summit of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.109.2006",
+"title": "Geological and geochemical constraints on the isotopic composition of interstitial waters from the Hydrate Ridge region, Cascadia Continental Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.109",
+"title": "Geological and geochemical contraints on the isotopic composition of interstitial waters from the Hydrate Ridge region, Cascadia Continental margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12947",
+"title": "Geological and hydrothermal controls on the distribution of megafauna in Ashes Vent Field, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gm057p0053",
+"title": "Geology of axial seamount, Juan de Fuca spreading center, northeastern Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1575/1912/24375",
+"title": "Geophysical and geochemical constraints on submarine volcanic processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0025-3227(03)00268-8",
+"title": "Geophysical constraints on the surface distribution of authigenic carbonates across the Hydrate Ridge region, Cascadia margin",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3182923875",
+"title": "Geophysical observations preceding the 2015 Axial Seamount eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1545304888",
+"title": "Geotechnical characterization of sediments from Hydrate Ridge, Cascadia Continental Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1021/acsearthspacechem.0c00047",
+"title": "Global Average Potassium Isotope Composition of Modern Seawater",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/mec.16745",
+"title": "Globally‐distributed microbial eukaryotes exhibit endemism at deep‐sea hydrothermal vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2113/gsecongeo.81.8.1867",
+"title": "Gold in sea-floor polymetallic sulfide deposits",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jb02485",
+"title": "Graben formation associated with recent dike intrusions and volcanic eruptions on the mid‐ocean ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/1758-2229.12065",
+"title": "Growth kinetics and energetics of a deep‐sea hyperthermophilic methanogen under varying environmental conditions",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/9781119054146.ch11",
+"title": "Growth, Demise, and Recent Eruption History of the Eastern Cobb‐Eickelberg Seamounts at the Intersection with the Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.2010.00984.x",
+"title": "Halomonas and Marinobacter ecotypes from hydrothermal vent, subseafloor and deep-sea environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1134/s0001437009030151",
+"title": "Heavy metals in the benthic animals from hydrothermal vents: Results of neutron activation analysis",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/93gl01271",
+"title": "Helium isotope variations in Juan De Fuca Ridge basalts",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12785",
+"title": "High‐resolution studies of the summit of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.jvolgeores.2012.12.004",
+"title": "High and highly variable cooling rates during pyroclastic eruptions on Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gm124p0297",
+"title": "High-Resolution Multibeam Survey of Hydrate Ridge, Offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans.2016.7761264",
+"title": "High-resolution AUV mapping and ROV sampling of mid-ocean ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2001jb000297",
+"title": "High‐resolution bathymetric surveys using scanning sonars: Lava flow morphology, hydrothermal vents, and geologic structure at recent eruption sites on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/int-2020-0137.1",
+"title": "How gas-hydrate saturation and morphology control seismic attenuation: A case study from the south Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.chemgeo.2003.12.034",
+"title": "Hydrate Ridge: a natural laboratory for the study of microbial life fueled by methane from near-surface gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmicb.2016.01240",
+"title": "Hydrogen Limitation and Syntrophic Growth among Natural Assemblages of Thermophilic Methanogens at Deep-sea Hydrothermal Vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1073/pnas.1206632109",
+"title": "Hydrogen-limited growth of hyperthermophilic methanogens at deep-sea hydrothermal vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4095/209220",
+"title": "Hydrosweep bathymetry of Axial Volcano, Juan de Fuca Ridge, based on Cruise SO-109 of the RV Sonne",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02403",
+"title": "Hydrothermal event plumes from the coaxial seafloor eruption site, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12843",
+"title": "Hydrothermal venting from the summit of a ridge axis Seamount: Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans.1983.1151993",
+"title": "Hydrothermal Vents and Sulfide Deposits, Axial Seamount, Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7936/zq26-p192",
+"title": "Hydrothermal influence on seawater composition: First direct observation from potassium isotopes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2172/803201",
+"title": "IN-SITU SAMPLING AND CHARACTERIZATION OF NATURALLY OCCURRING MARINE METHANE HYDRATE USING THE D/V JOIDES RESOLUTION",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2943777527",
+"title": "Imaging the Oceanic Crust with Broadband Seismic and Pressure Data",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2254424897",
+"title": "Implications of Environmental Heterogeneity for Community Structure, Colonization, and Trophic Dynamics at Eastern Pacific Methane Seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl900491",
+"title": "In situ ground deformation measurements from the summit of Axial Volcano during the 1998 volcanic episode",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002331",
+"title": "In situ observations of the onset of hydrothermal discharge during the 1998 Submarine Eruption of Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005gc001204",
+"title": "In situ Raman analyses of deep‐sea hydrothermal and cold seep systems (Gorda Ridge and Hydrate Ridge)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans-spain.2011.6003421",
+"title": "In situ Raman probe for quantitative observation of sediment pore waters in the Deep Ocean — Development and applications",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g19689.1",
+"title": "In situ methane concentrations at Hydrate Ridge, offshore Oregon: New constraints on the global gas hydrate inventory from an active margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1462-2920.2006.01127.x",
+"title": "In vitro cell growth of marine archaeal‐bacterial consortia during anaerobic oxidation of methane with sulfate",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1046/j.1462-2920.2002.00299.x",
+"title": "In vitro demonstration of anaerobic oxidation of methane coupled to sulphate reduction in sediment from a marine gas hydrate area",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/bf03184118",
+"title": "Indicators of ? 13C and ? 18O of gas hydrate-associated sedi-ments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.2009.00747.x",
+"title": "Individual hydrothermal vents at Axial Seamount harbor distinct subseafloor microbial communities",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2527851831",
+"title": "Influence of 3D fault modeling on gas migration pathways and gas hydrate accumulation in porous sediments: case studies of Hydrate Ridge (Oregon margin) and Green Canyon (Gulf of Mexico)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509303",
+"title": "Initial Results of a Rapid Response to the 1993 CoAxial event: Relationships between Hydrothermal and Volcanic Processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02281",
+"title": "Initial results of the rapid response to the 1993 CoAxial event: Relationships between hydrothermal and volcanic processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1462-2920.2005.00844.x",
+"title": "Insights into the genomes of archaea mediating the anaerobic oxidation of methane",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1089/ast.2021.0036",
+"title": "Interpreting Molecular and Isotopic Biosignatures in Methane-Derived Authigenic Carbonates in the Light of a Potential Carbon Cycle in the Icy Moons",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005jb004165",
+"title": "Interpreting in situ pressure and hydraulic properties with borehole penetrometers in ocean drilling: DVTPP and Piezoprobe deployments at southern Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2954025444",
+"title": "Investigating Axial Seamount: Using Student-Generated Models to Understand Plate Tectonics",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3120519212",
+"title": "Investigations of Multi-system Seismic Reflection Data At Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2007.12.015",
+"title": "Iodine ages of pore waters at Hydrate Ridge (ODP Leg 204), Cascadia Margin: Implications for sources of methane in gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1073/pnas.1412269111",
+"title": "Iron oxides stimulate sulfate-driven anaerobic methane oxidation in seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmars.2024.1439471",
+"title": "Iron species and sulfur isotopic compositions of authigenic pyrite in deep-sea sediments at southern Hydrate Ridge, Cascadia margin (ODP Leg 204): implications for non-steady-state depositional and diagenetic processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2002pa000824",
+"title": "Is methane venting at the seafloor recorded by δ13C of benthic foraminifera shells?",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.gca.2004.07.012",
+"title": "Isotopic evidence for the incorporation of methane-derived carbon into foraminifera from modern methane seeps, Hydrate Ridge, Northeast Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3997/2214-4609.201701046",
+"title": "Joint Stochastic Inversion of Elastic-electrical Data for Reservoir Parameters of Gas Hydrate Bearing Sediment",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1080/01490450490253437",
+"title": "Laboratory Investigation of the Role of Bacteria in the Weathering of Basalt Near Deep Sea Hydrothermal Vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/0009-2541(92)90203-h",
+"title": "Laser microprobe study of sulfur isotope variation in a sea-floor hydrothermal spire, Axial Seamount, Juan de Fuca Ridge, eastern Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans.2004.1402901",
+"title": "Laser raman spectroscopic instrumentation for in situ geochemical analyses in the deep ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.101.2006",
+"title": "Leg 204 synthesis: gas hydrate distribution and dynamics in the central Cascadia accretionary complex",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2108/zs250078",
+"title": "Levinaespira georgesnyderi gen. et sp. nov., a New Deep-Sea Snail (Gastropoda: Neomphalidae) from Eastern Pacific Methane Seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps304077",
+"title": "Living benthic foraminifera in sediments influenced by gas hydrates at the Cascadia convergent margin, NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2007.01.002",
+"title": "Local seismic quantification of gas hydrates and BSR characterization from multi-frequency OBS data at northern Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl900505",
+"title": "Local seismicity following the 1998 eruption of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W44658932",
+"title": "Logging-While-Coring- First Tests of a New Technology for Scientific Drilling",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002326",
+"title": "Long‐term seismicity and ground deformation at Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1099/ijs.0.000097",
+"title": "M ethanocaldococcus bathoardescens sp. nov., a hyperthermophilic methanogen isolated from a volcanically active deep-sea hydrothermal vent",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps231121",
+"title": "Macrofaunal community structure and sulfide flux at gas hydrate deposits from the Cascadia convergent margin, NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2018.04.044",
+"title": "Magma ascent and lava flow emplacement rates during the 2011 Axial Seamount eruption based on CO2 degassing",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/35101581",
+"title": "Magma storage beneath Axial volcano on the Juan de Fuca mid-ocean ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003jb002767",
+"title": "Magmatic effects of the Cobb hot spot on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1139/cjes-2024-0053",
+"title": "Mapping of fluid venting and attenuation of hydrate bearing sediments from offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/segam2012-1294.1",
+"title": "Marine EM inversion using unstructured grids: a 2D parallel adaptive finite element algorithm",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1767411243",
+"title": "Marine Electromagnetic Methods for Gas Hydrate Characterization",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/0091-7613(1999)027<1075:motadf>2.3.co;2",
+"title": "Measurements of transience and downward fluid flow near episodic methane gas vents, Hydrate Ridge, Cascadia",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/s41586-025-08865-8",
+"title": "Melt focusing along lithosphere–asthenosphere boundary below Axial volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/aem.01868-25",
+"title": "Metabolic and population profiles of active subseafloor autotrophs in young oceanic crust at deep-sea hydrothermal vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gb002266",
+"title": "Methane sources, distributions, and fluxes from cold vent sites at Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1099/ijsem.0.007098",
+"title": "Methanothermococcus jasoni sp. nov., a novel thermophilic methanogen from subseafloor hydrothermal vent fluids of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1462-2920.2007.01441.x",
+"title": "Methyl sulfides as intermediates in the anaerobic oxidation of methane",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1546974221",
+"title": "Microbe-Metazoan interactions at Pacific Ocean methane seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.113.2006",
+"title": "Microbial Methane Generation and Gas Transport in Shallow Sediments of an Accretionary Complex, Southern Hydrate Ridge (ODP Leg 204), offshore Oregon, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmars.2014.00044",
+"title": "Microbial abundance and diversity patterns associated with sediments and carbonates from the methane seep environments of Hydrate Ridge, OR",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002343",
+"title": "Microbial biomass in the hydrothermal plumes associated with the 1998 Axial Volcano Eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1575/1912/72780",
+"title": "Microbial communities, activities, and metabolisms in Earth’s subseafloor and analog oceanic environments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/1462-2920.13185",
+"title": "Microbial eukaryotic distributions and diversity patterns in a deep‐sea methane seep ecosystem",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/1462-2920.15656",
+"title": "Microbial metabolism and adaptations in Atribacteria ‐dominated methane hydrate sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02436",
+"title": "Microbial‐mineral floc associated with nascent hydrothermal activity on CoAxial Segment, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003jb002499",
+"title": "Microearthquake patterns following the 1998 eruption of Axial Volcano, Juan de Fuca Ridge: Mechanical relaxation and thermal strain",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2025gc012229",
+"title": "Mid‐Ocean Ridge (MOR) Ash Dispersal on Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2948542551",
+"title": "Mikrobiologische Studien zur anaeroben Oxidation von Methan (AOM)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2563555663",
+"title": "Mineralogy and geochemistry of a hydrothermal silica-sulfide-sulfate spire in the caldera of Axial Seamount, Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5194/bg-5-731-2008",
+"title": "Miniaturized biosignature analysis reveals implications for the formation of cold seep carbonates at Hydrate Ridge (off Oregon, USA)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7907/z96q1v6q",
+"title": "Molecular and Geochemical Insights into Microbial Life Centimeters to Kilometers Below the Seafloor",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3090492251",
+"title": "Molecular characterization of methanotrophic and chemoautotrophic communities at cold seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1093/gji/ggad133",
+"title": "Morphology identification of gas hydrate based on a machine learning method and its applications on saturation estimation",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2603373921",
+"title": "Multi-frequency acoustic data (deeptow, surface towed) on Hydrate Ridge: First results",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.120.2006",
+"title": "Near-Offset Vertical Seismic Experiments during Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.13680810",
+"title": "New-Species And New Records Of Scaled Polychaetes (Polychaeta, Polynoidae) From The Axial Seamount Caldera Of The Juan-De-Fuca-Ridge In The Northeast Pacific And The East Pacific-Ocean Off Northern California",
+"tier": "2_rca_place"
+},
+{
+"key": "10.48321/d18adcf620",
+"title": "Next Generation Submersible Incubation System for Robotic Ocean Observation of Microbial Dynamics",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ismej.2013.147",
+"title": "Nitrate-based niche differentiation by distinct sulfate-reducing bacteria involved in the anaerobic oxidation of methane",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2001gl014013",
+"title": "Noble gases and radiocarbon in natural gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3897/aca.6.e108248",
+"title": "Non-Deterministic Factors Affect Competition Between Thermophilic Autotrophs from Deep-Sea Hydrothermal Vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/s44384-025-00017-6",
+"title": "North Pacific Ocean sound levels 2018–2022: COVID-19 pandemic impacts on anthropogenic noise",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.125.2006\">https://dx.doi.org/10.2973/odp.proc.sr.204.125.2006</a",
+"title": "North-South Variability in the History of Deformation and Fluid Venting across Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2245981545",
+"title": "ODP Leg 204: Drilling Gas Hydrates on Hydrate Ridge, Oregon continental margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02662",
+"title": "Observations of manganese and iron at the CoAxial Seafloor Eruption Site, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12961",
+"title": "Observations on the effects of sampling on hydrothermal vent habitat and fauna of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2998255919",
+"title": "Occurrence of gas hydrate and associated free-gas accumulations on Hydrate Ridge, offshore Oregon, USA",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3202620256",
+"title": "Ocean circulation at Axial Seamount in response to the 2015 eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2002jc001305",
+"title": "Ocean currents at Axial Volcano, a northeastern Pacific seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/95jc00687",
+"title": "Ocean tides in the continental margin off the Pacific Northwest Shelf",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W7208432968",
+"title": "On the origin of marinegas hydrates: Systematics of iodine and I-129 in pore waters",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2025gb008535",
+"title": "Organic Matter Availability and the Production of Methane‐Derived Dissolved Organic Carbon at Methane Seeps",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.marchem.2011.04.006",
+"title": "Organic carbon remineralisation and complex, early diagenetic solid–aqueous solution–gas interactions: Case study ODP Leg 204, Site 1246 (Hydrate Ridge)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2010jb007492",
+"title": "Origin and evolution of fracture‐hosted methane hydrate deposits",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps289043",
+"title": "Origin, composition and nutritional quality of particulate matter at deep-sea hydrothermal vents on Axial Volcano, NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.1845141",
+"title": "P-wave seismic anisotropy on Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s00227-007-0790-1",
+"title": "POM in macro-/meiofaunal food webs associated with three flow regimes at deep-sea hydrothermal vents on Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/cjg2.30075",
+"title": "PREDICTION OF THE METHANE SUPPLY AND FORMATION PROCESS OF GAS HYDRATE RESERVOIR AT ODP1247, HYDRATE RIDGE, OFFSHORE OREGON",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gl021437",
+"title": "Painting a picture of gas hydrate distribution with thermal images",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2172/1060006",
+"title": "Part 1: Phase I (CATTS Theory), Phase II (Milne Point), Phase III (Hydrate Ridge)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2005.10.026",
+"title": "Passing gas through the hydrate stability zone at southern Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2001jb001650",
+"title": "Permeability evolution during the formation of gas hydrates in marine sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/ggge.20239",
+"title": "Petrological variability of recent magmatism at Axial Seamount summit, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.31979/etd.sw2y-a7hc",
+"title": "Phreatomagmatic Eruption Deposits on the Seafloor Record Cataclysmic Caldera Formation on Axial Seamount, Juan de Fuca Mid-Ocean Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1128/aem.69.2.960-970.2003",
+"title": "Phylogenetic Diversity of Nitrogenase ( nifH ) Genes in Deep-Sea and Hydrothermal Vent Environments of the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmicb.2013.00185",
+"title": "Phylogenetic diversity and functional gene patterns of sulfur-oxidizing subseafloor Epsilonproteobacteria in diffuse hydrothermal vent fluids",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/gbi.12118",
+"title": "Phylogenetic placement of C ibicidoides wuellerstorfi ( S chwager, 1866) from methane seeps and non‐seep habitats on the P acific margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1071/is19042",
+"title": "Phylogeny, biogeography and systematics of Pacific vent, methane seep, and whale-fall Parougia (Dorvilleidae : Annelida), with eight new species",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.104.2006",
+"title": "Physical Properties of Near-Surface Sediments at Southern Hydrate Ridge: Results from ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.119.2006",
+"title": "Physical Properties of Repressurized Sediment from Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2495476341",
+"title": "Physical properties of pressurized sediment from hydrate ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3208521974",
+"title": "Pore water iodine concentrations and 129 I/I ratios of the Hydrate Ridge (ODP 204): Implication for the origin of gas hydrates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2011jb008290",
+"title": "Pore water sulfate, alkalinity, and carbon isotope profiles in shallow sediment above marine gas hydrate systems: A numerical modeling perspective",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/g22892a.1",
+"title": "Porosity of the upper edifice of Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/98gl01412",
+"title": "Porosity of very young oceanic crust from sea floor gravity measurements",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.dsr2.2009.05.004",
+"title": "Post-eruption succession of macrofaunal communities at diffuse flow hydrothermal vents on Axial Volcano, Juan de Fuca Ridge, Northeast Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/98jb00391",
+"title": "Postrifting seismicity and a model for the 1993 diking event on the Coaxial segment, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.17504/protocols.io.iutcewn",
+"title": "Potential Rate Measurements for Uptake of Bicarbonate and Acetate by Microbes in Crustal Fluids v1",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4043/30573-ms",
+"title": "Probabilistic Seismic Inversion for Shallow Site Characterization on the Hydrate Ridge Area",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.19401895",
+"title": "Proceedings of the Ocean Drilling Program Volume 204 Initial Reports: Drilling Gas Hydrates on Hydrate Ridge, Cascadia Continental Margin, Sites 1244–1252",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.19402401",
+"title": "Proceedings of the Ocean Drilling Program Volume 204 Scientific Results: Drilling Gas Hydrates on Hydrate Ridge, Cascadia Continental Margin, Sites 1244–1252",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2742615828",
+"title": "Processing of two colocated 3D seismic datasets from Hydrate Ridge, offshore Oregon: a 4D study",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W569515076",
+"title": "Properties and near-surface methane hydrates at Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1175/1520-0485(2001)031<0827:pfhvum>2.0.co;2",
+"title": "Prospecting for Hydrothermal Vents Using Moored Current and Temperature Data: Axial Volcano on the Juan de Fuca Ridge, Northeast Pacific*",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1088/1755-1307/3/1/012005",
+"title": "Pyroclastic eruptions from Axial caldera, Juan de Fuca Ridge, NE Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1619616722",
+"title": "Quantifying long-term methane flux change by coupling authigenic mineral distribution and kinetic modelling at southern Hydrate Ridge, Oregon.",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2003jb002422",
+"title": "Quantitative constraints on the growth of submarine lava pillars from a monitoring instrument that was caught in a lava flow",
+"tier": "2_rca_place"
+},
+{
+"key": "10.17504/protocols.io.iugcetw",
+"title": "RNA Stable Isotope Probing Experimental Set Up v1",
+"tier": "2_rca_place"
+},
+{
+"key": "10.17504/protocols.io.iuzcex6",
+"title": "RNA Stable Isotope Probing Experimental Set Up v2",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3289/geomar_rep_93_2000",
+"title": "RV SONNE CRUISE REPORT SO143 - TECFLUX - I - 1999 : TECTONICALLY-INDUCED MATERIAL FLUXES, HONOLULU - ASTORIA - SAN DIEGO, JUNE 29 - SEPTEMBER 6 , 1999",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3249/webdoc-3922",
+"title": "Raman spectroscopy of biosignature in methane-related microbialites",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s00367-013-0334-2",
+"title": "Rare earth element geochemistry in cold-seep pore waters of Hydrate Ridge, northeast Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2000jb900030",
+"title": "Recent eruptions on the CoAxial segment of the Juan de Fuca Ridge: Implications for mid‐ocean ridge accretion processes",
+"tier": "2_rca_place"
+},
+{
+"key": "10.21411/cbm.a.c85c8d59",
+"title": "Recruitment patterns of invertebrates at anhydrite hydrothermal vents on the Juan de Fuca Ridge, NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.115.2006",
+"title": "Relationship between Sediment Granulometry and the Presence of Gas Hydrate on Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004gl021219",
+"title": "Relationship of pore water freshening to accretionary processes in the Cascadia margin: Fluid sources and gas hydrate abundance",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12875",
+"title": "Relationships between lava types, seafloor morphology, and the occurrence of hydrothermal venting in the ASHES Vent Field of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ngeo1496",
+"title": "Repeat bathymetric surveys at 1-metre resolution of lava flows erupted at Axial Seamount in April 2011",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5479/si.gvp.bgvn201703-331021",
+"title": "Report on Axial Seamount (Undersea Features)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5479/si.gvp.bgvn199307-331020",
+"title": "Report on CoAxial Segment (Undersea Features)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2291583667",
+"title": "Reproductive and physiological condition and juvenile recruitment in the hydrothermal vent tubeworm Ridgeia piscesae Jones (Polychaeta: Siboglinidae) in the context of a highly variable habitat on Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2746329285",
+"title": "Ring Fault Mechanics Surrounding the 2015 Eruption of Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.111.2006",
+"title": "Rock Magnetic Identification of Magnetic Iron Sulfides and Its Bearing on the Occurrence of Gas Hydrates, ODP Leg 204 (Hydrate Ridge)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W154027361",
+"title": "Rock magnetic signature of gas hydrates in sediments from southern Hydrate Ridge (Cascadia Margin) (abstract of paper presented at AGU Fall Meeting, San Francisco, 8-12 Dec 2003)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/jrs.6711",
+"title": "SEM/Raman spectroscopy of clathrites as analogs of authigenic carbonates in ocean worlds",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509523",
+"title": "Sea Beam Backscatter Analysis Applied to the Classification of Deep-sea Volcanic Terrains",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/gm124p0087",
+"title": "Sea Floor Methane Hydrates at Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl01895",
+"title": "SeaBeam depth changes associated with recent lava flows, Coaxial Segment, Juan De Fuca Ridge: Evidence for multiple eruptions between 1981–1993",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5636/jgg.49.1327",
+"title": "Seafloor Electromagnetic Measurements above Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1098/rsta.1997.0013",
+"title": "Seafloor eruptions and evolution of hydrothermal fluid chemistry",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/91jb01577",
+"title": "Seafloor compliance observed by long‐period pressure and displacement measurements",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1101/2020.11.11.378315",
+"title": "Seafloor incubation experiment with deep-sea hydrothermal vent fluid reveals effect of pressure and lag time on autotrophic microbial communities",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1093/femsec/fiae001",
+"title": "Seafloor incubation experiments at deep-sea hydrothermal vents reveal distinct biogeographic signatures of autotrophic communities",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/96gl01673",
+"title": "Seafloor magnetotelluric sounding above axial seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1887433319",
+"title": "Sedimentology and geochemistry of gas hydrate rich sediments from the Oregon margin (Ocean Drilling Program Leg 204)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3164313367",
+"title": "Sedimentología y magnetismo de sedimentos ricos en hidratos de gas de Hydrate Ridge (margen de Oregón - ODP LEG 204): aplicación en estudios paleodimáticos",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3354/meps337027",
+"title": "Sediments hosting gas hydrate: oases for metazoan meiofauna",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W967500643",
+"title": "Seepage Systematic of Different Geological Settings: Reflected in Time Scales and Controls of Microbially MediatedCarbonate Formation",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1014652395",
+"title": "Seismic Characterization of Marine Gas Hydrates and Free Gas at Northern Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2526973989",
+"title": "Seismic Investigations of a Bottom Simulating Reflector : Implications on Gas Hydrate and free Gas at Southern Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.121.2006\">https://dx.doi.org/10.2973/odp.proc.sr.204.121.2006</a",
+"title": "Seismic Sequence Stratigraphy and Tectonic Evolution of Southern Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3010502015",
+"title": "Seismic and Acoustic Constraints on the Dynamics of the Submarine Eruption Cycle at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2005gl023945",
+"title": "Seismic anisotropy at Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3997/2214-4609-pdb.160.sbgf362",
+"title": "Seismic characteristics of gas hydrate system at the Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.2202665",
+"title": "Seismic characteristics of gas hydrates at Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/ngeo1490",
+"title": "Seismic precursors and magma ascent before the April 2011 eruption at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2531542377",
+"title": "Seismic quantification of marine gas hydrates at northern Hydrate Ridge - final results of the HYDGAS Projekt",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3011671777",
+"title": "Shallow crustal structure of Axial Seamount: Geophysical inversions of sea surface and near seafloor gravity observations",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W181111556",
+"title": "Shallow crustal structure of the caldera of Axial Seamount, Juan de Fuca ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0031-9201(98)00091-0",
+"title": "Short and long baseline tiltmeter measurements on axial seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans.2002.1192127",
+"title": "Side-scan sonar investigations and hydroacoustic 'bubble' quantification in an area of surface-near gas hydrate occurrences: recent studies from Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2528025601",
+"title": "Signatures of geochemical changes at methane-seeps as recorded by seep carbonates",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s13202-025-01968-y",
+"title": "Simultaneous inversion of five physical parameters of submarine gas reservoir from synthetic elastic impedance for high-efficiency reserve evaluation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.3389/fmicb.2016.00603",
+"title": "Single-Cell (Meta-)Genomics of a Dimorphic Candidatus Thiomargarita nelsonii Reveals Genomic Plasticity",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.124.2006",
+"title": "Sonic Velocities in an Active Gas Hydrate System, Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W24420703",
+"title": "Sound field near hydrothermal vents on Axial Seamount, Juan de Fuca Ridge. Technical report",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4319/lo.2004.49.6.1949",
+"title": "Spatial and temporal patterns in larval supply at hydrothermal vents in the northeast Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.dsr.2006.01.007",
+"title": "Spatial organization of food webs along habitat gradients at deep-sea hydrothermal vents on Axial Volcano, Northeast Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1472-4669.2005.00051.x",
+"title": "Spatial variations of methanotrophic consortia at cold methane seeps: implications from a high‐resolution molecular and isotopic approach",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02967",
+"title": "Special collection on the June 1993 volcanic eruption on the CoAxial segment, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/s11430-006-0872-9",
+"title": "Stable carbon and nitrogen isotopic composition of gas hydrate-bearing sediment from Hydrate Ridge, Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2001gb001851",
+"title": "Stable carbon isotopic evidence for methane oxidation in plumes above Hydrate Ridge, Cascadia Oregon Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2621893691",
+"title": "Stressing Rate Changes Associated with the 2015 Axial Seamount Eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2247052412",
+"title": "Sub-millimeter structure and internal architecture of ODP 204 (Hydrate Ridge) gas hydrates revealed by Synchroton Radiation X-Ray Cryo-Tomographic Microscopy (SRXCTM)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1007/bf00301391",
+"title": "Submarine tumuli and inflated tube-fed lava flows on Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/340702a0",
+"title": "Submarine venting of phase-separated hydrothermal fluids at Axial Volcano, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1264/jsme2.me08514",
+"title": "Subseafloor Microbial Communities in Methane Hydrate-Bearing Sediment at Two Distinct Locations (ODP Leg204) in the Cascadia Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1758-2229.2009.00074.x",
+"title": "Substantial 13 C/ 12 C and D/H fractionation during anaerobic oxidation of methane by marine consortia enriched in vitro",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2973/odp.proc.sr.204.114.2006",
+"title": "Subsurface Temperatures beneath Southern Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/96jc01451",
+"title": "Subtidal bottom pressure observed at Axial Seamount in the northeastern continental margin of the Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1046/j.1472-4669.2003.00001.x",
+"title": "Surface chemistry and reactivity of bacteriogenic iron oxides from Axial Volcano, Juan de Fuca Ridge, north‐east Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/essoar.10505810.1",
+"title": "Systematic Variations in Lava Flow Morphology Along the North and South Rift Zones of Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2520537325",
+"title": "THE ECOLOGY, BIOGEOCHEMISTRY AND PHYLOGENY OF METHANE SEEP AND NON-SEEP BENTHIC FORAMINIFERA FROM THE PACIFIC MARGIN",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2897849561",
+"title": "TRACKING SULFUR DIAGENESIS IN METHANE RICH MARINE SEDIMENTS ON THE CASCADIA MARGIN: COMPARING SULFUR ISOTOPES OF BULK SEDIMENT AND CHROMIUM REDUCIBLE SULFUR",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W210668487",
+"title": "Tectonic and volcanic structures of the southern flank of Axial Volcano, Juan de Fuca Ridge : results from a SeaMARC I sidescan sonar survey",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/0091-7613(1999)027<0939:taseoa>2.3.co;2",
+"title": "Temporal and spatial evolution of a gas hydrate–bearing accretionary ridge on the Oregon continental margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2013.02.030",
+"title": "Temporal variation of methane flares in the ocean above Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/ggge.20202",
+"title": "The 1998 eruption of Axial Seamount: New insights on submarine lava flow emplacement from high‐resolution mapping",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509273",
+"title": "The Caldera of Axial Volcano - Remote Sensing and Submersible Studies of a Hydrothermally Active Submarine Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12697",
+"title": "The Cobb‐Eickelberg Seamount Chain: Hotspot volcanism with mid‐ocean ridge basalt affinity",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2939143987",
+"title": "The Collapse of Sulfide Columns Within the Axial Seamount in Relation to Thermal and Seismic Activity",
+"tier": "2_rca_place"
+},
+{
+"key": "10.31979/etd.gsn2-yznd",
+"title": "The Effect of Submarine Volcanism on Foraminifera at Axial Seamount of Juan De Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509243",
+"title": "The January 1998 Earthquake Wwarm at Axial Volcano, Juan de Fuca Ridge: Hydroacoustic Evidence of Seafloor Volcanic Activity",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl01857",
+"title": "The June‐July 1993 seismo‐acoustic event at CoAxial segment, Juan de Fuca Ridge: Evidence for a lateral dike injection",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jb03112",
+"title": "The rise and fall of the Coaxial hydrothermal site, 1993–1996",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2998947478",
+"title": "The deep structure of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl01463",
+"title": "The initial rise of a hydrothermal plume from a line segment source—Results from a three‐dimensional numerical model",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2389260827",
+"title": "The magnetic properties of iron sulfide minerals from Hydrate Ridge cores,East Pacific and their significance",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12735",
+"title": "The magnetic structure of Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.epsl.2011.06.022",
+"title": "The mechanics of intermittent methane venting at South Hydrate Ridge inferred from 4D seismic surveying",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.3506004",
+"title": "The practical application of 2D inversion to marine controlled-source electromagnetic data",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12927",
+"title": "The sound field near hydrothermal vents on Axial Seamount, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002350",
+"title": "The water-column chemical signature after the 1998 eruption of Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jb02123",
+"title": "Thermal fluxes associated with the 1993 diking event on the CoAxial segment, Juan de Fuca Ridge: A model for the convective cooling of a dike",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.proeps.2013.03.090",
+"title": "Thermodynamic Modeling of Complex Sediment-Water-Gas Interactions During Early Diagenesis",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.1998.tb00458.x",
+"title": "Thermophilic and hyperthermophilic microorganisms in 3–30°C hydrothermal fluids following a deep-sea volcanic eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0012-821x(04)00219-5",
+"title": "Three-dimensional distribution of gas hydrate beneath southern Hydrate Ridge: constraints from ODP Leg 204",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1719749095",
+"title": "Three-dimensional gas migration and gas hydrate systems of south Hydrate Ridge, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jb00592",
+"title": "Three‐dimensional tomographic velocity structure of upper crust, Coaxial segment, Juan de Fuca Ridge: Implications for on‐axis evolution and hydrothermal circulation",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/88eo01172",
+"title": "Time lapse photography of a hydrothermal system: A successful one‐year deployment",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7282/t3-5zsv-9m84",
+"title": "Tracking hydrothermal diffuse flow with multibeam sonar: Insights from COVIS (2019-2023)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2011gc003841",
+"title": "Transient hydraulic fracturing and gas release in methane hydrate settings: A case study from southern Hydrate Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2400956526",
+"title": "Trophic structure of meiobenthic communities in sediments hosting shallow gashydrates at Hydrate Ridge, Cascadia convergent margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/s0016-7037(03)00128-5",
+"title": "U/Th systematics and ages of authigenic carbonates from Hydrate Ridge, Cascadia Margin: recorders of fluid flow variations",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1574-6941.2003.tb01064.x",
+"title": "Ultrastructure and potential sub-seafloor evidence of bacteriogenic iron oxides from Axial Volcano, Juan de Fuca Ridge, north-east Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W66369836",
+"title": "Understanding gas distribution beneath Hydrate Ridge: combining 2D and 3D seismic datasets",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/s41598-020-58418-4",
+"title": "Unique Solid Phase Microextraction Sampler Reveals Distinctive Biogeochemical Profiles among Various Deep-Sea Hydrothermal Vents",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2004jb003293",
+"title": "Upward shifts in the southern Hydrate Ridge gas hydrate stability zone following postglacial warming, offshore Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2947976922",
+"title": "Using 34Sulfur Isotopes to Reconstruct Paleo-SMTZs at Hydrate Ridge, Oregon",
+"tier": "2_rca_place"
+},
+{
+"key": "10.21411/cbm.a.a588f025",
+"title": "Utilization of nutritional resources and energy budgets for populations of the hydrothermal vent polychaete Paralvinella sulfincola on Axial Volcano, Juan de Fuca Ridge (Northeast Pacific)",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2738058985",
+"title": "VENTS 1993 Cleft and CoAxial Segment plume monitoring : physical and chemical data, NOAA Ship Discoverer and R/V Atlantis II, June to October 1993",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2744766971",
+"title": "VENTS 1994 Cleft and CoAxial Segment plume monitoring : physical and chemical data, NOAA Ship Discoverer and Surveyor, and R/V Atlantis II, April to September 1994",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2007gc001922",
+"title": "Variable crustal structure along the Juan de Fuca Ridge: Influence of on‐axis hot spots and absolute plate motions",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2389275092",
+"title": "Variation in grain size of sediments above BSR and correlation with the occurrence of gas hydrates on Hydrates Ridge, East Pacific.",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/1999gl002336",
+"title": "Variations in hydrothermal methane and hydrogen concentrations following the 1998 eruption at Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/94gl02797",
+"title": "Variations in water‐column ³He/heat ratios associated with the 1993 CoAxial event, Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/j.jvolgeores.2005.07.006",
+"title": "Vertical deformation monitoring at Axial Seamount since its 1998 eruption using deep-sea pressure sensors",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W7155132299",
+"title": "Viral Ecology and Taxonomy at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1038/35000335",
+"title": "Volcanic action at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12765",
+"title": "Volcanic and structural morphology of the south flank of Axial Volcano, Juan de Fuca Ridge: Results from a Sea MARC I side scan sonar survey",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2008gc002315",
+"title": "Volcanic inflation measured in the caldera of Axial Seamount: Implications for magma supply and future eruptions",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/2025gc012675",
+"title": "Voluminous Inflated Lobate Flows on the Distal Rift Zones of Axial Seamount, Juan de Fuca Spreading Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/jb095ib08p12829",
+"title": "Water column hydrothermal plumes on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/abs/2025am-8310",
+"title": "When a Cold Seep Becomes a Hot Spot: Determining Spatial Relationships Between Substrate, Water Quality, and Fauna Distributions at Southern Hydrate Ridge, Oregon Continental Margin",
+"tier": "2_rca_place"
+},
+{
+"key": "10.2172/803860",
+"title": "X-ray Scanner for ODP Leg 204: Drilling Gas Hydrates on Hydrate Ridge, Cascadia Continental Margin",
+"tier": "2_rca_place"
+}
+],
+"dropped": [
+{
+"key": "10.1002/2017gc007270",
+"title": "30 Years in the Life of an Active Submarine Volcano: A Time‐Lapse Bathymetry Study of the Kick‐'em‐Jenny Volcano, Lesser Antilles",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3390/geohazards5030041",
+"title": "A Preliminary Hazard Assessment of Kolumbo Volcano (Santorini, Greece)",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/feart.2018.00172",
+"title": "A Recent Volcanic Eruption Discovered on the Central Mariana Back-Arc Spreading Center",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/2016gc006537",
+"title": "A preliminary 1‐D model investigation of tidal variations of temperature and chlorinity at the Grotto mound, Endeavour Segment, Juan de Fuca Ridge",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1063/5.0189674",
+"title": "A quantum algorithm for computing dispersal of submarine volcanic tephra",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.ecoinf.2025.103483",
+"title": "A roadmap for designing a virtual interface to explore a digital twin of the oceans for marine ecosystems monitoring",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.4031/mtsj.52.5.7",
+"title": "Advances in Distributed Fiber-Optic Sensing for Monitoring Marine Infrastructure, Measuring the Deep Ocean, and Quantifying the Risks Posed by Seafloor Hazards",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3354/esr01439",
+"title": "Applying distance sampling to estimate densities of fin whale calls recorded by ocean bottom seismometers in the Marianas region",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1371/journal.pone.0317906",
+"title": "Assessing benthic invertebrate vulnerability to ocean acidification and de-oxygenation in California: The importance of effective oceanographic monitoring networks",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1575/1912/5215",
+"title": "At Sea Test 2 deployment cruise : cruise 475 on board R/V Oceanus September 22 � 26, 2011 Woods Hole �Woods Hole, MA",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1575/1912/5592",
+"title": "At Sea Test 2 recovery cruise : Cruise 206 on board R/V Knorr April 10 - 15, 2012 Woods Hole - Woods Hole, MA",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W3040358083",
+"title": "Caraterização de Vulcanismo Submarino por Técnicas de Deteção Remota entre 2000 e 2018",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.epsl.2021.117328",
+"title": "Deep-subaqueous implosive volcanism at West Mata seamount, Tonga",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2022.1048048",
+"title": "Design and optimization of buoy mooring with single-point cable for seafloor observatories",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1007/s10712-024-09839-7",
+"title": "Detectability of Seamount Eruptions Through a Quantum Technology Gravity Mission MOCAST+: Hunga Tonga, Fani Maoré and Other Smaller Eruptions",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2024.1414686",
+"title": "Development and implementation of an advanced shipborne integrated platform for water quality inspection",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3997/1873-0604.2017033",
+"title": "Direct monitoring of active geohazards: emerging geophysical tools for deep‐water assessments",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1111/2041-210x.70437",
+"title": "Distributed acoustic sensing for marine mammal monitoring",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1007/s44295-024-00039-y",
+"title": "Distributed acoustic sensing technology in marine geosciences",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2012.03",
+"title": "Endeavour Segment of the Juan de Fuca Ridge: One of the Most Remarkable Places on Earth",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/2014gc005415",
+"title": "Eruptive and tectonic history of the Endeavour Segment, Juan de Fuca Ridge, based on AUV mapping data and lava flow ages",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1785/0220240037",
+"title": "First Installation of an Optical Ocean-Bottom Seismometer, Cabled Offshore Les Saintes, Lesser Antilles",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5281/zenodo.19546951",
+"title": "Geo-Seismic Energy Forecast and Observed Instrument Response",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2018.121",
+"title": "Get Engaged with the Ocean Observatories Initiative",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5281/zenodo.21738571",
+"title": "Global coherent locking in submarine volcanic eruptions: near-field OBS coherence to trans-oceanic DART air-wave coupling",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1785/0120220213",
+"title": "Hydroacoustic Study of a Seismic Swarm in 2016–2017 near the Melville Transform Fault on the Southwest Indian Ridge",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.epsl.2015.09.025",
+"title": "Hydrothermal activity along the slow-spreading Lucky Strike ridge segment (Mid-Atlantic Ridge): Distribution, heatflux, and geological controls",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.marenvres.2014.03.008",
+"title": "Impacts of anthropogenic disturbances at deep-sea hydrothermal vent ecosystems: A review",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1007/s11707-015-0540-5",
+"title": "Infrastructure for collaborative science and societal applications in the Columbia River estuary",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1002/2015gc006091",
+"title": "Linkages between mineralogy, fluid chemistry, and microbial communities within hydrothermal chimneys from the E ndeavour S egment, J uan de F uca R idge",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.epsl.2025.119496",
+"title": "Log-periodic signatures prior to volcanic eruptions: evidence from 34 events",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2021.supplement.02-27",
+"title": "Long-Term Ocean Observing Coupled with Community Engagement Improves Tsunami Early Warning",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W7115371368",
+"title": "MATE ROV Competition 2024: Explorer Class Manual",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W7115370057",
+"title": "MATE ROV Competition 2024: Navigator Class Manual",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W7115384032",
+"title": "MATE ROV Competition 2024: Pioneer Class Manual",
+"tier": "1_uses_rca"
+},
+{
+"key": "https://openalex.org/W7115244290",
+"title": "MATE ROV Competition 2024: Ranger Class Manual",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2021.667274",
+"title": "Marine Genetic Resources in Areas Beyond National Jurisdiction: Promoting Marine Scientific Research and Enabling Equitable Benefit Sharing",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3390/geosciences9020100",
+"title": "Marine Geohazards: A Bibliometric-Based Review",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.gca.2023.05.018",
+"title": "Molybdenum in basalt-hosted seafloor hydrothermal systems: Experimental, theoretical, and field sampling approaches",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5281/zenodo.19491096",
+"title": "Network-Wide Simultaneous Seismic Activation at Axial Seamount Coincident with Maximum Geo-Seismic Energy Index",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3390/rs8040298",
+"title": "Observing Volcanoes from the Seafloor in the Central Mediterranean Area",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3390/oceans2020023",
+"title": "Offshore Geological Hazards: Charting the Course of Progress and Future Directions",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5670/oceanog.2018.107",
+"title": "On the Relationship Between the Global Ocean Observing System and the Ocean Observatories Initiative",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1080/1755876x.2019.1679609",
+"title": "Scientific rationale and conceptual design of a process-oriented shelfbreak observatory: the OOI Pioneer Array",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1146/annurev-earth-060313-054953",
+"title": "Seafloor Geodesy",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.5270/oceanobs09.cwp.28",
+"title": "Seafloor Observatory Science",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1357/002224017821836743",
+"title": "Some considerations about coastal ocean observing systems",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1016/j.dsr.2019.103137",
+"title": "Spatial patterns of arctic sponge ground fauna and demersal fish are detectable in autonomous underwater vehicle (AUV) imagery",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1029/2024gl113504",
+"title": "Surface‐Wave Relocation and Characterization of the October 2023 Tsunamigenic Seismic Unrest Near Sofugan Volcano, Izu Islands, Japan",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1029/2019rg000654",
+"title": "Sustainable Observations of the AMOC: Methodology and Technology",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1109/oceans.2012.6404924",
+"title": "The Ocean Observatories Initiative education and Public Engagement Organization: Using real-time data in the undergraduate classroom",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.3389/fmars.2021.764029",
+"title": "The South American Advances in Submarine Canyons Studies and Their Link to the Ocean Decade",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.4401/ag-8575",
+"title": "The contribution of the NEMO-SN1 seafloor observatory to improve the seismic locations in the Ionian Sea (Italy)",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.1093/icesjms/fsae041",
+"title": "The social science side of marine biodiversity monitoring",
+"tier": "1_uses_rca"
+},
+{
+"key": "10.30790/mnyj/2021/08",
+"title": "A III. Egri szójegyzék és a 18. századi magyar zsiványnyelvi glosszáriumok kapcsolatai",
+"tier": "3_text_place"
+},
+{
+"key": "10.1575/1912/7351",
+"title": "A modern coastal ocean observing system using data from advanced satellite and in situ sensors � an example",
+"tier": "3_text_place"
+},
+{
+"key": "10.22060/ajmc.2025.23898.1324",
+"title": "A note on algebraic commutators in division rings with uncountable center",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/s41598-024-69802-9",
+"title": "A novel development of wide voltage supply DC–DC converter for fuel stack application with PSO-ANFIS MPPT controller",
+"tier": "3_text_place"
+},
+{
+"key": "10.56781/ijsret.2023.3.1.0041",
+"title": "A study of the mechanical properties and chemical composition of some HYS 12 concrete reinforcement steel rods produced in Nigeria",
+"tier": "3_text_place"
+},
+{
+"key": "10.32399/fder.rdk.2594-0708.2016.20.236",
+"title": "Acciones ambientales. Algunos Referentes Latinoamericanos",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.bbagen.2013.03.012",
+"title": "Activation of H+-ATPase by glucose in Saccharomyces cerevisiae involves a membrane serine protease",
+"tier": "3_text_place"
+},
+{
+"key": "10.6084/m9.figshare.4355030",
+"title": "Additional file 2: Figure S2. of The human Na+/H+ exchanger 1 is a membrane scaffold protein for extracellular signal-regulated kinase 2",
+"tier": "3_text_place"
+},
+{
+"key": "10.6084/m9.figshare.4355009",
+"title": "Additional file 6: Figure S6. of The human Na+/H+ exchanger 1 is a membrane scaffold protein for extracellular signal-regulated kinase 2",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.isci.2026.115664",
+"title": "Aligning observation to action: Integrated monitoring for tropical seascape conservation and restoration",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmars.2019.00337",
+"title": "An Enhanced Ocean Acidification Observing Network: From People to Technology to Data Synthesis and Information Exchange",
+"tier": "3_text_place"
+},
+{
+"key": "10.1371/journal.pone.0085533",
+"title": "Analysis of Dictyostelium discoideum Inositol Pyrophosphate Metabolism by Gel Electrophoresis",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7210062337",
+"title": "Annual Report (printout) (1), 2009",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7210251379",
+"title": "Annual Report (printout) (1), 2010",
+"tier": "3_text_place"
+},
+{
+"key": "10.1088/1757-899x/186/1/012004",
+"title": "Application of the high temperature series expansions method Green’s function theory to the spinel systems: AxA’1-xB2X4",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.jtct.2025.01.132",
+"title": "Axatilimab Combination Therapies with Ruxolitinib and/or Belumosudil Induces Clinical Responses in Patients with Severe, Treatment-Refractory Chronic Gvhd",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/s0969-6210(09)70090-6",
+"title": "BASF buys Ciba, but must sell-on the BiVO4 & indanthrone blue assets",
+"tier": "3_text_place"
+},
+{
+"key": "10.30790/mnyj/2023/35",
+"title": "Balek. Kalandozások egy zsiványnyelvi szó nyomában",
+"tier": "3_text_place"
+},
+{
+"key": "10.1063/1.5012111",
+"title": "Bandgap behavior and singularity of the domain-induced light scattering through the pressure-induced ferroelectric transition in relaxor ferroelectric AxBa1–xNb2O6 (A: Sr,Ca)",
+"tier": "3_text_place"
+},
+{
+"key": "10.1109/mc.2016.16",
+"title": "Beyond Science Fiction: The American Dream",
+"tier": "3_text_place"
+},
+{
+"key": "10.3390/ijms262411876",
+"title": "Bifunctional BODIPY-Clioquinol Copper Chelator with Multiple Anti-AD Properties",
+"tier": "3_text_place"
+},
+{
+"key": "10.1093/biosci/biy114",
+"title": "Blue Exploration",
+"tier": "3_text_place"
+},
+{
+"key": "10.1002/aenm.201902384",
+"title": "Boosting the Activity of BaCo0.4Fe0.4Zr0.1Y0.1O3−δ Perovskite for Oxygen Reduction Reactions at Low‐to‐Intermediate Temperatures through Tuning B‐Site Cation Deficiency",
+"tier": "3_text_place"
+},
+{
+"key": "10.1145/2858036.2858420",
+"title": "Breaking Down While Building Up: Design and Decline in Emerging Infrastructures",
+"tier": "3_text_place"
+},
+{
+"key": "10.30790/mnyj/2020/10",
+"title": "Böszörményi zsiványnyelvi szójegyzékek",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2218208018",
+"title": "Characterization of DnmA, the Dnmt2 homolog in Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "10.1128/ec.00196-10",
+"title": "Characterization of the Dictyostelium Homolog of Chromatin Binding Protein DET1 Suggests a Conserved Pathway Regulating Cell Type Specification and Developmental Plasticity",
+"tier": "3_text_place"
+},
+{
+"key": "10.31083/ph.2013.6525",
+"title": "Chromatin organisation of transgenes in Dictyostelium",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7112688734",
+"title": "Ciudades ecofeministas y cuidadoras para las generaciones futuras",
+"tier": "3_text_place"
+},
+{
+"key": "10.1002/ajh.27481",
+"title": "Clearance of pathogenic erythrocytes is maintained despite spleen dysfunction in children with sickle cell disease",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/s41598-026-77581-8",
+"title": "Compound environmental events in Washington coastal waters from high-resolution downscaled projections",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmicb.2018.03001",
+"title": "Contribution of the Twin-Arginine Translocation System to the Intracellular Survival of Salmonella Typhimurium in Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7225134273",
+"title": "Costume as an Art Object: From Deep-Sea Biomimicry to Speculative Design and Potential Innovations",
+"tier": "3_text_place"
+},
+{
+"key": "10.1042/bj20090786",
+"title": "Development of Dictyostelium discoideum is associated with alteration of fucosylated N-glycan structures",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W136188913",
+"title": "Dictyostelium cell-fate bias is regulated antagonistically by the Retinoblastoma orthologue RblA and the cyclin-dependent kinase Cdk1",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmicb.2016.01665",
+"title": "Dictyostelium discoideum as a Novel Host System to Study the Interaction between Phagocytes and Yeasts",
+"tier": "3_text_place"
+},
+{
+"key": "10.31223/osf.io/m3gkj",
+"title": "Direct monitoring of active geohazards: emerging geophysical tools for deep-water assessments",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7112023191",
+"title": "Distribution spatio-temporelle des communautés benthiques en environnement marin profond",
+"tier": "3_text_place"
+},
+{
+"key": "10.1017/spq.2022.16",
+"title": "Do Male and Female Legislators Have Different Twitter Communication Styles?",
+"tier": "3_text_place"
+},
+{
+"key": "10.1093/nar/gkq664",
+"title": "Dynamics of a novel centromeric histone variant CenH3 reveals the evolutionary ancestral timing of centromere biogenesis",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7219938289",
+"title": "El patio escolar como espacio de observación para la acción tutorial",
+"tier": "3_text_place"
+},
+{
+"key": "10.5282/edoc.26713",
+"title": "Environmental research infrastructures in the command and control anthropocene",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7135281694",
+"title": "Eskolako patioen diseinuaren eragina berdinen arteko harremanetan: San Fermin Ikastolaren azterketa",
+"tier": "3_text_place"
+},
+{
+"key": "10.1007/s10687-024-00494-0",
+"title": "Estimation of marginal excess moments for Weibull-type distributions",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2176225672",
+"title": "Estudo do desempenho de um protocolo Slotted ALOHA P-persistente numa rede de Rádio Cognitivo",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2273380877",
+"title": "Estudo do sistema quase unidimensional AxA'1-xNb2O6 (A e A'=Ni, Fe e Co) : preparação e caracterização das propriedades e estruturas magnéticas",
+"tier": "3_text_place"
+},
+{
+"key": "10.70675/c82ce2ddzaabaz4f59za74bz3ce0a5bd6f22",
+"title": "Etude du système quasi-unidimensionnel AxA'1-xNb2O6 (A et A'= Ni, Fe et Co) : préparation et caractérisation des propriétés structurales et magnétiques",
+"tier": "3_text_place"
+},
+{
+"key": "10.36948/ijfmr.2025.v07i06.60982",
+"title": "Evaluation of Medication Adherence and Quality of Life in Patients with Benign Prostatic Hyperplasia",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/534160a",
+"title": "Fairer way to distribute last-ditch drugs gets real-world trial",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.matchemphys.2017.11.026",
+"title": "First – principles calculations on stability and mechanical properties of various ABO3 and their alloys",
+"tier": "3_text_place"
+},
+{
+"key": "10.1186/s13053-025-00322-x",
+"title": "Genomic characterization of patients with colorectal cancer",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W4386755682",
+"title": "Genre & Habitat : regards croisés des partenaires de la fondation Abbé Pierre",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmars.2019.00241",
+"title": "Global Observing Needs in the Deep Ocean",
+"tier": "3_text_place"
+},
+{
+"key": "10.1021/acssuschemeng.6c09348",
+"title": "High-Throughput Exploration of Perovskite Oxides for Chemical Looping Air Separation",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W3120554622",
+"title": "Hyperquaternion Symmetry Groups",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W3216441860",
+"title": "Hyperquaternions and Physics: Historical Outlook",
+"tier": "3_text_place"
+},
+{
+"key": "10.1002/pro.2319",
+"title": "In silico and in vitro studies to elucidate the role of Cu 2+ and galanthamine as the limiting step in the amyloid beta (1–42) fibrillation process",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fcimb.2018.00008",
+"title": "Inorganic Polyphosphate Is Essential for Salmonella Typhimurium Virulence and Survival in Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W3196074308",
+"title": "Inositol pyrophosphates in dictyostelium discoideum: developing the model",
+"tier": "3_text_place"
+},
+{
+"key": "10.3390/en15155502",
+"title": "Insights into Nanoparticles, Electrokinetics and Hybrid Techniques on Improving Oil Recovered in Carbonate Reservoirs",
+"tier": "3_text_place"
+},
+{
+"key": "10.5281/zenodo.3539253",
+"title": "International Research Infrastructure Landscape 2019",
+"tier": "3_text_place"
+},
+{
+"key": "10.11591/ijeecs.v37.i1.pp48-55",
+"title": "Internet of things enabled landfill pollution gas monitoring",
+"tier": "3_text_place"
+},
+{
+"key": "10.3390/en14175431",
+"title": "Investigation of Opto-Electronic Properties and Stability of Mixed-Cation Mixed-Halide Perovskite Materials with Machine-Learning Implementation",
+"tier": "3_text_place"
+},
+{
+"key": "10.1051/mattech/2018047",
+"title": "La coulée continue des aciers. Un exemple de développement technique où l’étroite coopération entre métallurgistes, constructeurs et exploitants ont été d’une grande fécondité",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W3174781462",
+"title": "La participación equitativa en el alumnado de educación básica desde la mirada de género",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7204365983",
+"title": "La perspectiva de género en el espacio público",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2913548651",
+"title": "La respuesta al estrés de retículo endoplásmico en Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7202007132",
+"title": "Larraintzar ikastetxeko patioaren analisia genero-ikuspegitik",
+"tier": "3_text_place"
+},
+{
+"key": "10.66778/cs.v13n37.06",
+"title": "Los bienes comunes desde la experiencia del cooperativismo de vivienda por ayuda mutua en Costa Rica (2014-2019). Una aproximación desde la Investigación Acción Participativa",
+"tier": "3_text_place"
+},
+{
+"key": "10.1121/10.0017840",
+"title": "Low frequency ambient noise dynamics and trends in the Indian Ocean, Cape Leeuwin, Australia",
+"tier": "3_text_place"
+},
+{
+"key": "10.1007/s10661-025-14434-3",
+"title": "Management considerations for establishing a coastal acidification monitoring system from U.S. Coastal Acidification Networks",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/501480a",
+"title": "Marine science: Oceanography's billion-dollar baby",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/534159a",
+"title": "Massive ocean-observing project launches — despite turmoil",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmicb.2013.00189",
+"title": "Microbial activity in the marine deep biosphere: progress and prospects",
+"tier": "3_text_place"
+},
+{
+"key": "10.1088/1361-6560/aeabe8",
+"title": "Multi-GPU parallel framework for DOI-enabled long axial field-of-view PET image reconstruction",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.compbiomed.2016.09.012",
+"title": "Multi-window detection for P-wave in electrocardiograms based on bilateral accumulative area",
+"tier": "3_text_place"
+},
+{
+"key": "10.7554/elife.04940",
+"title": "Neurofibromin controls macropinocytosis and phagocytosis in Dictyostelium",
+"tier": "3_text_place"
+},
+{
+"key": "10.14279/depositonce-26715",
+"title": "Nicht-konvexe Probleme und Algorithmen für das Ressourcenmanagement und die Vorhersage der Dienstgüte in drahtlosen Netzwerken",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2275365723",
+"title": "Nuclear organisation and epigenetic regulation of gene expression in Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7220096010",
+"title": "O direito à cidade e à moradia para as mulheres em Curitiba",
+"tier": "3_text_place"
+},
+{
+"key": "10.5670/oceanog.2021.411",
+"title": "Ocean System Science to Inform the Exploration of Ocean Worlds",
+"tier": "3_text_place"
+},
+{
+"key": "10.1038/515474a",
+"title": "Ocean observatory project hits rough water",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2608556902",
+"title": "Optimierung der zellfreien Proteinsynthese durch Etablierung einer schnellen in-situ Faltungskontrolle mittels GFP-Fusion",
+"tier": "3_text_place"
+},
+{
+"key": "10.1177/15266028231202456",
+"title": "Outcomes of Percutaneous Access to the First Versus Third Segment of Axillary Artery During Aortic Procedures",
+"tier": "3_text_place"
+},
+{
+"key": "10.1575/1912/29644",
+"title": "Perceive, predict, and plan: robotic expeditionary science in oceanic spatiotemporal fields",
+"tier": "3_text_place"
+},
+{
+"key": "10.4028/www.scientific.net/msf.915.34",
+"title": "Piezoelectricity in the {AxA`(1-x)}BO3 and A{BxB`(1-x)}O3 Ceramic Alloys",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2946034069",
+"title": "Quantifying the deep: The importance of diagenetic reactions to marine geochemical cycles",
+"tier": "3_text_place"
+},
+{
+"key": "10.1109/oceans55160.2024.10753815",
+"title": "Real-Time, Year-Round, Cross-Arctic Observations Integrating Three Complementary Technologies into Submarine Telecommunication Cables",
+"tier": "3_text_place"
+},
+{
+"key": "10.1007/s00280-018-3724-3",
+"title": "Real-world use of sunitinib in Japanese patients with pancreatic neuroendocrine tumors: results from a post-marketing surveillance study",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W4287641473",
+"title": "Redox-active oxide materials for thermal energy storage",
+"tier": "3_text_place"
+},
+{
+"key": "10.3389/fmicb.2016.01305",
+"title": "Relevant Genes Linked to Virulence Are Required for Salmonella Typhimurium to Survive Intracellularly in the Social Amoeba Dictyostelium discoideum",
+"tier": "3_text_place"
+},
+{
+"key": "10.5670/oceanog.2018.123",
+"title": "Seastate: Experiential C-STEM Learning Through Environmental Sensor Building",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2309266354",
+"title": "Sind Aquaporine an der Zellwanderung beteiligt",
+"tier": "3_text_place"
+},
+{
+"key": "10.1007/978-3-319-48766-3_45",
+"title": "Stability and Mechanical Properties of {AxA′(1-x)}{ByB′(1-y)}O3 Ceramics",
+"tier": "3_text_place"
+},
+{
+"key": "10.3133/sir20245062f",
+"title": "Streams, springs, and volcanic lakes for volcano monitoring",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.foodchem.2020.128218",
+"title": "Structural characterization, α-amylase and α-glucosidase inhibitory activities of polysaccharides from wheat bran",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/b978-0-12-381015-1.00001-0",
+"title": "Temporal Change in Deep-Sea Benthic Ecosystems",
+"tier": "3_text_place"
+},
+{
+"key": "10.5670/oceanog.2023.235",
+"title": "The History and Evolution of PMEL: Purposeful Research that Impacts Environmental Policy",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W275060169",
+"title": "The MOTion trap: a hybrid atom-ion trap system for experiments in cold-chemistry and the production of cold polar molecular ions",
+"tier": "3_text_place"
+},
+{
+"key": "10.5670/oceanog.2023.229",
+"title": "The PMEL Earth-Ocean Interactions Program: Beyond Vents",
+"tier": "3_text_place"
+},
+{
+"key": "10.1016/j.isci.2025.111986",
+"title": "The impact of lymph node dissection on stage I ovarian endometrioid carcinoma: A US-China Comparative Analysis",
+"tier": "3_text_place"
+},
+{
+"key": "10.14279/depositonce-6024",
+"title": "Towards energy aware wireless network operation",
+"tier": "3_text_place"
+},
+{
+"key": "10.5281/zenodo.20813589",
+"title": "Towards unmanned vehicle detection using distributed acoustic sensing",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W7219388698",
+"title": "VULNERABILIDAD SOCIO AMBIENTAL EN LATINOAMÉRICA: Un abordaje teórico para la gestión feminista de los territorios",
+"tier": "3_text_place"
+},
+{
+"key": "10.1103/physrevmaterials.4.085602",
+"title": "Vibrational mode contribution to the dielectric permittivity of disordered small-molecule organic semiconductors",
+"tier": "3_text_place"
+},
+{
+"key": "10.1371/journal.pone.0130263",
+"title": "Virtual and In Vitro Screens Reveal a Potential Pharmacophore that Avoids the Fibrillization of Aβ1–42",
+"tier": "3_text_place"
+},
+{
+"key": "10.1007/s00010-009-2958-x",
+"title": "Weak mixing and mixing of a single transformation of a topological (semi)group",
+"tier": "3_text_place"
+},
+{
+"key": "10.21203/rs.3.rs-7114751/v1",
+"title": "Wheat defenses display both sustained and time-of-day-specific responses to Rhopalosiphum padi (bird cherry-oat aphid) infestation over a 24-hour period",
+"tier": "3_text_place"
+},
+{
+"key": "10.14198/fem.2024.44.10",
+"title": "Women Architects and Social Housing in the Basque Country (1978-2008). An Approach from a Feminist Perspective",
+"tier": "3_text_place"
+},
+{
+"key": "10.31590/ejosat.452123",
+"title": "Yüksek Sıcaklıkta Uygulamalar için Kükürde Dayanıklı Perovskit Elektrokatalizörler",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2466293396",
+"title": "Zellfreie Synthese von schwer herstellbaren Proteinen",
+"tier": "3_text_place"
+},
+{
+"key": "10.18411/trnio-04-2022-236",
+"title": "Настройка параметров кремниевого детектора KETEK, калибровка мощности и эффективности",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W3081900500",
+"title": "“Estudio de compatibilidad de cinco ecotipos promisorios de sacha inchi (plukenetia volubilis L.) en la región San Martín-Perú”",
+"tier": "3_text_place"
+},
+{
+"key": "https://openalex.org/W2295572342",
+"title": "非线性算子方程X^-1＋（AXA^＊）^1/t=Q的正算子解的研究",
+"tier": "3_text_place"
+},
+{
+"key": "10.1029/1999jb900107",
+"title": "A model for growth of steep‐sided vent structures on the Endeavour Segment of the Juan de Fuca Ridge: Results of a petrologic and geochemical study",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23583339",
+"title": "Addendum to the evaluation of prospective deposit 10.5281/zenodo.20648543 (October 9–10, 2026 windows)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.4217/opr.2003.25.1.107",
+"title": "Axial Seamount Basalts in P3 Segment of Phoenix Ridge, Drake Passage, Antarctica: K-Ar Age Determination and Geochemistry",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.20634892",
+"title": "Canary SFS Prospective Forecast: June 13–14, 2026 Geo-Seismic Energy Delivery Windows — Pacific Rim Multi-Zone Targeting",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.20648542",
+"title": "Canary SFS Prospective Forecast: October 9–10, 2026 Geo-Seismic Energy Delivery Windows — Region-to-Region Targeting at Five-Month Lead, Highest-Confidence Concordance Classification",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W636643121",
+"title": "Characterization Of Pyrite From Gold Deposits",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2282717543",
+"title": "Connectivity within a metapopulation of the foundation species, Ridgeia piscesae Jones (Annelida, Siboglinidae), from the Endeavour Hydrothermal Vents Marine Protected Area on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.18728337",
+"title": "Deep Earth Processes, Core Dynamics, and Hot-Spot Volcanism",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2790896582",
+"title": "Distribution of zooplankton and nekton above hydrothermal vents on the Juan de Fuca and Explorer ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1126/science.284.5422.1901a",
+"title": "Down to the Summit",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1093/mollus/eym034",
+"title": "Experimental deep-sea deployments reveal diverse Northeast Pacific wood-boring bivalves of Xylophagainae (Myoida: Pholadidae)",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/icsai.2018.8599418",
+"title": "Field result of marine controlled source electromagnetic survey for gas hydrates in northern South China Sea",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/essoar.10501854.1",
+"title": "Formation of the Galapagos Microplate and its Effect on Rifting at the Galapagos Triple Junction",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2366334064",
+"title": "GFZ AND NATURAL GAS HYDRATE RESEARCHES IN GERMANY",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.1816087",
+"title": "Gravity monitoring of offshore gas reservoirs",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509579",
+"title": "Hydroacoustic Detection of Volcanic Activity on the Gorda Ridge, February - March 1996",
+"tier": "2_rca_place"
+},
+{
+"key": "10.21203/rs.3.rs-4581081/v1",
+"title": "Melt Focusing and Assimilation Along the Lithosphere-Asthenosphere Boundary Beneath Axial Volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/91jc01023",
+"title": "Middepth flow near hydrothermal venting sites on the southern Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2600509546",
+"title": "Noble metals in seafloor hydrothermal mineralization from the Juan de Fuca and Mid-Atlantic ridges; a fractionation of gold from platinum metals in hydrothermal fields",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/2013jb010101",
+"title": "North Cascadia heat flux and fluid flow from gas hydrates: Modeling 3‐D topographic effects",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.23509573",
+"title": "Objective Classification of Oceanic Ridge-crest Terrains Using Two-dimensional Spectral Models of Bathymetry: Application to the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1144/gsl.sp.1996.118.01.13",
+"title": "Ocean-ridge segmentation and vent tubeworms (Vestimentifera) in the NE Pacific",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2566743140",
+"title": "Ore textures in Turkish volcanogenic massive sulfide deposits in light of exhalative sulfide deposits from Axial Seamount and Explorer Ridge, northeastern Pacific Ocean",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1088/1755-1307/3/1/012006",
+"title": "Physical volcanology of the mafic segment of the subaqueous New Senator caldera, Abitibi greenstone belt, Quebec, Canada",
+"tier": "2_rca_place"
+},
+{
+"key": "10.15781/t2542j80z",
+"title": "Pore size distribution and methane equilibrium conditions at Walker Ridge Block 313, northern Gulf of Mexico",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W4295138450",
+"title": "Pore size distribution and methane equilibrium conditions at Walker Ridge Block 313, northern Gulf of Mexico",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/2014gc005389",
+"title": "Post Eruption inflation of the East Pacific Rise at 9°50′ N",
+"tier": "2_rca_place"
+},
+{
+"key": "10.22541/au.173498202.28863970/v1",
+"title": "Potential Shallow Tectonic Tremor Signals Near the Deformation Front in Central Cascadia",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/ggge.20210",
+"title": "Preeruptive flow focussing in dikes feeding historical pillow ridges on the Juan de Fuca and Gorda Ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.19305207",
+"title": "Prospective April-May 2026 Seismic Pulse Windows at Axial Seamount",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.19701004",
+"title": "Prospective Seismic & Volcanic Forecast Axial Seamount Primary D-Day · May 7, 2026",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1111/j.1439-0485.2006.00118.x",
+"title": "Protozoan–bacterial symbiosis in a deep‐sea hydrothermal vent folliculinid ciliate (Folliculinopsis sp.) from the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/95jb02502",
+"title": "Relationship between axial morphology, crustal thickness, and mantle temperature along the Juan de Fuca and Gorda Ridges",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1002/2016jb012990",
+"title": "Ridge asymmetry and deep aqueous alteration at the trench observed from Rayleigh wave tomography of the Juan de Fuca plate",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1109/oceans.2006.307103",
+"title": "SCIMPI: A New Seafloor Observatory System",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2189533752",
+"title": "SCIMPI: ANewSeafloor Observatory System",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1021/cen-v076n051.p035",
+"title": "SOME LIKE IT HOT",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1016/0012-821x(93)90144-x",
+"title": "Silica and germanium in Pacific Ocean hydrothermal vents and plumes",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W3155508499",
+"title": "Stability Evaluation of Highway Cut Slope Based on Remote Monitoring of Axial Force of Anchor and Displacement",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5281/zenodo.20201926",
+"title": "Studi Fisika Sederhana tentang Aktivitas Gunung Api Bawah Laut",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1130/geol.s.31434943.v1",
+"title": "Supplemental Material: Migrating tremors indicate the activation of distributed melt bodies days before the 2015 Axial Seamount eruption",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W2374433591",
+"title": "The Progresses and Revelations of Marine Gas Hydrate Explorations(I): Purposes and Selection Evidences of the Hydrate Drilling Sites",
+"tier": "2_rca_place"
+},
+{
+"key": "10.23860/diss-4220",
+"title": "The morphological characteristics and geological implications of prime segments and axial volcanoes along the East Pacific Rise",
+"tier": "2_rca_place"
+},
+{
+"key": "10.7275/7941421.0",
+"title": "Theoretical Studies of Atomic Transport in Ternary Semiconductor Quantum Dots and Charge Transport in Organic Photovoltaic Active Layers",
+"tier": "2_rca_place"
+},
+{
+"key": "10.21203/rs.3.rs-6888002/v1",
+"title": "Upper crustal accretion by melt sill and lava flow interaction at Axial volcano",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1029/97jc01910",
+"title": "Variations in mean currents affecting hydrothermal plumes on the Juan de Fuca Ridge",
+"tier": "2_rca_place"
+},
+{
+"key": "10.1190/1.9781560802197.ch8",
+"title": "Vertical Seismic Profiles through Gas-Hydrate-Bearing Sediments",
+"tier": "2_rca_place"
+},
+{
+"key": "10.5918/jamstecr.5.61",
+"title": "World Largest Outcrop of Pure Hydrate on the Seafloor",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1415067818",
+"title": "海域天然气水合物钻探研究进展及启示(I)：站位选择",
+"tier": "2_rca_place"
+},
+{
+"key": "https://openalex.org/W1034492348",
+"title": "科学钻探新技术—随“取心”测井技术",
+"tier": "2_rca_place"
+}
+]
+}

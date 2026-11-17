@@ -15,7 +15,7 @@ from .answering import AnsweringError, GeminiAnswerer
 from .config import Settings
 from .embeddings import BGE384Provider, EmbeddingProvider, checked_embedding
 from .models import (AnswerRequest, AnswerResponse, ChunksByIdRequest, ContextRequest, ContextResponse, NeighborsRequest, NeighborsResponse,
-                     PapersNamingRequest, PassagesRequest, SearchRequest, SearchResponse, ToolsRequest, ToolsResponse)
+                     PapersLinkedRequest, PapersNamingRequest, PassagesRequest, SearchRequest, SearchResponse, ToolsRequest, ToolsResponse)
 from .repository import PostgresRepository, Repository
 
 LOGGER = logging.getLogger(__name__)
@@ -97,6 +97,14 @@ def create_app(*, settings: Settings | None = None, repository: Repository | Non
             return {"query": " ".join(body.terms), "hits": repo.papers_naming(body.terms, limit=body.limit)}
         except Exception:
             LOGGER.exception("papers-naming lookup failed")
+            raise HTTPException(503, "paper lookup temporarily unavailable") from None
+
+    @app.post("/v1/papers-linked", response_model=SearchResponse)
+    def papers_linked(body: PapersLinkedRequest, _: None = Depends(authorize)) -> dict[str, Any]:
+        try:
+            return {"query": " ".join(body.terms), "hits": repo.papers_linked(body.terms, limit=body.limit)}
+        except Exception:
+            LOGGER.exception("papers-linked lookup failed")
             raise HTTPException(503, "paper lookup temporarily unavailable") from None
 
     @app.post("/v1/chunks", response_model=SearchResponse)

@@ -42,6 +42,14 @@ class FakeRepository:
                  "citations": [{"source_id": "REF-2", "title": "Paper", "url": "https://doi.org/10.1/y"}],
                  "metadata": {"node_local_id": "p2", "locator": "page 4", "places": [], "paper_key": "10.1/y",
                               "passages_naming": 3, "terms_named": ["AXEC2"]}}]
+    def papers_linked(self, terms, **kwargs):
+        self.calls.append(("papers_linked", list(terms), kwargs))
+        return [{"chunk_id": "LINK-1", "collection_id": "literature_links", "collection_label": "literature_links",
+                 "title": "Paper", "text": "Paper (2025) names HYS14", "score": 4.0, "lexical_score": 0.0, "vector_score": 0.0,
+                 "citations": [{"source_id": "RCA-LIT-001", "title": "Paper", "url": "https://doi.org/10.1/z"}],
+                 "metadata": {"node_local_id": "RCA-LIT-001", "locator": None, "places": [], "paper_key": "10.1/z",
+                              "passages_naming": 4, "terms_named": ["EARTHSCOPE-OO-HYS14"],
+                              "link": {"predicate": "NAMES_SENSOR", "match": ["named"], "layers": ["fulltext"]}}}]
     def chunks_by_id(self, collection_id, chunk_ids):
         self.calls.append(("chunks_by_id", collection_id, list(chunk_ids)))
         return [{"chunk_id": chunk_ids[0], "collection_id": collection_id, "collection_label": collection_id,
@@ -99,6 +107,15 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.repo.calls[-1], ("papers_naming", ["AXEC1", "AXEC2"], {"limit": 5}))
         for bad in ({"terms": []}, {"terms": ["AX"]}, {"terms": ["x'); DROP"]}):
             self.assertEqual(self.client.post("/v1/papers-naming", headers=self.headers, json=bad).status_code, 422)
+
+    def test_papers_linked_take_a_sensors_identities(self):
+        terms = ["HYS14", "EARTHSCOPE-OO-HYS14", "RS01SUM1-LJ01B-05-OBSBBA101", "INSTRUMENT-57840ee0d7c50d3972"]
+        response = self.client.post("/v1/papers-linked", headers=self.headers, json={"terms": terms, "limit": 30})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["hits"][0]["metadata"]["link"]["predicate"], "NAMES_SENSOR")
+        self.assertEqual(self.repo.calls[-1], ("papers_linked", terms, {"limit": 30}))
+        for bad in ({"terms": []}, {"terms": ["AX"]}, {"terms": ["x'); DROP"]}, {"terms": ["HYS14"], "limit": 51}):
+            self.assertEqual(self.client.post("/v1/papers-linked", headers=self.headers, json=bad).status_code, 422)
 
     def test_chunks_are_fetched_by_id_within_one_collection(self):
         ids = ["ooi_assets_RS03CCAL-MJ03F-05-BOTPTA301", "ooi_assets_depth_deeper_than_2000_m"]

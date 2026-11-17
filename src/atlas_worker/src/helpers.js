@@ -49,6 +49,9 @@ const PASSAGE_CHARS = 1_800;
 // With passages the whole prompt stays near 26,000 characters (~5,800 tokens at Groq's ~4.5 characters a token):
 // Groq's free tier refuses a request over 8,000 tokens a minute, and the 34,000-character prompts were refused.
 const FULLTEXT_CHARS = 11_000;
+// A papers question's link passages (up to 25 papers, ~600 characters each) get room of their own size.
+const LINKS_CHARS = 20_000;
+export const LINKS_COLLECTION = "literature_links";
 const MAIN_WITH_FULLTEXT_CHARS = 12_000;
 const REPEAT_RUN = 8;
 const REPEAT_SHARE = 0.2;
@@ -273,7 +276,7 @@ export function withRouteCitations(hit) {
 // literature collection and its full-text layer, and any record cited by a DOI (the papers RCA Information carries).
 export function sourceKind(hit) {
   const collection = String(hit.collection_id || "").toLowerCase();
-  if (collection === "literature" || isLayer(hit) || hit.metadata?.source_row_type === "paper"
+  if (collection === "literature" || collection === LINKS_COLLECTION || isLayer(hit) || hit.metadata?.source_row_type === "paper"
       || (hit.citations || []).some((c) => DOI_URL.test(c.url || ""))) return "scientific literature";
   if (collection === "websites") return "website";
   return null;
@@ -284,7 +287,7 @@ export function evidencePackage(hits, sourceNumbers) {
   // Full-text passages come last, in room of their own (eight passages of ~1,300 characters, the median page):
   // the main evidence and the passages never take each other's room.
   const room = { main: hits.some(isLayer) ? MAIN_WITH_FULLTEXT_CHARS : hits.some(isInventory) ? MAIN_WITH_INVENTORY_CHARS : MAX_EVIDENCE_CHARS,
-    layer: FULLTEXT_CHARS, recipe: RECIPE_CHARS, inventory: INVENTORY_CHARS };
+    layer: hits.some((hit) => hit.collection_id === LINKS_COLLECTION) ? LINKS_CHARS : FULLTEXT_CHARS, recipe: RECIPE_CHARS, inventory: INVENTORY_CHARS };
   for (const hit of hits) {
     const budget = isLayer(hit) ? "layer" : isRecipe(hit) ? "recipe" : isInventory(hit) ? "inventory" : "main";
     if (room[budget] <= 0) continue;
@@ -1011,7 +1014,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
       ? " (the Cascadia margin, slope and shelf alike: the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites; Axial Seamount, on the Juan de Fuca Ridge, is not part of it)" : ""}. List every one of them, each by name and identifier with its site; say that one whose record says Planned is planned and not yet operating.`
     : "";
   const papersInstruction = isPaperUsageQuestion(question)
-    ? "The question asks which papers used an instrument. Full-text passages and abstracts from papers that name it or describe it are in the evidence; a passage may name a station within a range of stations (it says so). List each paper whose passage shows it used or analyzed that instrument's data, by title with its citation and a few words on how it used it, saying which of the station's instruments it used (its seismometer, or its hydrophone) when the passage says; list papers that only mention the instrument separately as mentions; leave out papers whose passages are about something else. Only scientific papers count as papers: never list an instrument record, station metadata or a web page as a paper."
+    ? "The question asks which papers used an instrument. Full-text passages and abstracts from papers that name it or describe it are in the evidence; a passage may name a station within a range of stations (it says so). A literature-link passage says whether the paper names the instrument (by code, range or designator: it is that instrument) or describes it (its site and kind of instrument: it may be any of the sensors of that kind at the site, and the link says how many), and quotes the paper's words as evidence. List each paper whose passage shows it used or analyzed that instrument's data, by title with its citation and a few words on how it used it, saying which of the station's instruments it used (its seismometer, or its hydrophone) when the passage says; list papers that only mention the instrument separately as mentions; leave out papers whose passages are about something else. Only scientific papers count as papers: never list an instrument record, station metadata or a web page as a paper."
     : "";
   // The orientation summary lists every OO station; a question about one place is answered for that place's stations.
   // Where an instrument is: OOI asset management and a paper can each give its position, metres apart.

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
+import { paperKey, assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -97,6 +97,10 @@ test("evidence headers mark papers and websites, and the prompt prefers the pape
   assert.equal(sourceKind({ collection_id: "arcada", metadata: { source_row_type: "paper" } }), "scientific literature");
   assert.equal(sourceKind({ collection_id: "websites" }), "website");
   assert.equal(sourceKind({ collection_id: "instruments" }), null);
+  // A literature link's passage is its paper's, though the paper has no DOI (a thesis at its OpenAlex page).
+  const link = { collection_id: "literature_links", chunk_id: "LINK-1", citations: [{ source_id: "RCA-LIT-100", url: "https://openalex.org/W1" }] };
+  assert.equal(sourceKind(link), "scientific literature");
+  assert.ok(paperKey(link));
   const numbers = new Map([[sourceKey("L", ""), 1], [sourceKey("W", ""), 2], [sourceKey("I", ""), 3]]);
   const text = evidencePackage([
     { chunk_id: "L", collection_id: "literature", title: "Stacked sills", text: "300–450 m", citations: [{ source_id: "L" }] },

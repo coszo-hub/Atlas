@@ -35,6 +35,7 @@ COLLECTION_NAMES = {
     "Literature": ("literature", "Scientific literature"),
     # A retrieval layer: the search leaves *_fulltext collections out unless a request names them (migration 003).
     "LiteratureFullText": ("literature_fulltext", "Scientific literature full text"),
+    "LiteratureLinks": ("literature_links", "Scientific literature links to sensors and features"),
     "Nereus/graphrag": ("nereus", "Nereus operational data"),
     "OOIDASGeometry": ("ooi_das_geometry", "OOI RCA OptaSense DAS channel geometry"),
     "OOIAssetManagement": ("ooi_asset_management", "OOI asset-management (deployments, serial numbers, calibrations)"),
