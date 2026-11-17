@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -517,6 +517,42 @@ async function papersFor(question, env) {
   }
 }
 
+// The papers about a method or topic (asksForPapers): the topic searched in the abstracts and in the full text, as the
+// question words it and as papers word it (topicPhrasings: "ambient noise interferometry" is also "ambient seismic
+// noise cross-correlation" and "seismic velocity variations"), one passage a paper, interleaved so each phrasing's
+// best come first, 25 papers at most.
+async function papersOnTopic(question, env, requestedModel) {
+  const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
+  const topic = topicText(question);
+  if (!topic) return [];
+  try {
+    const phrasings = [topic, ...await topicPhrasings(topic, env, requestedModel)];
+    const lists = await Promise.all(phrasings.flatMap((query) => ["literature", "literature_fulltext"].map((collection) =>
+      postJson(`${api}/v1/search`, { query, limit: 15, collection_ids: [collection] }, headers).then((r) => r.hits || []).catch(() => []))));
+    const seen = new Set();
+    return interleave(lists).filter((hit) => {
+      const key = paperKey(hit);
+      return key && !seen.has(key) && seen.add(key);
+    }).slice(0, 25).map((hit) => ({ ...hit, text: String(hit.text || "").slice(0, 900), layer: true, paperList: true }));
+  } catch (error) {
+    console.error("topic paper lookup failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
+// Up to three other ways papers word a topic, from the answering model; none if it fails (the topic alone is searched).
+async function topicPhrasings(topic, env, requestedModel) {
+  const prompt = `List up to three other ways scientific papers word this research method or topic in their titles and abstracts, one per line, with no numbering, quotes or commentary. Keep each under eight words.\n\nTopic: ${topic}`;
+  try {
+    const { answer } = await completePrompt(prompt, "compact", env, requestedModel);
+    return String(answer || "").split("\n").map((line) => line.replace(/^[-*\d.)\s]+/, "").replace(/["“”]/g, "").trim())
+      .filter((line) => line.length >= 3 && line.length <= 80 && line.toLowerCase() !== topic.toLowerCase()).slice(0, 3);
+  } catch (error) {
+    console.warn("topic phrasings failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
 // The full-text layer, asked only when the evidence already holds a paper, and only for that paper's passages
 // (fullTextFor). A failure here leaves the answer to the main evidence.
 async function fullTextPassages(context, query, env) {
@@ -883,7 +919,20 @@ export default {
       }, { "x-api-key": env.ATLAS_API_KEY });
       context.hits = (context.hits || []).map(withRouteCitations);
       // An overview of the DAS experiments is answered from their records; one paper's pages would crowd them.
-      if (isPaperUsageQuestion(query)) context.papers = await papersFor(query, env);
+      // Papers: an instrument's linked papers, and papers on the method or topic asked about, the topic first when the
+      // question asks about more than an instrument.
+      if (asksForPapers(query)) {
+        const leads = topicLeads(query);
+        const [byInstrument, byTopic] = await Promise.all([
+          isPaperUsageQuestion(query) && !(leads && !askedType(query).length && !questionCodes(query).length) ? papersFor(query, env) : [],
+          leads ? papersOnTopic(query, env, requestedModel) : [],
+        ]);
+        const seen = new Set();
+        context.papers = (leads ? [...byTopic, ...byInstrument] : byInstrument).filter((hit) => {
+          const key = paperKey(hit) || hit.chunk_id;
+          return !seen.has(key) && seen.add(key);
+        });
+      }
       if (isAssetQuestion(query)) context.assets = await assetRecords(query, env);
       if (isOrientationQuestion(query)) context.orientation = await orientationRecords(query, env);
       if (isWatchQuestion(query)) context.watch = await watchRecords(ctx);

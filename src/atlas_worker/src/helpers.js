@@ -287,7 +287,7 @@ export function evidencePackage(hits, sourceNumbers) {
   // Full-text passages come last, in room of their own (eight passages of ~1,300 characters, the median page):
   // the main evidence and the passages never take each other's room.
   const room = { main: hits.some(isLayer) ? MAIN_WITH_FULLTEXT_CHARS : hits.some(isInventory) ? MAIN_WITH_INVENTORY_CHARS : MAX_EVIDENCE_CHARS,
-    layer: hits.some((hit) => hit.collection_id === LINKS_COLLECTION) ? LINKS_CHARS : FULLTEXT_CHARS, recipe: RECIPE_CHARS, inventory: INVENTORY_CHARS };
+    layer: hits.some((hit) => hit.collection_id === LINKS_COLLECTION || hit.paperList) ? LINKS_CHARS : FULLTEXT_CHARS, recipe: RECIPE_CHARS, inventory: INVENTORY_CHARS };
   for (const hit of hits) {
     const budget = isLayer(hit) ? "layer" : isRecipe(hit) ? "recipe" : isInventory(hit) ? "inventory" : "main";
     if (room[budget] <= 0) continue;
@@ -898,6 +898,25 @@ const USE_WORDS = /\b(?:us(?:e|es|ed|ing)|cit(?:e|es|ed|ing)|mention(?:s|ed)?|ba
 // methods ("which echosounder was used… in the 2016 study").
 const ASKS_FOR_PAPERS = /\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has)\b/i;
 export const isPaperUsageQuestion = (question) => ASKS_FOR_PAPERS.test(String(question || "")) && USE_WORDS.test(String(question || ""));
+export const asksForPapers = (question) => ASKS_FOR_PAPERS.test(String(question || ""));
+// "Which papers performed ambient noise interferometry using RCA data?": the method or topic asked about, without the
+// request ("which papers performed"), the use words, or the RCA's names (every paper in the corpus is about the RCA,
+// and "RCA data" ranked the papers that say RCA, the hydrophone ones, above the seismic noise papers).
+const SCOPE_WORDS = /\b(?:RCA|OOI|Regional Cabled Array|Ocean Observatories Initiative|cabled array|data(?:sets?)?|observator(?:y|ies))\b/gi;
+const TOPIC_STOP = /\b(?:which|what|list|any|find|show|name|have|has|had|that|the|a|an|did|do|does|done|perform(?:s|ed)?|appl(?:y|ies|ied)|conduct(?:s|ed)?|carr(?:y|ied) out|look(?:s|ed)? (?:at|into)|stud(?:y|ies|ied)|investigat(?:e|es|ed)|examin(?:e|es|ed)|about|on|with|from|by|for|of|in|at|to|its|their)\b/gi;
+export const topicText = (question) => String(question || "").replace(new RegExp(PAPER_WORDS.source, "gi"), " ")
+  .replace(new RegExp(USE_WORDS.source, "gi"), " ").replace(SCOPE_WORDS, " ").replace(TOPIC_STOP, " ")
+  .replace(/[?.,;:]/g, " ").replace(/\s+/g, " ").trim();
+// The topic leads when the question asks about more than an instrument ("machine learning on hydrophone data"); a
+// question naming only an instrument ("papers that used COVIS") is the instrument's linked papers first.
+export function topicLeads(question) {
+  let rest = topicText(question);
+  for (const type of askedType(question)) rest = rest.replace(new RegExp(`[\\w-]*(?:${type.source})[\\w-]*`, "gi"), " ");
+  for (const code of questionCodes(question)) rest = rest.replace(new RegExp(`\\b${code}\\b`, "gi"), " ");
+  // Where the instrument is ("at Southern Hydrate Ridge") is not a topic of its own.
+  rest = rest.replace(/\b(?:Southern |South )?Hydrate Ridge|Axial (?:Seamount|Base|Volcano|caldera)|(?:Central|Eastern) Caldera|International District|ASHES|Slope Base|Oregon (?:Shelf|Offshore|Mid[- ]Slope|margin)|summit|caldera|cables?\b/gi, " ");
+  return !(askedType(question).length || questionCodes(question).length) || /\b[a-z]{4,}\b/i.test(rest.replace(/\b(?:seafloor|instrument|sensor|station|broadband|seismomet\w*|seismic|OBS|hydrophone|camera|sonar|CTD|ADCP|gauge|pressure|tilt\w*|profiler|meter|recorder|package)s?\b/gi, " "));
+}
 export const instrumentSearch = (question) => String(question || "").replace(PAPER_WORDS, " ").replace(USE_WORDS, " ")
   .replace(/\b(?:what|which|have|has|had|the|that|any|did|do|does|data|of)\b/gi, " ").replace(/[?]/g, " ").replace(/\s+/g, " ").trim();
 // The codes a paper names an instrument by: its station code (AXEC2), reference designator and that designator's
@@ -1013,7 +1032,9 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
     ? `Records marked (instrument inventory) are every instrument of the asked type at the place the question asks about${isMarginQuestion(question)
       ? " (the Cascadia margin, slope and shelf alike: the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites; Axial Seamount, on the Juan de Fuca Ridge, is not part of it)" : ""}. List every one of them, each by name and identifier with its site; say that one whose record says Planned is planned and not yet operating.`
     : "";
-  const papersInstruction = isPaperUsageQuestion(question)
+  const papersInstruction = asksForPapers(question) && topicLeads(question)
+    ? "The question asks which papers did a kind of study: a method or a topic, with the RCA's or OOI's data. Passages and abstracts of papers found for it are in the evidence, each under its paper's title. List under 'Papers that did it' each paper whose passage shows it applied that method to RCA or OOI data or studied that topic with them (for a method: it computed, processed or analyzed with it), by title with its citation and a few words on what it did and with which instruments' data when the passage says. Papers whose passages only mention the method or topic, cite others who did it, or did it with other data go under 'Papers that mention it'; when in doubt, it is a mention. Leave out papers whose passages are about something else, and do not stop at the first few: give every paper in the evidence that did it. Only scientific papers count as papers: never list an instrument record, station metadata or a web page as a paper."
+    : isPaperUsageQuestion(question)
     ? "The question asks which papers used an instrument. Full-text passages and abstracts from papers that name it or describe it are in the evidence; a passage may name a station within a range of stations (it says so). A literature-link passage says whether the paper names the instrument (by code, range or designator: it is that instrument) or describes it (its site and kind of instrument: it may be any of the sensors of that kind at the site, and the link says how many), and quotes the paper's words as evidence. A paper used the instrument only when its passage shows the paper analyzed the instrument's data: it processed, plotted, inverted, modeled or compared the data the instrument recorded ('we used data from', 'recorded by', 'time series from'). List those papers under 'Papers that used its data', each by title with its citation and a few words on the analysis, saying which of the station's instruments it used (its seismometer, or its hydrophone) when the passage says. Everything else goes under 'Papers that mention it': a paper that names the instrument, describes its deployment, specifications or site, lists it among a site's sensors, cites its method, reviews it, or plans for it, and any paper whose passage does not show the analysis. When in doubt, it is a mention. Leave out papers whose passages are about something else. Only scientific papers count as papers: never list an instrument record, station metadata or a web page as a paper."
     : "";
   // The orientation summary lists every OO station; a question about one place is answered for that place's stations.
