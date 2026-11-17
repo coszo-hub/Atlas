@@ -392,7 +392,7 @@ async function orientationRecords(question, env) {
 async function assetRecords(question, env) {
   const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
   try {
-    const ids = assetChunkIds(question, ASSET_DIRECTORY);
+    const ids = assetChunkIds(question, ASSET_DIRECTORY, INSTRUMENT_IDS);
     if (!ids.length) return [];
     const found = await postJson(`${api}/v1/chunks`, { collection_id: "ooi_asset_management", chunk_ids: ids }, headers);
     return (found.hits || []).slice(0, ids.length).map(withRouteCitations);

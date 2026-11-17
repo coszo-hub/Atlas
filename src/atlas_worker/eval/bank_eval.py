@@ -30,7 +30,9 @@ def plain(text):
 
 
 def norm(text):
-    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9.]+", " ", plain(text).lower())).strip()
+    import unicodedata   # Güralp and Guralp are one maker
+    text = "".join(c for c in unicodedata.normalize("NFKD", plain(text)) if not unicodedata.combining(c))
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9.]+", " ", text.lower())).strip()
 
 
 def date_rx(day):
@@ -72,8 +74,10 @@ def score(row, text, names):   # noqa: C901
         if "manufacturer" in g:
             checks.append(("maker " + g["manufacturer"], norm(g["manufacturer"]).split()[0] in norm(text)))
         if g.get("model"):
+            # The model as written ("ACM-3D-MP", "SBE 43"), or its first two distinctive words.
             words = [w for w in norm(g["model"]).split() if len(w) >= 4][:2]
-            checks.append(("model " + g["model"], bool(words) and all(w in norm(text) for w in words)))
+            whole = f" {norm(g['model'])} " in f" {norm(text)} "
+            checks.append(("model " + g["model"], whole or (bool(words) and all(w in norm(text) for w in words))))
         if "depth_m" in g and g["depth_m"] is not None:
             checks.append((f"depth {g['depth_m']} m", number_near(plain(text), float(g["depth_m"]), max(2.0, 0.02 * float(g["depth_m"])))))
         # A changes question asks how often and with which serials; it needs the first date only when it asks when.
@@ -100,7 +104,7 @@ def score(row, text, names):   # noqa: C901
             opening = re.split(r"(?<=[.!?])\s|\n", plain(text).strip(), maxsplit=1)[0]
             denied = re.search(r"\b(?:no|not have an?|does not have|doesn't have|without)\b[^.]{0,40}\b(?:orientation )?issue|correctly oriented|oriented correctly|properly oriented|aligned (?:with|to) (?:true )?north|oriented (?:to|toward|towards) (?:true )?north|\bat 0\s*°|\bis 0\s*°", opening, re.I)
             # An azimuth other than north, east, south or west (0°, 90°, 180°, 270°) says it is rotated.
-            claimed = re.search(r"misorient|not (?:correctly |properly )?(?:oriented|aligned)|rotated|disagree|inconsisten", opening, re.I) or any(
+            claimed = re.search(r"misorient|not (?:correctly |properly )?(?:oriented|aligned)|rotated|disagree|inconsisten|\b(?:has|have) an? (?:orientation )?(?:issue|problem)", opening, re.I) or any(
                 int(d) not in (0, 90, 180, 270) for d in re.findall(r"\b(\d{1,3})\s*°", opening))
             checks.append(("misoriented" if issue else "oriented to north", bool(claimed) if issue else bool(denied) and not claimed))
         if "calibration_in_force" in g and g["calibration_in_force"]:

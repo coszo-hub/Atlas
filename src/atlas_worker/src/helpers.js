@@ -820,7 +820,7 @@ export function dataAccessInstruments(question, directory) {
   return typed ? instruments.map((i) => i.refdes).slice(0, 4) : [];
 }
 
-export function assetChunkIds(question, directory) {
+export function assetChunkIds(question, directory, instrumentIds = {}) {
   const q = String(question || "");
   if (!directory || !isAssetQuestion(q)) return [];
   const places = ASSET_PLACES.find(([asked]) => asked.test(q));
@@ -845,6 +845,13 @@ export function assetChunkIds(question, directory) {
     if (kept.length) types.splice(0, types.length, ...kept);
   }
   const named = new Set(q.match(new RegExp(REFDES_SOURCE, "g")) || []);
+  // A station code (AXBA1, "axba1") is its seismometer's designator: the station and the designator share a record.
+  for (const m of q.matchAll(new RegExp(STATION_SOURCE, "gi"))) {
+    const record = instrumentIds[`EARTHSCOPE-OO-${m[0].toUpperCase()}`];
+    for (const [key, chunk] of Object.entries(instrumentIds)) {
+      if (record && chunk === record && new RegExp(`^${REFDES_SOURCE.replace(/\\b/g, "")}$`).test(key)) named.add(key);
+    }
+  }
   // Codes as written, plural too ("VEL3Ds", "CTDs").
   const codes = new Set([...q.matchAll(/\b([A-Z][A-Z0-9]{3,4})s?\b/g)].map((m) => m[1]));
   const ofType = (i) => types.some((type) => type.test(i.instrument)) || i.codes.some((code) => codes.has(code));
