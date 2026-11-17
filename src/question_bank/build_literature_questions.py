@@ -31,12 +31,16 @@ def h(*parts: str) -> int:
 
 
 def surname(work: dict, doc: dict) -> str:
+    """The first author's surname, from "Seiple, Jason Eric", "Li, S., ...", "Marcon Y, ...", "F. Waldhauser, ..." or
+    "William W. Chadwick, ..."."""
     authors = work.get("resolved_authors") or []
-    if authors:
-        name = authors[0].replace(".", " ").split()
-        return name[-1] if name else "?"
-    cit = (work.get("citation") or doc.get("citation") or "").strip()
-    return re.split(r"[,.(]", cit, 1)[0].strip().split()[-1] if cit else "?"
+    text = (authors[0] if authors else work.get("citation") or doc.get("citation") or "").strip()
+    m = re.match(r"([A-Z][\w'’\-]+), (?:[A-Z]\.|[A-Z][a-z]+)", text)   # Surname, Given
+    if m:
+        return m.group(1)
+    head = re.split(r"[,(]", text, 1)[0]
+    words = [w for w in head.replace(".", ". ").split() if not re.fullmatch(r"[A-Z]{1,3}\.?|Jr\.?", w)]
+    return words[-1].rstrip(".") if words else "?"
 
 
 def main() -> int:

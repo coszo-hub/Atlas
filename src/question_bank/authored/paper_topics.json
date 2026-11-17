@@ -1,0 +1,1769 @@
+{
+ "_rule": "methods: what the paper itself does in its analysis (not methods it only cites or proposes); concepts: what it studies or reports on (its subject, not background). The most specific entry is given; a broad question takes in children through the vocabulary's parents. Judged from each paper's title, abstract and full text, with the vocabulary's word matches only as hints. rca: 'data' if the paper analyzes data from a Regional Cabled Array sensor (the cabled Endurance nodes included), 'products' if it analyzes products made from them (an RCA earthquake catalog), else 'none'. sites: the paper's study area among the RCA sites (axial, ashes, ccal, ecal, axbase, shr, nhr, hr for Hydrate Ridge unspecified, slope, shelf, offshore); a site the paper only passes through (one of many stations, a cable route) is not its study area.",
+ "COSZO-REF-008": {
+  "methods": [
+   "gnss-geodesy",
+   "deformation-modeling",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "ets",
+   "slow-slip",
+   "megathrust-locking",
+   "segmentation",
+   "tectonic-tremor"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-015": {
+  "methods": [
+   "seafloor-pressure-geodesy",
+   "eruption-forecasting"
+  ],
+  "concepts": [
+   "eruption-axial-2011",
+   "inflation-cycle"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "COSZO-REF-017": {
+  "methods": [
+   "template-matching",
+   "focal-mechanisms",
+   "earthquake-detection"
+  ],
+  "concepts": [
+   "tectonic-tremor",
+   "offshore-seismicity",
+   "cascadia-strike-slip-faults"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-028": {
+  "methods": [
+   "focal-mechanisms"
+  ],
+  "concepts": [
+   "tectonic-tremor",
+   "ets"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-032": {
+  "methods": [
+   "seafloor-pressure-geodesy",
+   "ocean-modeling",
+   "noise-removal"
+  ],
+  "concepts": [
+   "slow-slip",
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-039": {
+  "methods": [
+   "paleoseismology",
+   "isotopes",
+   "seafloor-mapping"
+  ],
+  "concepts": [
+   "great-earthquakes",
+   "segmentation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-041": {
+  "methods": [
+   "seafloor-mapping",
+   "hydroacoustic-tphases"
+  ],
+  "concepts": [
+   "hydrothermal-venting",
+   "eruptions",
+   "vent-ecology"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-046": {
+  "methods": [
+   "sound-levels",
+   "ocean-modeling"
+  ],
+  "concepts": [
+   "weather-noise",
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-057": {
+  "methods": [],
+  "concepts": [
+   "cabled-observatories",
+   "eruptions",
+   "hydrothermal-venting",
+   "dike-intrusion"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "COSZO-REF-059": {
+  "methods": [
+   "earthquake-location",
+   "earthquake-detection"
+  ],
+  "concepts": [
+   "dike-intrusion",
+   "volcanic-seismicity",
+   "hydrothermal-venting",
+   "faulting"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-060": {
+  "methods": [
+   "paleoseismology",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "great-earthquakes"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-073": {
+  "methods": [
+   "seafloor-pressure-geodesy",
+   "deformation-modeling",
+   "eruption-forecasting"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "inflation-cycle",
+   "magma-reservoir"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "COSZO-REF-084": {
+  "methods": [
+   "pressure-calibration",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "pressure-drift",
+   "inflation-cycle"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ccal"
+  ]
+ },
+ "COSZO-REF-086": {
+  "methods": [
+   "gnss-geodesy",
+   "deformation-modeling"
+  ],
+  "concepts": [
+   "megathrust-locking"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-087": {
+  "methods": [],
+  "concepts": [
+   "early-warning",
+   "tsunami",
+   "great-earthquakes",
+   "cabled-observatories"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-096": {
+  "methods": [
+   "potential-fields",
+   "seismic-tomography",
+   "seafloor-mapping"
+  ],
+  "concepts": [
+   "subducted-seamounts",
+   "accretionary-prism",
+   "offshore-seismicity",
+   "gas-hydrates"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-098": {
+  "methods": [
+   "focal-mechanisms",
+   "earthquake-location"
+  ],
+  "concepts": [
+   "offshore-seismicity",
+   "megathrust-locking"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-099": {
+  "methods": [
+   "earthquake-location",
+   "earthquake-detection",
+   "sound-levels"
+  ],
+  "concepts": [
+   "offshore-seismicity",
+   "megathrust-locking",
+   "cabled-observatories"
+  ],
+  "rca": "data",
+  "sites": [
+   "shr",
+   "slope"
+  ]
+ },
+ "COSZO-REF-111": {
+  "methods": [],
+  "concepts": [
+   "great-earthquakes",
+   "tsunami",
+   "megathrust-locking"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-116": {
+  "methods": [
+   "tremor-detection"
+  ],
+  "concepts": [
+   "tectonic-tremor",
+   "ets"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-118": {
+  "methods": [
+   "pressure-calibration",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "pressure-drift"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ccal"
+  ]
+ },
+ "COSZO-REF-119": {
+  "methods": [
+   "earthquake-location",
+   "tidal-triggering"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "outward-dipping-faults",
+   "dike-intrusion",
+   "volcanic-seismicity",
+   "inflation-cycle"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "COSZO-REF-124": {
+  "methods": [
+   "earthquake-location"
+  ],
+  "concepts": [
+   "offshore-seismicity",
+   "megathrust-locking"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-129": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "hydrothermal-venting",
+   "diffuse-flow"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "COSZO-REF-133": {
+  "methods": [
+   "fiber-strain"
+  ],
+  "concepts": [
+   "tidal-forcing"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "COSZO-REF-142": {
+  "methods": [],
+  "concepts": [
+   "subduction-fluids",
+   "porosity",
+   "faulting"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-151": {
+  "methods": [
+   "gnss-geodesy",
+   "deformation-modeling"
+  ],
+  "concepts": [
+   "slow-slip",
+   "segmentation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-152": {
+  "methods": [
+   "gnss-geodesy",
+   "deformation-modeling"
+  ],
+  "concepts": [
+   "megathrust-locking",
+   "ets"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "COSZO-REF-160": {
+  "methods": [
+   "sonar-imaging",
+   "imagery-analysis",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "methane-seepage",
+   "tidal-forcing"
+  ],
+  "rca": "data",
+  "sites": [
+   "shr"
+  ]
+ },
+ "COSZO-REF-185": {
+  "methods": [
+   "acoustic-ranging",
+   "seafloor-pressure-geodesy",
+   "deformation-modeling"
+  ],
+  "concepts": [
+   "inflation-cycle",
+   "stacked-sills"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-DAS-2026-001": {
+  "methods": [
+   "das"
+  ],
+  "concepts": [
+   "cabled-observatories"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-003": {
+  "methods": [
+   "das",
+   "machine-learning",
+   "earthquake-detection"
+  ],
+  "concepts": [],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-004": {
+  "methods": [
+   "das",
+   "template-matching",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-006": {
+  "methods": [
+   "das",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-007": {
+  "methods": [
+   "das",
+   "sound-levels"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-009": {
+  "methods": [
+   "seafloor-compliance"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "magma-reservoir",
+   "crustal-structure"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-013": {
+  "methods": [
+   "echosounder"
+  ],
+  "concepts": [
+   "zooplankton-fish"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-014": {
+  "methods": [
+   "ambient-noise-interferometry",
+   "sound-propagation"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ccal",
+   "ecal"
+  ]
+ },
+ "OOI-ZOT-017": {
+  "methods": [
+   "seafloor-pressure-geodesy",
+   "eruption-forecasting"
+  ],
+  "concepts": [
+   "inflation-cycle",
+   "magma-reservoir",
+   "volcanic-seismicity",
+   "eruption-axial-2015"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-019": {
+  "methods": [
+   "tidal-triggering",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "porosity",
+   "volcanic-seismicity",
+   "inflation-cycle"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-023": {
+  "methods": [
+   "das",
+   "hydroacoustic-tphases",
+   "earthquake-detection"
+  ],
+  "concepts": [
+   "offshore-seismicity",
+   "ocean-thermometry"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-029": {
+  "methods": [
+   "sound-levels",
+   "machine-learning"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-030": {
+  "methods": [
+   "das",
+   "machine-learning"
+  ],
+  "concepts": [],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-033": {
+  "methods": [
+   "genomics",
+   "incubation-experiments"
+  ],
+  "concepts": [
+   "hydrothermal-venting",
+   "subseafloor-biosphere"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-035": {
+  "methods": [],
+  "concepts": [
+   "magma-reservoir",
+   "dike-intrusion",
+   "eruption-axial-2015"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-036": {
+  "methods": [
+   "pressure-calibration",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "pressure-drift",
+   "inflation-cycle"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-038": {
+  "methods": [
+   "seafloor-mapping",
+   "petrology"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "lava-flows",
+   "magma-reservoir"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-039": {
+  "methods": [
+   "ocean-modeling",
+   "current-measurement"
+  ],
+  "concepts": [
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-041": {
+  "methods": [
+   "hydroacoustic-tphases",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "eruption-axial-2011",
+   "lava-flows"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-042": {
+  "methods": [
+   "seismic-tomography",
+   "seismic-reflection"
+  ],
+  "concepts": [
+   "crustal-structure",
+   "magma-reservoir",
+   "hotspot-volcanism"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-043": {
+  "methods": [
+   "ocean-modeling",
+   "profiling"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-044": {
+  "methods": [],
+  "concepts": [
+   "eruptions",
+   "inflation-cycle",
+   "outward-dipping-faults",
+   "dike-intrusion"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-045": {
+  "methods": [
+   "echosounder",
+   "sonar-imaging",
+   "seafloor-mapping"
+  ],
+  "concepts": [
+   "methane-seepage"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "OOI-ZOT-048": {
+  "methods": [
+   "earthquake-location",
+   "focal-mechanisms",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "outward-dipping-faults",
+   "eruption-axial-2015",
+   "inflation-cycle",
+   "volcanic-seismicity"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-050": {
+  "methods": [
+   "data-assimilation"
+  ],
+  "concepts": [
+   "tsunami",
+   "early-warning"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "OOI-ZOT-061": {
+  "methods": [
+   "tidal-triggering",
+   "deformation-modeling"
+  ],
+  "concepts": [
+   "tidal-forcing",
+   "magma-reservoir",
+   "faulting"
+  ],
+  "rca": "products",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-062": {
+  "methods": [
+   "sound-levels"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-065": {
+  "methods": [
+   "seismic-tomography",
+   "earthquake-location"
+  ],
+  "concepts": [
+   "magma-reservoir",
+   "ring-faults",
+   "eruption-axial-2015",
+   "crustal-structure"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-066": {
+  "methods": [
+   "b-value",
+   "tidal-triggering"
+  ],
+  "concepts": [
+   "tidal-forcing",
+   "volcanic-seismicity"
+  ],
+  "rca": "products",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-072": {
+  "methods": [
+   "earthquake-location"
+  ],
+  "concepts": [
+   "outward-dipping-faults",
+   "eruption-axial-2015",
+   "volcanic-seismicity"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-074": {
+  "methods": [
+   "hydroacoustic-tphases",
+   "seafloor-mapping"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "lava-flows"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-078": {
+  "methods": [
+   "machine-learning",
+   "imagery-analysis"
+  ],
+  "concepts": [
+   "seep-ecology"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr"
+  ]
+ },
+ "OOI-ZOT-080": {
+  "methods": [
+   "source-parameters"
+  ],
+  "concepts": [
+   "ring-faults",
+   "eruption-axial-2015",
+   "volcanic-seismicity"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-081": {
+  "methods": [
+   "echosounder",
+   "machine-learning"
+  ],
+  "concepts": [
+   "zooplankton-fish"
+  ],
+  "rca": "data",
+  "sites": [
+   "offshore"
+  ]
+ },
+ "OOI-ZOT-082": {
+  "methods": [
+   "seafloor-compliance"
+  ],
+  "concepts": [
+   "crustal-structure",
+   "magma-reservoir",
+   "eruption-axial-2015"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-085": {
+  "methods": [
+   "sound-levels",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": [
+   "shelf",
+   "offshore"
+  ]
+ },
+ "OOI-ZOT-086": {
+  "methods": [
+   "sonar-imaging",
+   "fluid-geochemistry"
+  ],
+  "concepts": [
+   "methane-seepage"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "OOI-ZOT-089": {
+  "methods": [
+   "sound-levels",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": [
+   "shelf",
+   "offshore"
+  ]
+ },
+ "OOI-ZOT-090": {
+  "methods": [
+   "eddy-covariance"
+  ],
+  "concepts": [
+   "benthic-processes",
+   "hypoxia"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-095": {
+  "methods": [
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": [
+   "axbase"
+  ]
+ },
+ "OOI-ZOT-096": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "diffuse-flow",
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "OOI-ZOT-099": {
+  "methods": [
+   "tidal-triggering"
+  ],
+  "concepts": [
+   "tidal-forcing",
+   "volcanic-seismicity"
+  ],
+  "rca": "products",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-103": {
+  "methods": [
+   "passive-acoustics",
+   "sound-levels"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "anthropogenic-noise",
+   "weather-noise",
+   "eruption-axial-2015"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-108": {
+  "methods": [],
+  "concepts": [
+   "gas-hydrates",
+   "methane-seepage",
+   "seep-ecology"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr",
+   "nhr"
+  ]
+ },
+ "OOI-ZOT-113": {
+  "methods": [
+   "ambient-noise-interferometry",
+   "sound-propagation"
+  ],
+  "concepts": [],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ccal",
+   "ecal"
+  ]
+ },
+ "OOI-ZOT-115": {
+  "methods": [
+   "cultivation",
+   "genomics"
+  ],
+  "concepts": [
+   "subseafloor-biosphere"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-119": {
+  "methods": [
+   "das",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-131": {
+  "methods": [
+   "sound-propagation",
+   "profiling"
+  ],
+  "concepts": [
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "OOI-ZOT-132": {
+  "methods": [
+   "echosounder",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "zooplankton-fish",
+   "upwelling"
+  ],
+  "rca": "data",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-133": {
+  "methods": [
+   "eddy-covariance"
+  ],
+  "concepts": [
+   "benthic-processes",
+   "hypoxia"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-135": {
+  "methods": [
+   "profiling"
+  ],
+  "concepts": [
+   "river-plumes"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-136": {
+  "methods": [
+   "profiling"
+  ],
+  "concepts": [
+   "hypoxia",
+   "upwelling"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-138": {
+  "methods": [
+   "profiling",
+   "remote-sensing"
+  ],
+  "concepts": [
+   "river-plumes",
+   "primary-production",
+   "upwelling"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-139": {
+  "methods": [],
+  "concepts": [
+   "marine-heatwaves",
+   "hypoxia",
+   "upwelling",
+   "cabled-observatories"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf",
+   "offshore"
+  ]
+ },
+ "OOI-ZOT-144": {
+  "methods": [
+   "fluid-geochemistry"
+  ],
+  "concepts": [
+   "primary-production",
+   "upwelling",
+   "river-plumes"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-148": {
+  "methods": [
+   "ocean-modeling"
+  ],
+  "concepts": [
+   "marine-heatwaves",
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": [
+   "shelf"
+  ]
+ },
+ "OOI-ZOT-157": {
+  "methods": [
+   "das",
+   "ambient-noise-interferometry"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-159": {
+  "methods": [
+   "das",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "OOI-ZOT-160": {
+  "methods": [
+   "deformation-modeling",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "dike-intrusion",
+   "eruption-axial-2015"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "OOI-ZOT-165": {
+  "methods": [
+   "ambient-noise-interferometry"
+  ],
+  "concepts": [
+   "shallow-slow-slip",
+   "megathrust-locking",
+   "subduction-fluids",
+   "alvin-canyon-fault",
+   "accretionary-prism"
+  ],
+  "rca": "data",
+  "sites": [
+   "slope"
+  ]
+ },
+ "RCA-LIT-001": {
+  "methods": [
+   "tremor-detection",
+   "noise-removal"
+  ],
+  "concepts": [
+   "tectonic-tremor",
+   "megathrust-locking",
+   "accretionary-prism"
+  ],
+  "rca": "data",
+  "sites": [
+   "shr",
+   "slope"
+  ]
+ },
+ "RCA-LIT-002": {
+  "methods": [
+   "hydroacoustic-tphases",
+   "earthquake-location"
+  ],
+  "concepts": [
+   "volcanic-seismicity",
+   "eruptions",
+   "blanco-transform"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "RCA-LIT-004": {
+  "methods": [
+   "das",
+   "machine-learning",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-007": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "methane-seepage"
+  ],
+  "rca": "data",
+  "sites": [
+   "shr"
+  ]
+ },
+ "RCA-LIT-014": {
+  "methods": [
+   "imagery-analysis",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-015": {
+  "methods": [
+   "das",
+   "template-matching",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-019": {
+  "methods": [
+   "eruption-forecasting",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "inflation-cycle",
+   "eruptions"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-022": {
+  "methods": [
+   "imagery-analysis"
+  ],
+  "concepts": [],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-026": {
+  "methods": [
+   "imagery-analysis"
+  ],
+  "concepts": [],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-028": {
+  "methods": [
+   "das"
+  ],
+  "concepts": [
+   "cabled-observatories"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-030": {
+  "methods": [
+   "ocean-modeling",
+   "profiling"
+  ],
+  "concepts": [
+   "marine-heatwaves",
+   "ocean-circulation"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "RCA-LIT-037": {
+  "methods": [
+   "genomics",
+   "fluid-geochemistry"
+  ],
+  "concepts": [
+   "subseafloor-biosphere",
+   "eruption-axial-2011",
+   "diffuse-flow"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-040": {
+  "methods": [
+   "das",
+   "machine-learning"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-044": {
+  "methods": [
+   "seismic-reflection"
+  ],
+  "concepts": [
+   "lava-flows",
+   "crustal-structure",
+   "magma-reservoir",
+   "dike-intrusion"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-046": {
+  "methods": [
+   "machine-learning",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-059": {
+  "methods": [
+   "call-detection",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "marine-heatwaves"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-060": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-061": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "hydrothermal-venting",
+   "diffuse-flow"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-062": {
+  "methods": [
+   "das",
+   "sound-levels"
+  ],
+  "concepts": [
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-063": {
+  "methods": [
+   "das",
+   "sound-levels"
+  ],
+  "concepts": [
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-065": {
+  "methods": [
+   "das",
+   "call-detection"
+  ],
+  "concepts": [
+   "marine-mammals"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-069": {
+  "methods": [
+   "das",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-070": {
+  "methods": [
+   "das",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "marine-mammals",
+   "anthropogenic-noise"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-071": {
+  "methods": [
+   "seafloor-compliance"
+  ],
+  "concepts": [
+   "eruption-axial-2015",
+   "magma-reservoir"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-073": {
+  "methods": [
+   "pressure-calibration",
+   "seafloor-pressure-geodesy"
+  ],
+  "concepts": [
+   "pressure-drift"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ccal"
+  ]
+ },
+ "RCA-LIT-078": {
+  "methods": [
+   "seafloor-compliance"
+  ],
+  "concepts": [
+   "magma-reservoir",
+   "eruption-axial-2015"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-086": {
+  "methods": [
+   "das"
+  ],
+  "concepts": [
+   "cabled-observatories"
+  ],
+  "rca": "data",
+  "sites": []
+ },
+ "RCA-LIT-088": {
+  "methods": [
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "weather-noise"
+  ],
+  "rca": "data",
+  "sites": [
+   "axbase"
+  ]
+ },
+ "RCA-LIT-092": {
+  "methods": [
+   "sonar-imaging",
+   "echosounder"
+  ],
+  "concepts": [
+   "methane-seepage"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "RCA-LIT-097": {
+  "methods": [],
+  "concepts": [
+   "eruptions",
+   "dike-intrusion",
+   "magma-reservoir",
+   "lava-flows"
+  ],
+  "rca": "none",
+  "sites": []
+ },
+ "RCA-LIT-231": {
+  "methods": [
+   "tidal-triggering",
+   "b-value",
+   "earthquake-location"
+  ],
+  "concepts": [
+   "eruptions",
+   "tidal-forcing",
+   "volcanic-seismicity"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-232": {
+  "methods": [
+   "incubation-experiments"
+  ],
+  "concepts": [
+   "seep-ecology",
+   "gas-hydrates"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr"
+  ]
+ },
+ "RCA-LIT-256": {
+  "methods": [
+   "drilling-logging",
+   "seismic-reflection"
+  ],
+  "concepts": [
+   "gas-hydrates",
+   "methane-seepage"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr"
+  ]
+ },
+ "RCA-LIT-263": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-282": {
+  "methods": [
+   "genomics",
+   "fluid-geochemistry"
+  ],
+  "concepts": [
+   "aom",
+   "seep-ecology"
+  ],
+  "rca": "none",
+  "sites": [
+   "hr"
+  ]
+ },
+ "RCA-LIT-288": {
+  "methods": [
+   "isotopes",
+   "fluid-geochemistry",
+   "drilling-logging"
+  ],
+  "concepts": [
+   "gas-hydrates",
+   "accretionary-prism"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr",
+   "nhr"
+  ]
+ },
+ "RCA-LIT-328": {
+  "methods": [
+   "isotopes"
+  ],
+  "concepts": [
+   "authigenic-carbonates",
+   "gas-hydrates"
+  ],
+  "rca": "none",
+  "sites": [
+   "hr"
+  ]
+ },
+ "RCA-LIT-390": {
+  "methods": [
+   "cultivation"
+  ],
+  "concepts": [
+   "subseafloor-biosphere"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-391": {
+  "methods": [
+   "sound-levels",
+   "passive-acoustics"
+  ],
+  "concepts": [
+   "anthropogenic-noise"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-467": {
+  "methods": [
+   "seismic-reflection"
+  ],
+  "concepts": [
+   "gas-hydrates"
+  ],
+  "rca": "none",
+  "sites": [
+   "nhr"
+  ]
+ },
+ "RCA-LIT-481": {
+  "methods": [],
+  "concepts": [
+   "porosity"
+  ],
+  "rca": "none",
+  "sites": [
+   "hr"
+  ]
+ },
+ "RCA-LIT-509": {
+  "methods": [
+   "imagery-analysis",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "sulfide-chimneys",
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-528": {
+  "methods": [
+   "sonar-imaging",
+   "time-series-analysis"
+  ],
+  "concepts": [
+   "diffuse-flow",
+   "hydrothermal-venting"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ },
+ "RCA-LIT-534": {
+  "methods": [
+   "fluid-geochemistry"
+  ],
+  "concepts": [
+   "vent-chemistry",
+   "hydrothermal-venting"
+  ],
+  "rca": "none",
+  "sites": [
+   "axial"
+  ]
+ },
+ "RCA-LIT-552": {
+  "methods": [
+   "drilling-logging"
+  ],
+  "concepts": [
+   "gas-hydrates"
+  ],
+  "rca": "none",
+  "sites": [
+   "shr",
+   "nhr"
+  ]
+ },
+ "RCA-LIT-555": {
+  "methods": [
+   "sonar-imaging"
+  ],
+  "concepts": [
+   "hydrothermal-venting",
+   "diffuse-flow"
+  ],
+  "rca": "data",
+  "sites": [
+   "axial",
+   "ashes"
+  ]
+ }
+}

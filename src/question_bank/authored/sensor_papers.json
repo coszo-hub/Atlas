@@ -1,0 +1,406 @@
+{
+ "_rule": "used: the paper analyzes the sensor's own records (waveforms, picks, spectra, its pressure or hydrophone channels, images) in its methods or results, including as a comparison; mentioned: names or describes it, or uses only products others made from it (a catalog), without analyzing its data. Judged by reading each candidate's passages (gather_sensor_candidates.py).",
+ "EARTHSCOPE-OO-HYSB1": {
+  "used": [
+   "OOI-ZOT-165",
+   "RCA-LIT-001",
+   "OOI-ZOT-023",
+   "COSZO-REF-099",
+   "COSZO-REF-133",
+   "RCA-LIT-059"
+  ],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "EARTHSCOPE-OO-AXCC1": {
+  "used": [
+   "OOI-ZOT-009",
+   "OOI-ZOT-072",
+   "OOI-ZOT-080",
+   "OOI-ZOT-082",
+   "OOI-ZOT-062",
+   "OOI-ZOT-065",
+   "OOI-ZOT-042",
+   "OOI-ZOT-048",
+   "OOI-ZOT-041",
+   "COSZO-REF-119",
+   "RCA-LIT-059"
+  ],
+  "mentioned": [
+   "OOI-ZOT-079",
+   "COSZO-REF-065",
+   "RCA-LIT-231"
+  ]
+ },
+ "EARTHSCOPE-OO-AXEC2": {
+  "used": [
+   "OOI-ZOT-009",
+   "RCA-LIT-071",
+   "OOI-ZOT-072",
+   "OOI-ZOT-074",
+   "OOI-ZOT-082",
+   "OOI-ZOT-048",
+   "OOI-ZOT-041",
+   "OOI-ZOT-065"
+  ],
+  "mentioned": [
+   "OOI-ZOT-079",
+   "OOI-ZOT-160",
+   "COSZO-REF-065",
+   "RCA-LIT-231"
+  ]
+ },
+ "EARTHSCOPE-OO-AXBA1": {
+  "used": [
+   "RCA-LIT-078",
+   "OOI-ZOT-062",
+   "OOI-ZOT-041",
+   "RCA-LIT-059",
+   "OOI-ZOT-095"
+  ],
+  "mentioned": [
+   "RCA-LIT-088",
+   "COSZO-REF-089"
+  ]
+ },
+ "EARTHSCOPE-OO-AXAS1": {
+  "used": [
+   "OOI-ZOT-072",
+   "OOI-ZOT-065",
+   "RCA-LIT-059",
+   "OOI-ZOT-042"
+  ],
+  "mentioned": [
+   "COSZO-REF-065",
+   "COSZO-REF-087",
+   "COSZO-REF-057"
+  ]
+ },
+ "EARTHSCOPE-OO-AXID1": {
+  "used": [
+   "OOI-ZOT-019",
+   "RCA-LIT-071",
+   "OOI-ZOT-072",
+   "OOI-ZOT-065",
+   "OOI-ZOT-042"
+  ],
+  "mentioned": [
+   "COSZO-REF-065",
+   "RCA-LIT-231",
+   "COSZO-REF-089",
+   "COSZO-REF-057"
+  ]
+ },
+ "EARTHSCOPE-OO-HYS11": {
+  "used": [
+   "RCA-LIT-001",
+   "OOI-ZOT-023",
+   "COSZO-REF-099",
+   "RCA-LIT-059",
+   "COSZO-REF-160"
+  ],
+  "mentioned": [
+   "COSZO-REF-089",
+   "COSZO-REF-120"
+  ]
+ },
+ "EARTHSCOPE-OO-AXEC3": {
+  "used": [
+   "OOI-ZOT-072",
+   "OOI-ZOT-080",
+   "OOI-ZOT-065"
+  ],
+  "mentioned": [
+   "OOI-ZOT-160",
+   "COSZO-REF-065",
+   "RCA-LIT-231"
+  ]
+ },
+ "RS03CCAL-MJ03F-05-BOTPTA301": {
+  "used": [
+   "OOI-ZOT-160",
+   "RCA-LIT-019",
+   "OOI-ZOT-017",
+   "RCA-LIT-231",
+   "COSZO-REF-073",
+   "OOI-ZOT-048",
+   "RCA-LIT-073"
+  ],
+  "mentioned": [
+   "COSZO-REF-084",
+   "COSZO-REF-065"
+  ]
+ },
+ "RS03ECAL-MJ03E-06-BOTPTA302": {
+  "used": [
+   "RCA-LIT-019",
+   "OOI-ZOT-017",
+   "RCA-LIT-231",
+   "COSZO-REF-073",
+   "OOI-ZOT-160",
+   "OOI-ZOT-048"
+  ],
+  "mentioned": [
+   "COSZO-REF-065"
+  ]
+ },
+ "RS03INT2-MJ03D-06-BOTPTA303": {
+  "used": [
+   "RCA-LIT-231",
+   "COSZO-REF-073",
+   "OOI-ZOT-048",
+   "OOI-ZOT-043"
+  ],
+  "mentioned": [
+   "COSZO-REF-065",
+   "COSZO-REF-129",
+   "COSZO-REF-057"
+  ]
+ },
+ "RS03ASHS-MJ03B-09-BOTPTA304": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-129",
+   "COSZO-REF-065"
+  ]
+ },
+ "RS01SLBS-MJ01A-06-PRESTA101": {
+  "used": [],
+  "mentioned": [],
+  "note": "no paper in the corpus names or uses it"
+ },
+ "RS01SUM1-LJ01B-09-PRESTB102": {
+  "used": [],
+  "mentioned": [],
+  "note": "no paper in the corpus names or uses it"
+ },
+ "SCPRAAA301": {
+  "used": [
+   "RCA-LIT-073",
+   "COSZO-REF-084"
+  ],
+  "mentioned": [
+   "COSZO-REF-118",
+   "RCA-LIT-153",
+   "COSZO-REF-156"
+  ]
+ },
+ "SCPR-UNIT001-2013": {
+  "used": [
+   "OOI-ZOT-036",
+   "OOI-ZOT-043"
+  ],
+  "mentioned": [
+   "COSZO-REF-073",
+   "COSZO-REF-084"
+  ]
+ },
+ "AOABPA301": {
+  "used": [
+   "RCA-LIT-073",
+   "COSZO-REF-118"
+  ],
+  "mentioned": [
+   "COSZO-REF-084",
+   "COSZO-REF-156",
+   "COSZO-REF-031"
+  ]
+ },
+ "PI-COVIS": {
+  "used": [
+   "RCA-LIT-060",
+   "RCA-LIT-528",
+   "OOI-ZOT-096",
+   "COSZO-REF-129",
+   "RCA-LIT-555",
+   "RCA-LIT-061",
+   "RCA-LIT-263"
+  ],
+  "mentioned": [
+   "COSZO-REF-065",
+   "COSZO-REF-089",
+   "COSZO-REF-057",
+   "COSZO-REF-167"
+  ]
+ },
+ "RS03ASHS-PN03B-06-CAMHDA301": {
+  "used": [
+   "RCA-LIT-022",
+   "RCA-LIT-026",
+   "RCA-LIT-014",
+   "RCA-LIT-509"
+  ],
+  "mentioned": [
+   "COSZO-REF-065"
+  ]
+ },
+ "PI-QNTSRA101": {
+  "used": [
+   "COSZO-REF-160"
+  ],
+  "mentioned": [
+   "RCA-LIT-007"
+  ]
+ },
+ "PI-OVRSRA101": {
+  "used": [
+   "COSZO-REF-160",
+   "RCA-LIT-007"
+  ],
+  "mentioned": []
+ },
+ "RS03INT1-MJ03C-06-MASSPA301": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "RS03ASHS-MJ03B-00-OSMOIA301": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-065"
+  ]
+ },
+ "RS03INT1-MJ03C-07-RASFLA301": {
+  "used": [],
+  "mentioned": [
+   "OOI-ZOT-023",
+   "COSZO-REF-089"
+  ]
+ },
+ "RS03CCAL-MJ03F-08-FETCHA301": {
+  "used": [
+   "COSZO-REF-185",
+   "RCA-LIT-073"
+  ],
+  "mentioned": []
+ },
+ "PI-DAS25": {
+  "used": [
+   "OOI-DAS-2026-001",
+   "RCA-LIT-028",
+   "RCA-LIT-086"
+  ],
+  "mentioned": [
+   "RCA-LIT-081",
+   "OOI-ZOT-174"
+  ]
+ },
+ "COSZO-STRAINMETER-EW": {
+  "used": [
+   "COSZO-REF-133"
+  ],
+  "mentioned": [
+   "COSZO-REF-087"
+  ],
+  "note": "the paper that used it never writes 'strainmeter' (Measuring seafloor strain with an optical fiber interferometer)"
+ },
+ "RCA-DAS-2021-COMMUNITY-TEST": {
+  "used": [
+   "OOI-ZOT-157",
+   "OOI-ZOT-159",
+   "RCA-LIT-004",
+   "RCA-LIT-040",
+   "OOI-ZOT-003",
+   "OOI-ZOT-004",
+   "OOI-ZOT-006",
+   "OOI-ZOT-007",
+   "RCA-LIT-015",
+   "RCA-LIT-063",
+   "OOI-ZOT-023",
+   "OOI-ZOT-030",
+   "RCA-LIT-062",
+   "RCA-LIT-065",
+   "OOI-ZOT-119",
+   "RCA-LIT-069",
+   "RCA-LIT-070"
+  ],
+  "mentioned": [
+   "OOI-DAS-2026-001",
+   "RCA-LIT-028",
+   "RCA-LIT-086",
+   "RCA-LIT-081",
+   "OOI-ZOT-174",
+   "OOI-ZOT-107",
+   "RCA-LIT-003"
+  ]
+ },
+ "CE04OSPS-PC01B-05-ZPLSCB102": {
+  "used": [
+   "OOI-ZOT-013",
+   "OOI-ZOT-081"
+  ],
+  "mentioned": [
+   "COSZO-REF-104",
+   "COSZO-REF-089",
+   "OOI-ZOT-070",
+   "RCA-LIT-031"
+  ]
+ },
+ "RS01SLBS-LJ01A-09-HYDBBA102": {
+  "used": [
+   "OOI-ZOT-103",
+   "RCA-LIT-046"
+  ],
+  "mentioned": []
+ },
+ "RS03AXBS-LJ03A-09-HYDBBA302": {
+  "used": [
+   "OOI-ZOT-103",
+   "RCA-LIT-088"
+  ],
+  "mentioned": []
+ },
+ "CE02SHBP-LJ01D-11-HYDBBA106": {
+  "used": [
+   "OOI-ZOT-085",
+   "OOI-ZOT-089",
+   "OOI-ZOT-103",
+   "RCA-LIT-046",
+   "OOI-ZOT-029"
+  ],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "RS01SLBS-MJ01A-05-HYDLFA101": {
+  "used": [
+   "OOI-ZOT-103"
+  ],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "RS03CCAL-MJ03F-06-HYDLFA305": {
+  "used": [
+   "OOI-ZOT-103",
+   "OOI-ZOT-014",
+   "OOI-ZOT-113"
+  ],
+  "mentioned": []
+ },
+ "RS03AXBS-MJ03A-06-PRESTA301": {
+  "used": [],
+  "mentioned": [],
+  "note": "no paper in the corpus names or uses it"
+ },
+ "RS01SUM2-MJ01B-06-MASSPA101": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "RS03AXBS-LJ03A-05-HPIESA301": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ },
+ "RS01SLBS-LJ01A-05-HPIESA101": {
+  "used": [],
+  "mentioned": [
+   "COSZO-REF-089"
+  ]
+ }
+}
