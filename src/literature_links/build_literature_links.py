@@ -535,9 +535,20 @@ def build(output: Path) -> dict:
     def near_data(text):
         return any(USE.search(text[max(0, m.start() - 300): m.end() + 300]) and len(YEARS.findall(text[max(0, m.start() - 300): m.end() + 300])) < 8
                    for m in RCA_WORDS.finditer(text))
+    # Also RCA words right beside an instrument ("two OOI cabled array hydrophones"), and from 2016 on, years of
+    # continuous seismic, acoustic or pressure data at an RCA site ("7 years of continuous seismic noise at Axial
+    # Seamount": only the cabled array records that there).
+    RCA_INSTRUMENT = re.compile(RCA_WORDS.pattern + r"[\w\s,-]{0,40}?\b(?:hydrophones?|seismomet\w*|OBSs?|sensors?|instruments?|cameras?|sonars?|profilers?|moorings?|stations?|cables?|(?:seismic |hydrophone )?networks?)\b", re.I)
+    SITE_RECORD = re.compile(r"(?:continuous|\d+[- ](?:years?|months?) of|long[- ]term)\b[^.]{0,80}\b(?:seismic|acoustic|hydrophone|pressure|noise|data|records?|recordings?)\b"
+                             r"[^.]{0,120}\b(?:Axial Seamount|Axial caldera|Southern Hydrate Ridge|Slope Base|ASHES|International District)", re.I)
+    def rca_words_in(paper, abstract):
+        text = f"{paper.get('title') or ''}. {abstract}"
+        return (near_data(text) or bool(RCA_INSTRUMENT.search(text))
+                or ((paper.get("publication_year") or 0) >= 2016 and bool(SITE_RECORD.search(text))))
     rca_data = {pid for pid, paper in papers.items()
                 if (paper.get("publication_year") or 0) >= 2013 and not is_overview(paper.get("title") or "")
-                and (near_data(f"{paper.get('title') or ''}. {abstracts.get(pid, '')}") or sum(near_data(t) for t in full.get(pid, [])) >= 2)}
+                and (rca_words_in(paper, abstracts.get(pid, "")) or sum(near_data(t) for t in full.get(pid, [])) >= 2
+                     or sum(bool(RCA_INSTRUMENT.search(t)) and len(YEARS.findall(t)) < 8 for t in full.get(pid, [])) >= 2)}
 
     tmp = output.with_name(output.name + ".tmp")
     shutil.rmtree(tmp, ignore_errors=True)

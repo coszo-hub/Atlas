@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { authorYear, instrumentAsked, linkAppendix, linkInstruction, recentPapers, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
+import { authorYear, instrumentAsked, linkAppendix, linkInstruction, recentPapers, withoutNamedTerms, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
 
 test("a method, concept or site is matched with the words the links were built with", () => {
   assert.deepEqual(linkTermsIn("Which papers did ambient noise interferometry using RCA data?").map((t) => t.id), ["METHOD-ambient-noise-interferometry"]);
@@ -82,4 +82,12 @@ test("a long list keeps its most recent papers, and the list after the answer sa
   assert.match(sensor, /used its data \(1\)\*\*\n- Paper 1 \(2021\)/);
   assert.match(sensor, /only mention it \(1\)\*\*\n- Paper 2 \(2018\)/);
   assert.equal(linkAppendix(null, hits), "");
+});
+
+test("a method named by its own name is found, and its words are not an instrument", () => {
+  assert.deepEqual(linkTermsIn("who has applied earthquake source parameters to Regional Cabled Array data").map((t) => t.id), ["METHOD-source-parameters"]);
+  assert.equal(withoutNamedTerms("who has applied seafloor pressure geodesy to RCA data").includes("pressure"), false);
+  assert.equal(withoutNamedTerms("List the studies that used fiber-optic sensing on OOI data.").includes("fiber"), false);
+  // Only a method's name is taken out: an instrument described in a method's words stays.
+  assert.match(withoutNamedTerms("Which papers used data from the tidal pressure gauge?"), /tidal pressure gauge/);
 });

@@ -4,22 +4,43 @@
 // all reach the one method.
 import LINK_TERMS from "./link_terms.json" with { type: "json" };
 
-const TERMS = LINK_TERMS.map((term) => ({ ...term, rx: new RegExp(term.pattern, term.flags) }));
+// A term is also found by its own name ("earthquake source parameters", "fiber-optic sensing"), with or without
+// what its name puts in brackets, not only by the words papers use for it ("stress drop", "corner frequency").
+const words = (text) => String(text || "").toLowerCase().replace(/[^\p{L}\p{N}/]+/gu, " ").trim();
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+const TERMS = LINK_TERMS.map((term) => {
+  const names = [...new Set([term.name, term.name.replace(/\s*\([^)]*\)/g, "")].map(words).filter((n) => n.length >= 4))];
+  return { ...term, rx: new RegExp(term.pattern, term.flags),
+    nameRx: names.length ? new RegExp(`(?:^| )(?:${names.map(escape).join("|")})(?: |$)`) : null };
+});
 // The RCA's own names say where the data are from, not what the question is about ("using RCA data").
 const SCOPE = /\b(?:RCA|OOI|Regional Cabled Array|Ocean Observatories Initiative|cabled array|cabled observatory)\b/gi;
 export const asksRcaData = (question) => new RegExp(SCOPE.source, "i").test(String(question || ""));
+const matches = (term, text) => term.rx.test(text) || Boolean(term.nameRx?.test(words(text)));
 
 // The methods, concepts and sites a question names, the most specific of each line ("DAS" rather than "fiber sensing").
 export function linkTermsIn(question) {
   const q = String(question || "");
-  const sites = TERMS.filter((term) => term.kind === "site" && term.rx.test(q));
+  const sites = TERMS.filter((term) => term.kind === "site" && matches(term, q));
   // A site's name is not a topic: "Hydrate Ridge" is not a question about gas hydrates.
   let unscoped = q.replace(SCOPE, " ");
   for (const site of sites) unscoped = unscoped.replace(new RegExp(site.rx.source, `${site.rx.flags}g`), " ");
-  const found = [...sites, ...TERMS.filter((term) => term.kind !== "site" && term.rx.test(unscoped))];
+  const found = [...sites, ...TERMS.filter((term) => term.kind !== "site" && matches(term, unscoped))];
   const ids = new Set(found.map((term) => term.id));
   return found.filter((term) => !TERMS.some((child) => child.parent === term.id && ids.has(child.id)))
     .map(({ id, kind, name }) => ({ id, kind, name }));
+}
+
+// The question without the methods and concepts it names by name, for finding an instrument in it: "seafloor
+// pressure geodesy" and "fiber-optic sensing" name methods, not a pressure gauge or a cable. A question that only
+// uses a method's words ("the tidal pressure gauge") keeps them.
+const NAME_IN_TEXT = TERMS.filter((term) => term.kind !== "site").flatMap((term) =>
+  [...new Set([term.name, term.name.replace(/\s*\([^)]*\)/g, "")].map(words).filter((n) => n.length >= 4))]
+    .map((name) => new RegExp(`(?<![\\p{L}\\p{N}])${name.split(" ").map(escape).join("[^\\p{L}\\p{N}]+")}(?![\\p{L}\\p{N}])`, "giu")));
+export function withoutNamedTerms(question) {
+  let rest = String(question || "");
+  for (const rx of NAME_IN_TEXT) rest = rest.replace(rx, " ");
+  return rest;
 }
 
 // "Chadwick et al. (2012)", "Kidiwela 2026", "Krauss and Wilcock (2025)": a first author's surname and a year.

@@ -173,7 +173,7 @@
   "name": "Animal call detection and classification",
   "pattern": "(?:whale|mammal|orca) (?:call|vocalization|detection|click)s?|call (?:detection|classification|localization)|vocalizations?",
   "flags": "i",
-  "parent": null
+  "parent": "METHOD-passive-acoustics"
  },
  {
   "id": "METHOD-sound-levels",
@@ -181,7 +181,7 @@
   "name": "Sound levels and soundscapes",
   "pattern": "sound (?:pressure )?levels?|noise levels?|power spectral densit\\w*|\\bPSDs?\\b|soundscapes?|ambient sound",
   "flags": "i",
-  "parent": null
+  "parent": "METHOD-passive-acoustics"
  },
  {
   "id": "METHOD-hydroacoustic-tphases",
@@ -189,7 +189,7 @@
   "name": "Hydroacoustic T-phase analysis",
   "pattern": "T[- ]phases?|T[- ]waves?|hydroacoustic\\w*|\\bSOSUS\\b",
   "flags": "",
-  "parent": null
+  "parent": "METHOD-passive-acoustics"
  },
  {
   "id": "METHOD-sound-propagation",

@@ -280,7 +280,7 @@
   "definition": "Detecting, classifying and localizing marine mammal calls.",
   "pattern": "(?:whale|mammal|orca) (?:call|vocalization|detection|click)s?|call (?:detection|classification|localization)|vocalizations?",
   "ignore_case": true,
-  "parent": null,
+  "parent": "passive-acoustics",
   "background": false,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 23
@@ -293,7 +293,7 @@
   "definition": "Measuring ambient sound levels, spectra and soundscape trends.",
   "pattern": "sound (?:pressure )?levels?|noise levels?|power spectral densit\\w*|\\bPSDs?\\b|soundscapes?|ambient sound",
   "ignore_case": true,
-  "parent": null,
+  "parent": "passive-acoustics",
   "background": false,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 54
@@ -306,7 +306,7 @@
   "definition": "Detecting earthquakes and eruptions from T-phases recorded by hydrophones (SOSUS).",
   "pattern": "T[- ]phases?|T[- ]waves?|hydroacoustic\\w*|\\bSOSUS\\b",
   "ignore_case": false,
-  "parent": null,
+  "parent": "passive-acoustics",
   "background": false,
   "papers_abstract": 23,
   "papers_fulltext_2plus": 32

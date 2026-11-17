@@ -17,8 +17,8 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(manifest["counts"]["node_records"], 59_664)
         self.assertEqual(manifest["counts"]["nodes"], 57_911)
         self.assertEqual(manifest["counts"]["chunks"], 35_438)
-        self.assertEqual(manifest["counts"]["edge_records"], 78_324)
-        self.assertEqual(manifest["counts"]["edge_facts"], 77_514)
+        self.assertEqual(manifest["counts"]["edge_records"], 78_327)
+        self.assertEqual(manifest["counts"]["edge_facts"], 77_517)
         self.assertEqual(manifest["counts"]["structured_records"], 156_273)
 
     def test_each_embedding_file_retains_both_roles(self):

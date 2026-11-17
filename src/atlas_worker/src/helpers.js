@@ -1,5 +1,5 @@
 // Pure helpers for the answer route, kept apart from the Worker entry so node --test can import them.
-import { instrumentAsked, linkInstruction, linkPlan } from "./links.js";
+import { instrumentAsked, linkInstruction, linkPlan, withoutNamedTerms } from "./links.js";
 
 const EXCERPT_CHARS = 280;
 const MAX_EVENTS = 5_000;
@@ -1033,7 +1033,8 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
     ? `Records marked (instrument inventory) are every instrument of the asked type at the place the question asks about${isMarginQuestion(question)
       ? " (the Cascadia margin, slope and shelf alike: the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites; Axial Seamount, on the Juan de Fuca Ridge, is not part of it)" : ""}. List every one of them, each by name and identifier with its site; say that one whose record says Planned is planned and not yet operating.`
     : "";
-  const plan = linkPlan(question, { instrument: instrumentAsked({ types: askedType(question), codes: questionCodes(question) }) });
+  const bare = withoutNamedTerms(question);
+  const plan = linkPlan(question, { instrument: instrumentAsked({ types: askedType(bare), codes: questionCodes(bare) }) });
   const papersInstruction = plan && plan.kind !== "profile" && /literature links|literature-link|applies the method|studies |is about |used data from|mentions/.test(evidence)
     ? linkInstruction(plan) + (plan.kind === "topic" ? " Papers found by meaning rather than by a link may follow: count one only when its passage shows it did that study." : "")
     : plan?.kind === "profile" && /Literature links of /.test(evidence)
