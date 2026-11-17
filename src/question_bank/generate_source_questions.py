@@ -42,6 +42,8 @@ AREAS = {   # area -> site designators (and inventory locations) it takes in
     "the Axial Central Caldera": ("RS03CCAL",), "the Axial Eastern Caldera": ("RS03ECAL",),
     "the International District": ("RS03INT",), "the ASHES vent field": ("RS03ASHS",),
 }
+SUB_AREAS = {"Axial Seamount": ("Axial Base", "the Axial Central Caldera", "the Axial Eastern Caldera",
+                                 "the International District", "the ASHES vent field")}
 CASUAL_AREA = {"Axial Seamount": "axial", "Southern Hydrate Ridge": "hydrate ridge", "Oregon Slope Base": "slope base",
                "Oregon Offshore": "oregon offshore", "Oregon Shelf": "the oregon shelf", "Axial Base": "axial base",
                "the Axial Central Caldera": "central caldera", "the Axial Eastern Caldera": "eastern caldera",
@@ -237,7 +239,9 @@ def generate(src: Sources) -> list[dict]:
     deployed = [s for s in src.inv if src.deployed(s)]
     # 6: sensors at a site, all of them and by kind.
     for area in AREAS:
-        here = sorted(s for s in deployed if src.area_of(s) == area)
+        # A site takes in its sub-sites: "what sensors are at Axial" is every Axial instrument, not the two the
+        # inventory files under Axial Seamount itself (the key had only those).
+        here = sorted(s for s in deployed if src.area_of(s) in {area, *SUB_AREAS.get(area, ())})
         if not here:
             continue
         gold = {"sensors": here, "names": [src.inv[s].get("name") for s in here]}
