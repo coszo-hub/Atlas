@@ -543,6 +543,22 @@ async function papersFor(question, env, { withMethods = false } = {}) {
   }
 }
 
+// The paper a summary question names by its first author and year ("Summarize Chadwick et al. (2016)."): its abstract
+// record, by the id the author lookup gives; its full text follows through the evidence's paper keys.
+async function paperByAuthor(plan, env) {
+  const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
+  try {
+    const found = (await postJson(`${api}/v1/papers-by-author`, { surname: plan.surname, year: plan.year, limit: 5 }, headers)).papers || [];
+    const ids = pickPaper(found, plan.hint).map((paper) => paper.abstract_chunk_id).filter(Boolean);
+    if (!ids.length) return [];
+    const hits = (await postJson(`${api}/v1/chunks`, { collection_id: "literature", chunk_ids: ids }, headers)).hits || [];
+    return hits.map(withRouteCitations);
+  } catch (error) {
+    console.error("paper by author failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
 async function featurePapers(question, env) {
   const features = featuresIn(question);
   if (!features.length) return [];
@@ -996,7 +1012,7 @@ export default {
       const bare = withoutNamedTerms(query);   // a method named by its name is not an instrument
       const plan = linkPlan(query, { instrument: instrumentAsked({ types: askedType(bare), codes: questionCodes(bare) }) });
       let appendix = "";   // the papers' list from the links, added after the answer
-      if (asksForPapers(query) || (plan && !["profile", "site_overview"].includes(plan.kind))) {
+      if (plan?.kind !== "paper" && (asksForPapers(query) || (plan && !["profile", "site_overview"].includes(plan.kind)))) {
         const leads = topicLeads(query);
         const sensorMethods = plan?.kind === "sensor_methods";
         const listed = plan && ["topic", "site"].includes(plan.kind);
@@ -1018,6 +1034,8 @@ export default {
         const linked = await linkedRecords({ ...plan, kind: "site" }, env);
         context.links = linked.records.slice(0, 10);
         appendix = linkAppendix(plan, linked.raw);
+      } else if (plan?.kind === "paper") {
+        context.links = await paperByAuthor(plan, env);   // the paper asked about leads the evidence
       } else if (plan?.kind === "profile") {
         const linked = await linkedRecords(plan, env);
         context.links = linked.records;

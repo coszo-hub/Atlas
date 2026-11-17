@@ -17,14 +17,16 @@ test("a first author and year are read from the question, not a month or a place
   assert.equal(authorYear("what is Chadwick 2016 about").surname, "Chadwick");
   assert.equal(authorYear("Summarize Krauss and Wilcock (2025).").surname, "Krauss");
   assert.equal(authorYear("What happened at Axial in April 2015?"), null);
+  assert.equal(authorYear("How large an area did the ash from Axial's 2015 summit fissures cover?"), null);
   assert.equal(authorYear("Which papers used OOI 2021 DAS data?"), null);
 });
 
 test("each kind of question gets its plan", () => {
   assert.equal(linkPlan("What methods does Bartlow et al. (2020) use?").kind, "profile");
   // A summary is answered from the paper itself, not its links' outline.
-  assert.equal(linkPlan("Summarize Chadwick et al. (2016)."), null);
-  assert.equal(linkPlan("what is Sigmundsson 2016 about"), null);
+  assert.equal(linkPlan("Summarize Chadwick et al. (2016).").kind, "paper");
+  assert.equal(linkPlan("what is Sigmundsson 2016 about").kind, "paper");
+  assert.equal(linkInstruction(linkPlan("what is Sigmundsson 2016 about")), "");
   assert.equal(linkPlan("What methods have been applied to HYSB1 data?", { instrument: true }).kind, "sensor_methods");
   assert.equal(linkPlan("how have people analyzed data from AXCC1", { instrument: true }).kind, "sensor_methods");
   const topic = linkPlan("Which papers did ambient noise interferometry using RCA data?");

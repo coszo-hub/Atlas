@@ -18,6 +18,7 @@ services:
       - ./migrations/008_papers_naming_ranges.sql:/docker-entrypoint-initdb.d/008-papers-naming-ranges.sql:ro
       - ./migrations/009_papers_linked.sql:/docker-entrypoint-initdb.d/009-papers-linked.sql:ro
       - ./migrations/010_paper_links.sql:/docker-entrypoint-initdb.d/010-paper-links.sql:ro
+      - ./migrations/011_papers_by_author_abstract.sql:/docker-entrypoint-initdb.d/011-papers-by-author-abstract.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U graphrag_owner -d graphrag"]
       interval: 5s

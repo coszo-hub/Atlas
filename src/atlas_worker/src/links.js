@@ -54,7 +54,7 @@ const NOT_SURNAMES = new Set(["January", "February", "March", "April", "May", "J
 export function authorYear(question) {
   const rx = /\b([A-Z][\p{L}'’-]+)(?:\s+(?:et\s+al\.?|and\s+[A-Z][\p{L}'’-]+|&\s+[A-Z][\p{L}'’-]+))?\s*,?\s*\(?((?:19|20)\d\d)\)?/gu;
   for (const m of String(question || "").matchAll(rx)) {
-    if (!NOT_SURNAMES.has(m[1]) && !/^[A-Z0-9]+$/.test(m[1])) {
+    if (!NOT_SURNAMES.has(m[1]) && !/^[A-Z0-9]+$/.test(m[1]) && !/['’]s$/.test(m[1])) {   // "Axial's 2015" is no author
       // "on A Long-Term View of …": the title's first words, when the question gives them.
       const hint = String(question).slice(m.index + m[0].length).match(/^\s*on\s+([^?.]+)/)?.[1]?.trim() || "";
       return { surname: m[1], year: Number(m[2]), hint };
@@ -88,7 +88,8 @@ export function linkPlan(question, { instrument = false } = {}) {
   // answered from its abstract and passages, which the links' outline crowded out (summary key points 88% to 70%).
   const paper = authorYear(q);
   if (paper && PROFILE_ASK.test(q)) return { kind: "profile", ...paper };
-  if (paper) return null;
+  // A summary: the paper itself (found by its first author and year, which the search cannot match), not its links.
+  if (paper) return { kind: "paper", ...paper };
   const terms = linkTermsIn(q);
   const topics = terms.filter((term) => term.kind !== "site");
   const sites = terms.filter((term) => term.kind === "site");
@@ -226,7 +227,7 @@ export function linkAppendix(plan, hits) {
 
 // What the answer is told to do with the links.
 export function linkInstruction(plan) {
-  if (!plan) return "";
+  if (!plan || plan.kind === "paper") return "";   // a summary is answered from the paper's own text
   const judged = "The links were made by rule from each paper's own words (its title, abstract or full text), so read each record's quote:";
   if (plan.kind === "profile") {
     return `The evidence holds the literature links of the paper asked about, under 'Literature links of': the methods it applies, the concepts and features it studies, the sites it is about and the RCA sensors it used or mentions, each with how it was found and a quote. ${judged} answer from those that the quote supports, citing the paper (for a methods question, the methods; for what it studies, the concepts and features), and leave out a link whose quote shows the paper only mentions it.`;
