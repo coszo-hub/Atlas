@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / "data/Literature/literature.jsonl"
 CACHE = ROOT / "runtime_data/Literature/full_text_cache"
 DEFAULT_INPUT = ROOT / "source_material/literature_user_supplied"
-WORK_ID = re.compile(r"^((?:COSZO-REF|OOI-ZOT)-\d{3})(?:[-_.].*)?\.pdf$", re.I)
+WORK_ID = re.compile(r"^((?:COSZO-REF|OOI-ZOT|RCA-LIT)-\d{3})(?:[-_.].*)?\.pdf$", re.I)
 
 
 def sha256(path: Path) -> str:

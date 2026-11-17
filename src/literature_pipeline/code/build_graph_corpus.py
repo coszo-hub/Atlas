@@ -120,9 +120,15 @@ def build(input_path: Path, glossary_path: Path, output: Path) -> None:
     input_sha256 = hashlib.sha256(input_path.read_bytes()).hexdigest()
     glossary_sha256 = hashlib.sha256(glossary_path.read_bytes()).hexdigest()
     works = read_jsonl(input_path)
+    # The canonical catalog lives in the folder it builds (data/Literature/literature.jsonl), and is in no git
+    # history: clearing the folder must put it back, or a build in place deletes the only copy.
+    kept = {p: p.read_bytes() for p in (input_path, glossary_path) if p.resolve().is_relative_to(output.resolve())}
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)
+    for path, data in kept.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
     (output / "text").mkdir()
 
     entities: dict[str, dict] = {}
