@@ -35,7 +35,14 @@ export function authorYear(question) {
   return null;
 }
 
-const ASKS_PAPERS = /\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?|research)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has|about|on)\b|^\s*(?:papers?|publications?|studies)\b|\bwho\s+(?:has|have)\b|\bresearch\s+(?:has|have)\s+been\b/i;
+// Whether a question names an instrument: a type ("hydrophone") or a code, but not a site written in capitals
+// ("ASHES", "SHR"), which questionCodes takes for a code.
+export function instrumentAsked({ types = [], codes = [] } = {}) {
+  const sites = TERMS.filter((term) => term.kind === "site");
+  return types.length > 0 || codes.some((code) => !sites.some((site) => site.rx.test(code)));
+}
+
+const ASKS_PAPERS =/\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?|research)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has|about|on)\b|^\s*(?:papers?|publications?|studies)\b|\bwho\s+(?:has|have)\b|\bresearch\s+(?:has|have)\s+been\b/i;
 const METHOD_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz](?:e|es|ed|is|ing)|tools?)\b/i;
 
 // What a question asks of the links:
@@ -96,11 +103,17 @@ export function profileRecord(paper, hits) {
 }
 
 // A link record as a line of a paper list: the link's own text, and what the paper used (for "with RCA data").
+// The record's header already gives the paper's title, so the text starts at what the link says; a long list (every
+// paper about Axial Seamount) keeps each record short to fit.
 export function listRecord(hit, { withMethods = false } = {}) {
   const link = hit.metadata?.link || {};
   const used = (link.sensors_used || []).length ? ` It used data from RCA sensors: ${link.sensors_used.slice(0, 6).join(", ")}.` : "";
   const methods = withMethods && (link.methods || []).length ? ` Methods this paper applies (its links): ${link.methods.join("; ")}.` : "";
-  return { ...hit, text: `${String(hit.text || "").slice(0, 700)}${used}${methods}`, layer: true, paperList: true };
+  let text = String(hit.text || "");
+  const title = String(hit.title || "");
+  if (title && text.startsWith(title)) text = text.slice(title.length).replace(/^\s*\(\s*(?:\d{4}|n\.d\.)\s*\)\s*/, `(${link.publication_year ?? "n.d."}) `);
+  const room = link.predicate === "ABOUT_SITE" ? 220 : 420;
+  return { ...hit, text: `${text.slice(0, room)}${used}${methods}`, layer: true, paperList: true };
 }
 
 // What the answer is told to do with the links.

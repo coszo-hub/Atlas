@@ -1,5 +1,5 @@
 // Pure helpers for the answer route, kept apart from the Worker entry so node --test can import them.
-import { linkInstruction, linkPlan } from "./links.js";
+import { instrumentAsked, linkInstruction, linkPlan } from "./links.js";
 
 const EXCERPT_CHARS = 280;
 const MAX_EVENTS = 5_000;
@@ -51,7 +51,7 @@ const PASSAGE_CHARS = 1_800;
 // Groq's free tier refuses a request over 8,000 tokens a minute, and the 34,000-character prompts were refused.
 const FULLTEXT_CHARS = 11_000;
 // A papers question's link passages (up to 25 papers, ~600 characters each) get room of their own size.
-const LINKS_CHARS = 20_000;
+const LINKS_CHARS = 28_000;
 export const LINKS_COLLECTION = "literature_links";
 const MAIN_WITH_FULLTEXT_CHARS = 12_000;
 const REPEAT_RUN = 8;
@@ -1033,7 +1033,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
     ? `Records marked (instrument inventory) are every instrument of the asked type at the place the question asks about${isMarginQuestion(question)
       ? " (the Cascadia margin, slope and shelf alike: the Oregon Shelf, Outer Shelf, Offshore, Mid Slope, Slope Base and Southern Hydrate Ridge sites; Axial Seamount, on the Juan de Fuca Ridge, is not part of it)" : ""}. List every one of them, each by name and identifier with its site; say that one whose record says Planned is planned and not yet operating.`
     : "";
-  const plan = linkPlan(question, { instrument: Boolean(askedType(question).length || questionCodes(question).length) });
+  const plan = linkPlan(question, { instrument: instrumentAsked({ types: askedType(question), codes: questionCodes(question) }) });
   const papersInstruction = plan && plan.kind !== "profile" && /literature links|literature-link|applies the method|studies |is about |used data from|mentions/.test(evidence)
     ? linkInstruction(plan) + (plan.kind === "topic" ? " Papers found by meaning rather than by a link may follow: count one only when its passage shows it did that study." : "")
     : plan?.kind === "profile" && /Literature links of /.test(evidence)

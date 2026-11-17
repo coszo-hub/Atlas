@@ -9,7 +9,7 @@ import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
 import { watchLive, isWatchQuestion, watchRecords, watchSensorRecords } from "./watch.js";
-import { linkPlan, listRecord, pickPaper, profileRecord } from "./links.js";
+import { instrumentAsked, linkPlan, listRecord, pickPaper, profileRecord } from "./links.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -952,7 +952,7 @@ export default {
       // question asks about more than an instrument.
       // The literature links answer what they can (linkPlan): the papers on a method, concept or site, the methods used
       // on an instrument's data; a paper's own links join the evidence of a question about it.
-      const plan = linkPlan(query, { instrument: Boolean(askedType(query).length || questionCodes(query).length) });
+      const plan = linkPlan(query, { instrument: instrumentAsked({ types: askedType(query), codes: questionCodes(query) }) });
       if (asksForPapers(query) || (plan && plan.kind !== "profile")) {
         const leads = topicLeads(query);
         const sensorMethods = plan?.kind === "sensor_methods";

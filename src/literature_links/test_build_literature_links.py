@@ -54,13 +54,36 @@ class LiteratureLinksTests(unittest.TestCase):
         links.LIT, links.FULLTEXT, links.INSTRUMENTS = self.saved
 
     def test_a_range_names_every_station_it_takes_in(self):
+        # "We used OOI stations HYS11-14": named by the range, in a passage about using them.
         for code in ("HYS13", "HYS14"):
             link = self.edges[("P-RANGE", f"EARTHSCOPE-OO-{code}")]
-            self.assertEqual((link["predicate"], link["match"], link["evidence_page"]), ("NAMES_SENSOR", ["range"], 3))
+            self.assertEqual((link["predicate"], link["match"], link["evidence_page"]), ("USES_SENSOR", ["range"], 3))
 
     def test_a_description_links_the_sensors_of_that_kind_at_the_site(self):
+        # One passage describing the seismometers at the summit: a mention of each, with how many share it.
         link = self.edges[("P-DESC", "EARTHSCOPE-OO-HYS14")]
-        self.assertEqual((link["predicate"], link["sensors_sharing_description"]), ("DESCRIBES_SENSOR", 2))
+        self.assertEqual((link["predicate"], link["sensors_sharing_description"]), ("MENTIONS_SENSOR", 2))
+
+    def test_papers_link_to_methods_concepts_and_sites(self):
+        self.assertEqual(self.edges[("P-BOTPT", "CONCEPT-eruption-axial-2015")]["predicate"], "STUDIES_CONCEPT")
+        self.assertEqual(self.edges[("P-RANGE", "METHOD-das")]["predicate"], "APPLIES_METHOD")
+        self.assertEqual(self.edges[("P-RANGE", "SITE-southern-hydrate-ridge")]["predicate"], "ABOUT_SITE")
+        self.assertEqual(self.edges[("SITE-ashes", "SITE-axial-seamount")]["predicate"], "NARROWER_THAN")
+
+    def test_the_judge_reads_how_a_paper_names_a_sensor(self):
+        def link(*hits):
+            return {"hits": [{"layer": layer, "chunk": "c", "page": 1, "text": text, "span": (text.index("HYS14"), text.index("HYS14") + 5),
+                              "kind": kind, "share": None} for layer, kind, text in hits]}
+        paper = {"title": "Tremor near the deformation front", "publication_year": 2025}
+        # An abstract that names it is about work with it.
+        self.assertEqual(links.judge_sensor(link(("abstract", "named", "Signals at HYS14 near the front.")), paper)[0], "used")
+        # Named once in the full text, not about its data: a mention.
+        self.assertEqual(links.judge_sensor(link(("fulltext", "named", "Cabled stations such as HYS14 exist.")), paper)[0], "mentioned")
+        # Named in a passage about its data: used.
+        self.assertEqual(links.judge_sensor(link(("fulltext", "named", "We analyze waveforms recorded at HYS14.")), paper)[0], "used")
+        # An overview names it without analyzing it; a paper before the cabled array cannot have used it.
+        self.assertEqual(links.judge_sensor(link(("abstract", "named", "We analyze HYS14.")), {"title": "Lessons Learned From the OOI", "publication_year": 2019})[0], "mentioned")
+        self.assertEqual(links.judge_sensor(link(("abstract", "named", "We analyze HYS14.")), {"title": "Old", "publication_year": 2005})[0], "mentioned")
 
     def test_a_description_before_the_rca_or_without_it_links_nothing(self):
         self.assertNotIn(("P-ODP", "EARTHSCOPE-OO-HYS14"), self.edges)

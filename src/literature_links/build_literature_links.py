@@ -585,8 +585,13 @@ def build(output: Path) -> dict:
             verb = "applies the method" if e["kind"] == "method" else "studies"
             link_chunk(pid, target, predicate, f"{cite(pid)} {verb} {e['name']}: {how}. Evidence ({t['evidence_layer']}): {t['evidence']}")
             linked_papers.add(pid)
+        title, abstract = papers[pid].get("title") or "", abstracts.get(pid, "")
+        site_words = {sid: words for sid, _, words, _ in SITES}
         for site, why in site_rows[pid]:
-            relationships.append({"source_id": pid, "predicate": "ABOUT_SITE", "target_id": site, "why": why})
+            # How strongly: the site in the title, then how often the abstract names it (the lookup ranks by these).
+            relationships.append({"source_id": pid, "predicate": "ABOUT_SITE", "target_id": site, "why": why,
+                                  "in_title": bool(re.search(site_words[site], title)),
+                                  "abstract_mentions": len(re.findall(site_words[site], abstract))})
             link_chunk(pid, site, "ABOUT_SITE", f"{cite(pid)} is about {site_names[site]}: {why}.")
             linked_papers.add(pid)
 

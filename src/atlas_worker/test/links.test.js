@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { authorYear, linkInstruction, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
+import { authorYear, instrumentAsked, linkInstruction, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
 
 test("a method, concept or site is matched with the words the links were built with", () => {
   assert.deepEqual(linkTermsIn("Which papers did ambient noise interferometry using RCA data?").map((t) => t.id), ["METHOD-ambient-noise-interferometry"]);
@@ -34,6 +34,12 @@ test("each kind of question gets its plan", () => {
   // An instrument's papers stay with the instrument lookup.
   assert.equal(linkPlan("Which papers used data from HYSB1?", { instrument: true }), null);
   assert.equal(linkPlan("What is the depth of AXCC1?", { instrument: true }), null);
+});
+
+test("a site written in capitals is not an instrument", () => {
+  assert.equal(instrumentAsked({ codes: ["ASHES"] }), false);
+  assert.equal(instrumentAsked({ codes: ["HYSB1"] }), true);
+  assert.equal(linkPlan("Which papers are about the ASHES vent field?", { instrument: instrumentAsked({ codes: ["ASHES"] }) }).kind, "site");
 });
 
 test("the paper meant is the one whose title the question starts", () => {
