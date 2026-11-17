@@ -218,6 +218,10 @@ CONCEPTS = [
      r"Alvin Canyon", I, "cascadia-strike-slip-faults"),
     ("daisy-bank-fault", "Daisy Bank Fault", "faults", "A left-lateral strike-slip fault on the central Oregon shelf and slope.",
      r"Daisy Bank", I, "cascadia-strike-slip-faults"),
+    ("blanco-transform", "Blanco Transform Fault", "faults", "The transform fault joining the Juan de Fuca and Gorda Ridges, south of Axial.",
+     r"Blanco (?:Transform|Fracture Zone|Ridge|fault)", I, "faulting"),
+    ("mendocino-triple-junction", "Mendocino Triple Junction", "faults", "Where the Pacific, North American and Gorda/Juan de Fuca plates meet, at Cascadia's south end.",
+     r"Mendocino (?:Triple Junction|triple junction|Fracture Zone|fracture zone|transform)|\bMTJ\b", 0),
     # Volcanoes and ridges
     ("eruptions", "Submarine eruptions", "volcanic", "Eruptions at Axial and other ridges: timing, volume, dikes and lava.",
      r"eruptions?|erupted|eruptive", I),

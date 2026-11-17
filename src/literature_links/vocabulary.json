@@ -816,6 +816,30 @@
   "papers_fulltext_2plus": 4
  },
  {
+  "id": "blanco-transform",
+  "name": "Blanco Transform Fault",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "The transform fault joining the Juan de Fuca and Gorda Ridges, south of Axial.",
+  "pattern": "Blanco (?:Transform|Fracture Zone|Ridge|fault)",
+  "ignore_case": true,
+  "parent": "faulting",
+  "papers_abstract": 4,
+  "papers_fulltext_2plus": 8
+ },
+ {
+  "id": "mendocino-triple-junction",
+  "name": "Mendocino Triple Junction",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "Where the Pacific, North American and Gorda/Juan de Fuca plates meet, at Cascadia's south end.",
+  "pattern": "Mendocino (?:Triple Junction|triple junction|Fracture Zone|fracture zone|transform)|\\bMTJ\\b",
+  "ignore_case": false,
+  "parent": null,
+  "papers_abstract": 2,
+  "papers_fulltext_2plus": 8
+ },
+ {
   "id": "eruptions",
   "name": "Submarine eruptions",
   "kind": "concept",
