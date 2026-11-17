@@ -490,7 +490,15 @@ async function papersFor(question, env, { withMethods = false } = {}) {
     const types = askedType(question);
     // Records the question's codes name (AXEC2; BOTPT in their text), else records of the type asked.
     const byCode = found.filter((hit) => asked.some((code) => new RegExp(`\\b${code}\\b`).test(`${hit.title || ""}\n${hit.text || ""}`)));
-    const records = (byCode.length ? byCode : found.filter((hit) => !types.length || types.some((type) => type.test(hit.title || "")))).slice(0, 3);
+    // An instrument the question names in full ("the Central Caldera Acoustic Transponders") is that one record, not
+    // the three best matches (which brought in the caldera's hydrophones).
+    const namedInFull = (title) => {
+      const want = String(title || "").replace(/\s*\((?:description|params)\)$/i, "").toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
+      return want.length >= 2 && want.every((w) => String(question).toLowerCase().includes(w));
+    };
+    const exact = found.find((hit) => namedInFull(hit.title));
+    const records = byCode.length ? byCode.slice(0, 3) : exact ? [exact]
+      : found.filter((hit) => !types.length || types.some((type) => type.test(hit.title || ""))).slice(0, 3);
     const codes = [...new Set([...asked, ...instrumentCodes(records.map((hit) => `${hit.title}\n${hit.text}`))])].slice(0, 6);
     // The sensor's identities: the codes, and its records' nodes (INSTRUMENT-…), which reach the links through the
     // identifiers they share (its inventory ID, designators, station code).
