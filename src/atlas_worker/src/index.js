@@ -9,7 +9,7 @@ import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
 import { watchLive, isWatchQuestion, watchRecords, watchSensorRecords } from "./watch.js";
-import { instrumentAsked, linkAppendix, linkPlan, listRecord, pickPaper, profileRecord, recentPapers, withoutNamedTerms } from "./links.js";
+import { featuresIn, instrumentAsked, linkAppendix, linkPlan, listRecord, pickPaper, profileRecord, recentPapers, withoutNamedTerms } from "./links.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -526,6 +526,20 @@ async function papersFor(question, env, { withMethods = false } = {}) {
   }
 }
 
+async function featurePapers(question, env) {
+  const features = featuresIn(question);
+  if (!features.length) return [];
+  try {
+    const hits = (await postJson(`${env.ATLAS_API_ORIGIN.replace(/\/$/, "")}/v1/paper-links`, {
+      terms: features.map((f) => f.id), predicates: ["NAMES_FEATURE"], limit: 2 * features.length,
+    }, { "x-api-key": env.ATLAS_API_KEY })).hits || [];
+    return hits.map(withRouteCitations);
+  } catch (error) {
+    console.error("feature papers failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
 // The literature links a plan asks for (linkPlan): a paper's own links (found by its first author and year), the papers
 // applying a method or studying a concept (with RCA data when asked), or the papers about a site; a long list keeps
 // its most recent papers (recentPapers). records: one evidence record a paper; raw: the links, for the list after
@@ -1017,6 +1031,9 @@ export default {
         // (a dataset's DOI counts too) without the one that answers, and three more took the answering paper's passages.
         const found = await literatureFallback(query, env);
         context.literature = paperKeys(selectedEvidenceHits(context, query)).length ? found.slice(0, 1) : found;
+        // A distinctive place the question names (Pythia's Oasis): the two papers naming it most, ahead of the rest,
+        // since a broad search can rank papers about its region above them.
+        context.literature = [...await featurePapers(query, env), ...context.literature];
       }
       if (isDasOverview(query)) context.experiments = await dasExperimentRecords(env);
       else if (!context.inventory?.length) context.fulltext = await fullTextPassages(context, query, env);

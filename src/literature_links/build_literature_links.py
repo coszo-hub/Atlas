@@ -701,7 +701,15 @@ def worker_terms() -> list[dict]:
               "parent": e["parent"] and ("METHOD-" if e["kind"] == "method" else "CONCEPT-") + e["parent"]} for e in vocabulary]
     terms += [{"id": sid, "kind": "site", "name": name, "pattern": words, "flags": "i", "parent": SITE_PARENT.get(sid)}
               for sid, name, words, _ in SITES]
+    # Named places few papers name (a vent, a seep): a question naming one gets the papers that name it most.
+    terms += [{"id": fid, "kind": "feature", "name": name, "pattern": words, "flags": "", "parent": None}
+              for fid, name, words, _ in FEATURES if fid in DISTINCTIVE_FEATURES]
     return terms
+
+
+DISTINCTIVE_FEATURES = {"FEATURE-vent-inferno", "FEATURE-vent-mushroom", "FEATURE-vent-el-gordo", "FEATURE-vent-diva",
+                        "FEATURE-vent-escargot", "FEATURE-vent-marker-113", "FEATURE-vent-marker-33", "FEATURE-coaxial-segment",
+                        "FEATURE-pinnacle", "FEATURE-pythias-oasis"}
 
 
 def main() -> int:

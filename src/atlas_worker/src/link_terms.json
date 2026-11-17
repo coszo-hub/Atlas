@@ -1006,5 +1006,85 @@
   "pattern": "Oregon Offshore",
   "flags": "i",
   "parent": null
+ },
+ {
+  "id": "FEATURE-vent-inferno",
+  "kind": "feature",
+  "name": "Inferno vent (ASHES)",
+  "pattern": "\\bInferno\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-mushroom",
+  "kind": "feature",
+  "name": "Mushroom vent (ASHES)",
+  "pattern": "\\bMushroom\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-el-gordo",
+  "kind": "feature",
+  "name": "El Gordo vent (International District)",
+  "pattern": "El Gordo",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-diva",
+  "kind": "feature",
+  "name": "Diva vent (International District)",
+  "pattern": "\\bDiva\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-escargot",
+  "kind": "feature",
+  "name": "Escargot vent (International District)",
+  "pattern": "\\bEscargot\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-marker-113",
+  "kind": "feature",
+  "name": "Marker 113 vent",
+  "pattern": "Marker[- ]113",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-vent-marker-33",
+  "kind": "feature",
+  "name": "Marker 33 vent",
+  "pattern": "Marker[- ]33",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-coaxial-segment",
+  "kind": "feature",
+  "name": "CoAxial segment",
+  "pattern": "CoAxial (?:segment|site)",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-pinnacle",
+  "kind": "feature",
+  "name": "Pinnacle (Southern Hydrate Ridge)",
+  "pattern": "\\bPinnacle\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "FEATURE-pythias-oasis",
+  "kind": "feature",
+  "name": "Pythia's Oasis seep",
+  "pattern": "Pythia['’]?s Oasis",
+  "flags": "",
+  "parent": null
  }
 ]

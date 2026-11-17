@@ -49,7 +49,7 @@ const FULLTEXT_MAX = 8;
 const PASSAGE_CHARS = 1_800;
 // With passages the whole prompt stays near 26,000 characters (~5,800 tokens at Groq's ~4.5 characters a token):
 // Groq's free tier refuses a request over 8,000 tokens a minute, and the 34,000-character prompts were refused.
-const FULLTEXT_CHARS = 11_000;
+const FULLTEXT_CHARS = 14_000;   // about eight passages (11,000 cut T3's answer at the sixth)
 // A papers question's link passages (up to 25 papers, ~600 characters each) get room of their own size.
 const LINKS_CHARS = 28_000;
 export const LINKS_COLLECTION = "literature_links";

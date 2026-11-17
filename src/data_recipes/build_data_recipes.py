@@ -306,10 +306,17 @@ def refresh_earthscope(stations: list[dict]) -> dict:
             continue
         ends = [c["end"] for c in channels if c["channel"] == cha]
         closed = None if any(not e for e in ends) else max(ends)
-        end = (datetime.fromisoformat(closed) if closed else datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)) - timedelta(days=1)
-        url = (f"{FDSN}/fdsnws/dataselect/1/query?net={net}&sta={sta}&cha={cha}"
-               f"&starttime={end - timedelta(minutes=1):%Y-%m-%dT%H:%M:%S}&endtime={end:%Y-%m-%dT%H:%M:%S}")
-        status, body, headers = get(url, timeout=120)
+        last = datetime.fromisoformat(closed) if closed else datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
+        # A minute a day back, or further back when that minute has no data yet: on 2026-11-15 every OO station
+        # answered 204 for the day before, and the recipes lost their EarthScope route though the archive held years.
+        for days in (1, 3, 7, 14, 30):
+            end = last - timedelta(days=days)
+            url = (f"{FDSN}/fdsnws/dataselect/1/query?net={net}&sta={sta}&cha={cha}"
+                   f"&starttime={end - timedelta(minutes=1):%Y-%m-%dT%H:%M:%S}&endtime={end:%Y-%m-%dT%H:%M:%S}")
+            status, body, headers = get(url, timeout=120)
+            if status == 200:
+                break
+            time.sleep(0.3)
         out[f"{net}.{sta}"] = {"channels": channels, "channel": cha, "closed": closed,
                                "window": [f"{end - timedelta(minutes=1):%Y-%m-%dT%H:%M:%S}", f"{end:%Y-%m-%dT%H:%M:%S}"],
                                "check": {"url": url, "status": status, "bytes": len(body) or headers.get("Content-Length")}}

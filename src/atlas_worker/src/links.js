@@ -25,7 +25,7 @@ export function linkTermsIn(question) {
   // A site's name is not a topic: "Hydrate Ridge" is not a question about gas hydrates.
   let unscoped = q.replace(SCOPE, " ");
   for (const site of sites) unscoped = unscoped.replace(new RegExp(site.rx.source, `${site.rx.flags}g`), " ");
-  const found = [...sites, ...TERMS.filter((term) => term.kind !== "site" && matches(term, unscoped))];
+  const found = [...sites, ...TERMS.filter((term) => !["site", "feature"].includes(term.kind) && matches(term, unscoped))];
   const ids = new Set(found.map((term) => term.id));
   return found.filter((term) => !TERMS.some((child) => child.parent === term.id && ids.has(child.id)))
     .map(({ id, kind, name }) => ({ id, kind, name }));
@@ -34,7 +34,7 @@ export function linkTermsIn(question) {
 // The question without the methods and concepts it names by name, for finding an instrument in it: "seafloor
 // pressure geodesy" and "fiber-optic sensing" name methods, not a pressure gauge or a cable. A question that only
 // uses a method's words ("the tidal pressure gauge") keeps them.
-const NAME_IN_TEXT = TERMS.filter((term) => term.kind !== "site").flatMap((term) =>
+const NAME_IN_TEXT = TERMS.filter((term) => !["site", "feature"].includes(term.kind)).flatMap((term) =>
   [...new Set([term.name, term.name.replace(/\s*\([^)]*\)/g, "")].map(words).filter((n) => n.length >= 4))]
     .map((name) => new RegExp(`(?<![\\p{L}\\p{N}])${name.split(" ").map(escape).join("[^\\p{L}\\p{N}]+")}(?![\\p{L}\\p{N}])`, "giu")));
 export function withoutNamedTerms(question) {
@@ -42,6 +42,10 @@ export function withoutNamedTerms(question) {
   for (const rx of NAME_IN_TEXT) rest = rest.replace(rx, " ");
   return rest;
 }
+
+// The distinctive places a question names (Pythia's Oasis, the Inferno vent): their papers join its evidence.
+export const featuresIn = (question) => TERMS.filter((term) => term.kind === "feature" && term.rx.test(String(question || "")))
+  .map(({ id, name }) => ({ id, name }));
 
 // "Chadwick et al. (2012)", "Kidiwela 2026", "Krauss and Wilcock (2025)": a first author's surname and a year.
 const NOT_SURNAMES = new Set(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
