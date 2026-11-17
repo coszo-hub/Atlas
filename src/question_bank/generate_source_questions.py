@@ -56,6 +56,27 @@ KINDS = {   # a kind asked about at a site -> instrument types in the inventory
 }
 
 
+# Platforms (site designators) and the nodes on them, as questions name them.
+PLATFORMS = {
+    "RS01SBPS": ["the Slope Base shallow profiler mooring", "the shallow profiler at slope base"],
+    "RS01SBPD": ["the Slope Base deep profiler", "the deep profiler at slope base"],
+    "RS01SLBS": ["the Oregon Slope Base seafloor package", "the slope base seafloor instruments"],
+    "RS01SUM1": ["the Southern Hydrate Ridge flank", "the hydrate ridge flank site"],
+    "RS01SUM2": ["the Southern Hydrate Ridge summit", "the summit of southern hydrate ridge"],
+    "RS03AXPS": ["the Axial Base shallow profiler mooring", "the shallow profiler at axial base"],
+    "RS03AXPD": ["the Axial Base deep profiler", "the deep profiler at axial base"],
+    "RS03AXBS": ["the Axial Base seafloor package", "the axial base seafloor instruments"],
+    "CE04OSPS": ["the Oregon Offshore shallow profiler mooring", "the oregon offshore shallow profiler"],
+    "CE04OSPD": ["the Oregon Offshore deep profiler", "the deep profiler at oregon offshore"],
+    "CE04OSBP": ["the Oregon Offshore benthic experiment package", "the oregon offshore BEP"],
+    "CE02SHBP": ["the Oregon Shelf benthic experiment package", "the oregon shelf BEP"],
+    "RS03INT1": ["International District hydrothermal field 1", "IDF 1 at axial"],
+    "RS03INT2": ["International District hydrothermal field 2", "IDF 2 at axial"],
+}
+NODE_WORDS = {"LJ": "low-power junction box", "MJ": "medium-power junction box", "PC": "200 m platform", "SF": "shallow profiler",
+              "DP": "deep profiler", "PN": "primary node", "LV": "low-voltage node"}
+
+
 def h(*parts: str) -> int:
     return int(hashlib.sha256("|".join((SEED, *parts)).encode()).hexdigest()[:12], 16)
 
@@ -153,12 +174,53 @@ def names(src: Sources, sid: str) -> list[str]:
     return list(dict.fromkeys(out))
 
 
-def split_of(entities: dict[str, str]) -> dict[str, str]:
-    """entity -> 'train' or 'blind', alternating by hash within each area."""
+# System names a past question may use for a sensor (no designator or station code in the question).
+SYSTEM_WORDS = {"SCPR": r"\bSCPR", "BOTPT": r"\bBOTPT", "COVIS": r"\bCOVIS", "CAMHD": r"\bCAM ?HD", "PREST": r"\bPREST",
+                "HPIES": r"\bHPIES", "TRHPH": r"\bTRHPH", "VEL3D": r"\bVEL3D", "A-0-A": r"\bA-0-A"}
+
+
+def seen_entities(src: Sources, entities: list[str], bank: Path) -> set[str]:
+    """Entities a question already asked names (the train bank): they cannot be blind, having been seen."""
+    asked = [json.loads(l)["question"] for l in bank.read_text().splitlines() if l.strip()] if bank.exists() else []
+    text = "\n".join(asked)
+    low = text.lower()
+    seen = set()
+    for e in entities:
+        if e.startswith(("platform:", "node:")):
+            code = e.split(":", 1)[1]
+            words = PLATFORMS.get(code, [])
+            if re.search(rf"\b{code}\b", text) or any(w.replace("the ", "").lower() in low for w in words):
+                seen.add(e)
+            continue
+        if e.startswith("site:"):
+            area = e[5:]
+            if area.replace("the ", "").lower() in low or CASUAL_AREA.get(area, "@@").lower() in low:
+                seen.add(e)
+            continue
+        if e not in src.inv:
+            continue
+        d = src.inv[e]
+        ids = [e, *(d.get("aliases") or [])]
+        m = re.fullmatch(r"EARTHSCOPE-OO-([A-Z0-9]+)", e)
+        if m:
+            ids.append(m.group(1))
+        if any(re.search(rf"\b{re.escape(i)}\b", text) for i in ids if len(i) >= 4):
+            seen.add(e)
+            continue
+        label = f"{d.get('name') or ''} {d.get('model') or ''} {' '.join(ids)}"
+        for word, rx in SYSTEM_WORDS.items():
+            if re.search(rx, text, re.I) and re.search(rx, label, re.I):
+                seen.add(e)
+    return seen
+
+
+def split_of(entities: dict[str, str], seen: set[str]) -> dict[str, str]:
+    """entity -> 'train' or 'blind': seen entities train; the rest alternated by hash within each area."""
     by_area = defaultdict(list)
     for e, area in entities.items():
-        by_area[area or "none"].append(e)
-    out = {}
+        if e not in seen:
+            by_area[area or "none"].append(e)
+    out = {e: "train" for e in seen if e in entities}
     for area, es in by_area.items():
         for i, e in enumerate(sorted(es, key=lambda e: h(e))):
             out[e] = "train" if i % 2 == 0 else "blind"
@@ -188,6 +250,27 @@ def generate(src: Sources) -> list[dict]:
                 for text in pick([f"Which {kind} are at {area}?", f"what {kind} are there at {CASUAL_AREA[area]}",
                                   f"How many {kind} does {area} have, and which are they?"], area, kind, n=1):
                     q(6, f"site:{area}", text, {"sensors": ks, "names": [src.inv[s].get("name") for s in ks]}, "sensor_set")
+
+    # 6 at a finer grain: the platforms and the nodes (junction boxes, profilers, 200 m platforms) they carry.
+    REF = re.compile(r"((?:RS|CE)\d\d[A-Z0-9]{4})-([A-Z0-9]{5})-")
+    where = {}
+    for sid in deployed:
+        m = next((REF.match(n) for n in [sid, *(src.inv[sid].get("aliases") or [])] if REF.match(n)), None)
+        if m:
+            where[sid] = (m.group(1), m.group(2))
+    for plat, words in PLATFORMS.items():
+        on = sorted(s for s, (p, _) in where.items() if p == plat)
+        if on:
+            gold = {"sensors": on, "names": [src.inv[x].get("name") for x in on]}
+            q(6, f"platform:{plat}", f"Which instruments are on {words[0]}?", gold, "sensor_set")
+            q(6, f"platform:{plat}", f"what sensors does {words[1]} have", gold, "sensor_set")
+    for node in sorted({n for _, n in where.values()}):
+        on = sorted(s for s, (_, n) in where.items() if n == node)
+        plats = sorted({p for s, (p, n) in where.items() if n == node})
+        word = NODE_WORDS.get(node[:2], "node")
+        gold = {"sensors": on, "names": [src.inv[x].get("name") for x in on], "platforms": plats}
+        q(6, f"node:{node}", f"Which instruments are connected to {node}?", gold, "sensor_set")
+        q(6, f"node:{node}", f"what's plugged into the {word} {node}", gold, "sensor_set")
 
     for sid in deployed:
         r = src.refdes(sid)
@@ -255,6 +338,17 @@ def generate(src: Sources) -> list[dict]:
             q(11, sid, f"Which channels does {m.group(1)} record, and since when?",
               {"channels": sorted({f"{loc}.{c}" if loc else c for c, loc, _, _ in ep}), "first": min(s for _, _, s, _ in ep if s)}, "facts")
 
+    # The cabled SCPR calibrates itself in place; its calibrations come from its control log (scpr_calibrations.py).
+    scpr = ROOT / "runtime_data/SCPR/scpr_calibrations.json"
+    if scpr.exists() and "SCPRAAA301" in src.inv:
+        log = json.loads(scpr.read_text())
+        last = log["calibrations_newest_first"][0]
+        gold = {"last_calibration_start": last["start"], "last_calibration_end": last["end"], "minutes": last["minutes"],
+                "method": "in-situ deadweight (piston gauge) calibration", "no_calibration_since_through": TODAY}
+        for text in ["When was the SCPR at Axial Seamount last calibrated?", "when did the self-calibrating pressure recorder at the central caldera last calibrate",
+                     "How recently has the Axial SCPR run an in-situ calibration?"]:
+            q(14, "SCPRAAA301", text, gold, "facts")
+
     disagree = sorted(c for c, a in src.az.items() if len(set(a.values())) > 1)
     not_north = sorted(c for c, a in src.az.items() if any(x % 360 != 0 for x in a.values()))
     for text in ["Which seismic stations have an orientation issue?", "which seismometers are misoriented?",
@@ -270,8 +364,14 @@ def main() -> int:
     args = parser.parse_args()
     src = Sources()
     rows = generate(src)
-    entities = {r["entity"]: (src.area_of(r["entity"]) if r["entity"] in src.inv else r["entity"].split(":", 1)[-1]) for r in rows}
-    split = split_of(entities)
+    def area(e):
+        if e in src.inv:
+            return src.area_of(e)
+        kind, code = e.split(":", 1)
+        return "platforms" if kind in ("platform", "node") else code
+    entities = {r["entity"]: area(r["entity"]) for r in rows}
+    seen = seen_entities(src, list(entities), HERE / "question_bank.jsonl")
+    split = split_of(entities, seen)
     for i, r in enumerate(rows):
         r["split"] = split[r["entity"]]
         r["id"] = f"gen:{r['type']}:{h(r['entity'], r['question']) % 10**8:08d}"
@@ -281,7 +381,7 @@ def main() -> int:
     count = defaultdict(lambda: defaultdict(int))
     for r in rows:
         count[f"{r['type']} {r['type_name']}"][r["split"]] += 1
-    print(json.dumps({"questions": len(rows), "entities": len(entities), "by_type": {k: dict(v) for k, v in sorted(count.items())}}, indent=1))
+    print(json.dumps({"questions": len(rows), "entities": len(entities), "seen_entities_forced_train": len(seen), "by_type": {k: dict(v) for k, v in sorted(count.items())}}, indent=1))
     return 0
 
 

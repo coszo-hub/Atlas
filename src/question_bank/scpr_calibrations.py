@@ -20,6 +20,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 BASE = "http://piweb.ooirsn.uw.edu/scpr/data/SCPRAA301_SCPR/"
+OLD_BASE = "http://piweb.ooirsn.uw.edu/scpr/data/SCPR_Data/SCPRAA301_SCPR/"   # 2018-2022 (Sasagawa et al. 2022's calibrations)
 LINE = re.compile(rb"<log-ts:(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)[^>]*>\s+(\S+)\s+(\d+)\s+\S+\s+\S+\s+\S+\s+\S+\s+(\d+)\s")
 GAP = 1800   # seconds without the piston turning that end one calibration
 
@@ -32,13 +33,19 @@ def get(url: str, timeout: int = 300) -> bytes | None:
         return None
 
 
+_LISTINGS: dict[str, list[bytes]] = {}
+
+
 def day_file(day: date) -> str | None:
-    listing = get(f"{BASE}{day:%Y/%m}/", timeout=60)
-    if not listing:
-        return None
-    names = re.findall(rb'href="([^"?/]+)"', listing)
-    name = next((n.decode() for n in names if f"_{day:%Y%m%d}T".encode() in n), None)
-    return f"{BASE}{day:%Y/%m}/{name}" if name else None
+    for base in (BASE, OLD_BASE):
+        folder = f"{base}{day:%Y/%m}/"
+        if folder not in _LISTINGS:
+            listing = get(folder, timeout=60) or b""
+            _LISTINGS[folder] = re.findall(rb'href="([^"?/]+)"', listing)
+        name = next((n.decode() for n in _LISTINGS[folder] if f"_{day:%Y%m%d}T".encode() in n), None)
+        if name:
+            return f"{folder}{name}"
+    return None
 
 
 def spinning(raw: bytes) -> list[str]:
@@ -51,8 +58,9 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--want", type=int, default=2, help="Calibrations to find, newest first.")
     parser.add_argument("--max-days", type=int, default=200)
+    parser.add_argument("--start", help="Read back from this day (YYYY-MM-DD); default today.")
     args = parser.parse_args()
-    today = datetime.now(timezone.utc).date()
+    today = date.fromisoformat(args.start) if args.start else datetime.now(timezone.utc).date()
     times, read, files = [], 0, []
     for back in range(args.max_days):
         day = today - timedelta(days=back)
