@@ -1,0 +1,667 @@
+[
+ {
+  "question": "which paper showcased the dv/v for cascadia subduction zone",
+  "date": "2026-10-21",
+  "session": "2f3d4bac"
+ },
+ {
+  "question": "where can i download DAS21 data",
+  "date": "2026-10-21",
+  "session": "2f3d4bac"
+ },
+ {
+  "question": "what is axial seamount",
+  "date": "2026-10-21",
+  "session": "2f3d4bac"
+ },
+ {
+  "question": "What EarthScope says a station is: its seismometer class, channel groups, and whether it has closed.",
+  "date": "2026-10-21",
+  "session": "6e6b930e"
+ },
+ {
+  "question": "where can i download DAS data from 2021",
+  "date": "2026-10-21",
+  "session": "70c99552"
+ },
+ {
+  "question": "where can I get DAS24 data",
+  "date": "2026-10-21",
+  "session": "70c99552"
+ },
+ {
+  "question": "where is the OptoDAS data",
+  "date": "2026-10-21",
+  "session": "70c99552"
+ },
+ {
+  "question": "what das data is available for download",
+  "date": "2026-10-21",
+  "session": "70c99552"
+ },
+ {
+  "question": "which seismometers are at Axial?",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "what seismometers are available at axial seamount",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "Which hydrophones are at the ASHES vent field?",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "what sensors are at the southern hydrate ridge site",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "list the instruments deployed at the Oregon Shelf",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "which seismic stations are in the caldera",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "how do seismometers work?",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "when did axial seamount last erupt?",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "what instruments does COSZO use?",
+  "date": "2026-10-21",
+  "session": "a03ebf58"
+ },
+ {
+  "question": "which paper studied whether tidal triggering of earthquakes at axial predicts eruptions",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which study found stacked sills beneath axial seamount",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what paper describes VLFEs offshore cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper looked at wind dependent low frequency sound on OOI hydrophones",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper demonstrated G-FAST EEW for cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "is there a paper on a warm high-flux seep showing fluid overpressure in the CSZ",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper ran 2-D dynamic rupture simulations of the cascadia megathrust transition region",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper used DAS for seismic ocean thermometry",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what paper reviews the seismo-acoustics of submarine eruptions",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper took a long term view of ETS in cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which proposal planned compliance instruments to watch the AMC at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which dataset has APG calibration sheets for the cascadia margin",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper used offshore observations to augment onshore GNSS in cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper measured amphibious surface-wave phase velocities in the CSZ",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper studied methanogen communities in hydrothermal vents",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper built a catalog of offshore seismicity in cascadia from CI OBS data",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper describes the dv/v for cascadia subduction zone",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper used periodic tidal loading at axial to study stress",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper designed an offshore network for EEW and tsunami warning in the pacific northwest",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper integrated microbial and geophysical processes in zero-age crust at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper describes VLFEs offshore cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what papers discuss SSEs on the cascadia margin",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "is there research on ETS in cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "where are the BPRs deployed for COSZO",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what does the BOTPT measure at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what is an APG used for in COSZO",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which study used GNSS-A in cascadia",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "how deep is the AMC at axial seamount",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper used T-phases recorded on RCA hydrophones",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what is the Vp/Vs at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what is the b-value of axial seismicity",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what instruments are at OSB",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what instruments are at SHR",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what does ONC operate near the RCA",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which study used CI OBS data offshore oregon",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what instruments are at the IDF at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what does the DTS measure on the RCA cables",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper studied MORB at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which study used OBS data at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "what does the ADCP measure at slope base",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "How do I get the DAS data?",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "how deep is the AMC at axial",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which study used CI OBS data",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "which paper used distributed acoustic sensing for seismic ocean thermometry",
+  "date": "2026-10-21",
+  "session": "ae18e0ea"
+ },
+ {
+  "question": "where are the live data is getting pulled?",
+  "date": "2026-10-21",
+  "session": "b7d85097"
+ },
+ {
+  "question": "can 8hz data see earthquakes?",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "why does it take super long to load the website",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "why are there 9 download links, theres only 3 experiments\u2026",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which instrument is \u2026CE04OSBP\u2026",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "why the live data not working",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "when i first click on oregon shelf circle, it pops up a box with an overview, and that still says status unknown next to sensors",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Can the questions be spread across different sensors and datasets areas",
+  "date": "2026-10-22",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Which eruptions were on the south rift?",
+  "date": "2026-10-23",
+  "session": "33827e7c"
+ },
+ {
+  "question": "is the pressure gauge at slope base operational",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which CTD sensors are in the network",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what papers used the AXEC2 and AXEC1",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what depths were the hydrophones",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what DAS experiements were done here \u2026 OpenRouter nemotron \u2026 [answer listing 2021 and 2024 only; map 1 DAS24]",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "how many earthquakes occurs at axial seamount on October 1sr 2026 \u2026 [answer said the evidence doesn't establish it]",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "What kind of earthquake catalog questions can this answer",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "is the pressure gauge at slope base operational \u2026 [hedged answer] \u2026 But the block with data says \u2026 Operating \u00b7 checked live, data GOOD at 23:00 UTC",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which eruption did the axial seamount erupted to the southern rift \u2026 [answer]",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which CTD sensors are in the network \u2026 [answer listing the rosette]",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Can it answer what papers used the AXEC2 and AXEC1",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "do i do ! cd src/atlas_worker && npx wrangler secret put OOI_RELAY_ORIGIN here?",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which seismometers doesnt have 0 degree azimuth",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what seismometers have orientation issues?",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Are these meta data changes/ instrument swaps and deployment questions work for other instruments? Like VEL3D",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "can it answer what is the serial number of the SCPR at axial seamount?",
+  "date": "2026-10-23",
+  "session": "b7d85097"
+ },
+ {
+  "question": "How to download data from shallow profiler at slope base",
+  "date": "2026-10-24",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Which instruments at the Slope Base shallow profiler mooring are on the moving profiler and which are on the fixed 200 m platform?",
+  "date": "2026-10-24",
+  "session": "b7d85097"
+ },
+ {
+  "question": "how can I download pressure data for the MJ03F",
+  "date": "2026-10-24",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Where to download {label} data: every {label} instrument",
+  "date": "2026-10-27",
+  "session": "b7d85097"
+ },
+ {
+  "question": "where is the OOI asset manangement",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Where was the SCPR deployed in 2013?",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Where is Axial Seamount?",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "What is the location of the SCPR at Axial Seamount?",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Where was SCPR unit 001?",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Why can\u2019t Gemma realize misaligned misoriented, not correctly oriented, not oriented to north, misrotated, alignment issues, orientation issues are all the same thing",
+  "date": "2026-10-29",
+  "session": "b7d85097"
+ },
+ {
+  "question": "does the websites give daily whale tracks?",
+  "date": "2026-11-12",
+  "session": "b7d85097"
+ },
+ {
+  "question": "when faulting button is clicked, the bottom legend should change to showing what each color of the earthquake mean instead of the",
+  "date": "2026-11-12",
+  "session": "b7d85097"
+ },
+ {
+  "question": "How do I remove the jumps in the x and y tilt of the Axial caldera BOTPT?",
+  "date": "2026-11-12",
+  "session": "b8c647ba"
+ },
+ {
+  "question": "How do I get a QC'd week of Axial Base bottom currents from the VEL3D?",
+  "date": "2026-11-12",
+  "session": "b8c647ba"
+ },
+ {
+  "question": "How do I plot the current speed and direction from the Axial Base ADCP?",
+  "date": "2026-11-12",
+  "session": "b8c647ba"
+ },
+ {
+  "question": "How many earthquakes at Axial today?",
+  "date": "2026-11-15",
+  "session": "b7d85097"
+ },
+ {
+  "question": "is Nereus's live status, by designator or alias",
+  "date": "2026-11-16",
+  "session": "88a79084"
+ },
+ {
+  "question": "is operating for a sensor Nereus does not know that the Watcher found recording",
+  "date": "2026-11-16",
+  "session": "88a79084"
+ },
+ {
+  "question": "Give me Python code to download {name} ({label}) data from {start} to {end} UTC",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "How many earthquakes at Axial today? Answer temporarily unavailable (HTTP 503). Retry",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "how many download scripts doesnt work",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "where do I download the O1 pressure sensor data",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "How do I download data from the Oregon Mid Slope absolute pressure gauge?",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what bottom pressure gauges are part of coszo?",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Is the Central Caldera BOTPT working?",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "is o1 added as a marker like o2/03",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what bottom pressure gauges are present in the cascadia region? would needd all prest pressure sensors+ o1-6 and planned coszo scprs",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what bottom pressure gauges are part of coszo?\\",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "where are the vel3d sensors at cascadia slope",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "Is the Central Caldera BOTPT working? [showing a wrong answer]",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which papers use seismometer at HYS14 [showing an answer with 2 papers]",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what papers use Broadband seismometer at hydrate ridge / Try again",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "what papers use Broadband seismometer at hydrate ridge",
+  "date": "2026-11-16",
+  "session": "b7d85097"
+ },
+ {
+  "question": "which papers performed ambient noise interferometry using RCA data?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "Which papers use the seismometer at HYS14?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "what bottom pressure gauges are present in the Cascadia region?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "how many earthquakes at axial on 11-Nov-2026",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "How many fin whale calls at Axial in December 2024?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "Give me code to get one minute of DAS strain rate from the south cable on 8 May 2024",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "where is the SCPR at Axial Seamount?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "what is the location of the SCPR",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "which axial seismic stations have disoriented components",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "how are the seismometers at Axial Seamount oriented?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "how do I download the oxygen sensor data?",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "Who developed the multi-span DAS system",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "Where to download",
+  "date": "git",
+  "session": ""
+ },
+ {
+  "question": "How do I get the DAS\n  data?",
+  "date": "git",
+  "session": ""
+ }
+]
