@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, placeDesignators, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -327,6 +327,23 @@ async function liveStatuses(hits, question, env, allHits = hits) {
 // Every instrument record of the type a network-wide question names (typeInventory), from a search among instrument
 // records only. Records are kept by ID, not title: the two Axial shallow-profiler CTDs share one. A failed search
 // leaves the question to the main evidence.
+// Every instrument at a place or on a node (placeDesignators), of the kind asked when the question names one: the
+// records by id, a few lines each so that a site's whole list (72 at Axial) fits.
+async function placeRecords(designators, question, env) {
+  const ids = [...new Set(designators.map((d) => INSTRUMENT_IDS[d]).filter(Boolean))];
+  const batches = Array.from({ length: Math.ceil(ids.length / 12) }, (_, i) => ids.slice(i * 12, i * 12 + 12));
+  try {
+    const hits = (await Promise.all(batches.map((chunk_ids) => postJson(`${env.ATLAS_API_ORIGIN.replace(/\/$/, "")}/v1/chunks`,
+      { collection_id: "instruments", chunk_ids }, { "x-api-key": env.ATLAS_API_KEY }).then((r) => r.hits || []).catch(() => [])))).flat();
+    const types = askedType(question);
+    const ofType = types.length ? hits.filter((hit) => types.some((type) => type.test(hit.title || ""))) : hits;
+    return (ofType.length ? ofType : hits).map((hit) => ({ ...withRouteCitations(hit), text: String(hit.text || "").slice(0, 260), inventory: true }));
+  } catch (error) {
+    console.error("place inventory failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
 async function typeRecords(inventory, env) {
   try {
     const found = await postJson(`${env.ATLAS_API_ORIGIN.replace(/\/$/, "")}/v1/search`,
@@ -1018,8 +1035,10 @@ export default {
         return response({ query, answer: codeModeAnswer(TASK_RECIPES), answer_model: "RCA Atlas code recipes", answer_citations: [],
           hits: [], neighbors: [], tool_hints: [] }, 200, cors);
       }
-      const inventory = !context.papers?.length && typeInventory(query);
-      if (inventory) context.inventory = await typeRecords(inventory, env);
+      const placed = !context.papers?.length && !context.assets?.length && placeDesignators(query, INSTRUMENT_IDS);
+      const inventory = !context.papers?.length && !placed?.length && typeInventory(query);
+      if (placed?.length) context.inventory = await placeRecords(placed, query, env);
+      else if (inventory) context.inventory = await typeRecords(inventory, env);
       // The Cascadia margin is not Axial Seamount: its records give way in the assets and the main results too.
       if (isMarginQuestion(query)) {
         context.hits = context.hits.filter((hit) => !offMargin(hit));

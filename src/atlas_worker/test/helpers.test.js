@@ -1245,3 +1245,13 @@ test("a passage found by a range of station codes says which code it names", asy
   assert.equal(withRangeNote(hit, ["HYS15"]), hit);                   // outside the range
   assert.equal(withRangeNote({ text: "AXEC1–AXEC3 recorded it" }, ["AXEC2"]).text.split("\n")[0], '(This passage names AXEC2 within the range "AXEC1–AXEC3".)');
 });
+
+test("every instrument at a place or on a node, from the designators", async () => {
+  const { placeDesignators } = await import("../src/helpers.js");
+  const ids = { "RS03AXBS-LJ03A-09-HYDBBA302": "a", "RS03AXPS-PC03A-4A-CTDPFA303": "b", "RS03CCAL-MJ03F-05-BOTPTA301": "c",
+    "RS01SLBS-LJ01A-05-HPIESA101": "d", "CE04OSPS-PC01B-05-ZPLSCB102": "e", "AXCC1": "f" };
+  assert.deepEqual(placeDesignators("Which instruments are at Axial Base?", ids).sort(), ["RS03AXBS-LJ03A-09-HYDBBA302", "RS03AXPS-PC03A-4A-CTDPFA303"]);
+  assert.equal(placeDesignators("what sensors are deployed at axial", ids).length, 3);
+  assert.deepEqual(placeDesignators("Which instruments are connected to PC01B?", ids), ["CE04OSPS-PC01B-05-ZPLSCB102"]);
+  assert.deepEqual(placeDesignators("What is the depth of the CTD at Axial Base?", ids), []);
+});

@@ -69,7 +69,7 @@ const isRecipe = (hit) => hit.collection_id === RECIPE_COLLECTION || isTask(hit)
 // their own: the 29 pressure records run to ~18,000 characters with their headers, and in the main evidence's 12,000
 // the list stopped at O1 (O2, O4, both planned SCPRs and two planned gauges went unlisted). Such a question asks for
 // no paper passages, so the main evidence keeps what is left of the prompt's ~26,000.
-const INVENTORY_CHARS = 20_000;
+const INVENTORY_CHARS = 30_000;   // a site's whole list (72 instruments at Axial)
 const MAIN_WITH_INVENTORY_CHARS = 6_000;
 const isInventory = (hit) => hit.inventory === true;
 
@@ -518,7 +518,7 @@ export function isAxialRecord(hit) {
 // "which instruments are deeper than 2500 m?": OOI asset-management metadata (the ooi_asset_management collection).
 // Its records are a few hundred among 22,000, so the main search ranks web pages about the same instrument above
 // them; such a question also searches that collection (assetRecords in the Worker).
-const ASSET_WORDS = /\b(?:serial|s\/n|firmware|calibrat\w*|coefficients?|deploy\w*|redeploy\w*|recover\w*|cruises?|visions|manufactur\w*|make and model|(?:what|which)\s+(?:model|make)|who makes|made by|deeper|deepest|how deep|shallower|shallowest|junction box(?:es)?|j-?box(?:es)?|timeline|history|changes?|changed|swapp?\w*|replaced|where|locat\w*|positions?|coordinates?|latitude|longitude|depths?)\b/i;
+const ASSET_WORDS = /\b(?:serial|s\/n|firmware|calibrat\w*|coefficients?|deploy\w*|redeploy\w*|recover\w*|cruises?|visions|manufactur\w*|make and model|(?:what|which)\s+(?:model|make)|who makes|made by|deeper|deepest|how deep|shallower|shallowest|junction box(?:es)?|j-?box(?:es)?|timeline|history|changes?|changed|swapp?\w*|replaced|where|locat\w*|positions?|coordinates?|latitude|longitude|depths?|date range|since when|start(?:s|ed)? and end|data record|been recording|first data|how long has)\b/i;
 // Where an instrument is: its deployments' positions and depths are in its asset record ("where is the SCPR at Axial
 // Seamount?" otherwise found only a paper's position for an earlier unit, recovered in 2014).
 const LOCATION_WORDS = /\b(?:where|locat\w*|positions?|coordinates?|latitude|longitude|depths?|how deep)\b/i;
@@ -1112,3 +1112,46 @@ function runsOf(texts, n) {
   return runs;
 }
 const words = (text) => String(text || "").toLowerCase().replace(/[‐-–]/g, "-").replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(Boolean);
+
+// "Which instruments are at Axial Base?", "what's connected to LJ03A?": every instrument at a place or on a node,
+// from the designators the Worker knows (instrument_ids.json), not the search's best few (it returned 13 of Axial's 72).
+// A site takes in its sub-sites and moorings (Axial Seamount: the calderas, ASHES, the International District and
+// Axial Base with its profilers); a platform or node keeps to itself.
+const PLACE_PREFIXES = [
+  [/\b(?:LJ|MJ|LV|PC|SF|DP|PN)\d\d[A-Z]\b/, null],   // a node, by its code
+  [/shallow profiler[^?]{0,40}slope base|slope base[^?]{0,40}shallow profiler/i, ["RS01SBPS"]],
+  [/deep profiler[^?]{0,40}slope base|slope base[^?]{0,40}deep profiler/i, ["RS01SBPD"]],
+  [/shallow profiler[^?]{0,40}axial base|axial base[^?]{0,40}shallow profiler/i, ["RS03AXPS"]],
+  [/deep profiler[^?]{0,40}axial base|axial base[^?]{0,40}deep profiler/i, ["RS03AXPD"]],
+  [/shallow profiler[^?]{0,40}oregon offshore|oregon offshore[^?]{0,40}shallow profiler/i, ["CE04OSPS"]],
+  [/deep profiler[^?]{0,40}oregon offshore|oregon offshore[^?]{0,40}deep profiler/i, ["CE04OSPD"]],
+  [/oregon offshore[^?]{0,40}(?:benthic|BEP)|(?:benthic|BEP)[^?]{0,40}oregon offshore/i, ["CE04OSBP"]],
+  [/oregon shelf[^?]{0,40}(?:benthic|BEP)|(?:benthic|BEP)[^?]{0,40}oregon shelf/i, ["CE02SHBP"]],
+  [/hydrate ridge[^?]{0,30}summit|summit of (?:southern )?hydrate ridge/i, ["RS01SUM2"]],
+  [/hydrate ridge[^?]{0,30}flank|flank[^?]{0,30}hydrate ridge/i, ["RS01SUM1"]],
+  [/(?:international district (?:hydrothermal )?field|IDF) ?1\b/i, ["RS03INT1"]],
+  [/(?:international district (?:hydrothermal )?field|IDF) ?2\b/i, ["RS03INT2"]],
+  [/\bASHES\b/i, ["RS03ASHS"]],
+  [/international district/i, ["RS03INT"]],
+  [/central caldera/i, ["RS03CCAL"]],
+  [/eastern caldera/i, ["RS03ECAL"]],
+  [/axial base/i, ["RS03AXBS", "RS03AXPS", "RS03AXPD"]],
+  [/\baxial\b/i, ["RS03"]],
+  [/southern hydrate ridge|hydrate ridge|\bSHR\b/i, ["RS01SUM"]],
+  [/slope base/i, ["RS01SLBS", "RS01SBPS", "RS01SBPD"]],
+  [/oregon offshore/i, ["CE04OS"]],
+  [/oregon shelf/i, ["CE02SH"]],
+];
+const LISTS_INSTRUMENTS = /\b(?:which|what|list|how many|all|every)\b[^?]{0,50}\b(?:instruments|sensors|seismometers|hydrophones|CTDs|cameras|meters|gauges|devices|sonars|probes|samplers|profilers)\b|\bconnected to\b|\bwhat'?s (?:at|on)\b/i;
+export function placeDesignators(question, instrumentIds) {
+  const q = String(question || "");
+  if (!LISTS_INSTRUMENTS.test(q)) return [];
+  const designators = Object.keys(instrumentIds).filter((k) => /^(?:RS|CE)\d\d[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{2}-[A-Z0-9]{9}$/.test(k));
+  for (const [rx, prefixes] of PLACE_PREFIXES) {
+    const m = q.match(rx);
+    if (!m) continue;
+    return prefixes ? designators.filter((d) => prefixes.some((p) => d.startsWith(p)))
+      : designators.filter((d) => d.split("-")[1] === m[0].toUpperCase());
+  }
+  return [];
+}
