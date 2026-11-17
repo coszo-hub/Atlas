@@ -7,6 +7,7 @@
   "definition": "Cross-correlating ambient seismic or acoustic noise between sensors (or components) to measure Green's functions and their changes (dv/v).",
   "pattern": "ambient (?:seismic )?noise (?:cross[- ]?)?correlation|noise (?:cross[- ]?)?correlation functions?|(?:ambient |seismic |passive |coda[- ]wave )?noise interferometry|seismic interferometry|coda[- ]wave interferometry|\\bNCCFs?\\b|\\bdv/v\\b|relative (?:seismic )?velocity (?:changes?|variations?)|seismic velocity (?:changes?|variations?)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 10
  },
@@ -18,6 +19,7 @@
   "definition": "Locating and relocating earthquake hypocenters (double-difference, NonLinLoc, HYPO71) from arrival times.",
   "pattern": "earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\\bhypoDD\\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 33
  },
@@ -29,6 +31,7 @@
   "definition": "Detecting and picking events to build catalogs (STA/LTA, phase pickers, automated catalogs).",
   "pattern": "earthquake (?:detection|catalog(?:ue)?s?)|\\bSTA/LTA\\b|phase pick(?:ing|er)|PhaseNet|EQTransformer|automat(?:ed|ic) (?:detection|catalog)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 42
  },
@@ -40,6 +43,7 @@
   "definition": "Scanning continuous data with waveform templates of known events to detect repeats.",
   "pattern": "template[- ]matching|matched[- ]filter",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 4,
   "papers_fulltext_2plus": 6
  },
@@ -51,6 +55,7 @@
   "definition": "Imaging seismic velocity structure from travel times or full waveforms.",
   "pattern": "tomograph\\w*|full[- ]waveform inversion|\\bFWI\\b|travel[- ]?time inversion",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 16,
   "papers_fulltext_2plus": 37
  },
@@ -62,6 +67,7 @@
   "definition": "Imaging subsurface structure with active-source multichannel or 3-D reflection surveys.",
   "pattern": "seismic reflection|multichannel seismic|\\bMCS\\b|3-?D seismic|reflection (?:profil|imag|data)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 36,
   "papers_fulltext_2plus": 50
  },
@@ -73,6 +79,7 @@
   "definition": "Determining earthquake faulting geometry from polarities or moment tensor inversion.",
   "pattern": "focal mechanisms?|moment tensors?",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 37
  },
@@ -84,6 +91,7 @@
   "definition": "Stress drop, corner frequency and seismic moment from source spectra.",
   "pattern": "stress drops?|corner frequenc|source spectr",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 22
  },
@@ -95,6 +103,7 @@
   "definition": "The Gutenberg-Richter b value as a measure of the earthquake size distribution and stress.",
   "pattern": "\\bb[- ]values?\\b|Gutenberg[- ]Richter|frequency[- ]magnitude",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 15
  },
@@ -106,6 +115,7 @@
   "definition": "Testing how tidal stresses modulate earthquake (or seep, tremor) rates.",
   "pattern": "tidal (?:triggering|modulation|stress(?:es)?|loading)|tidally (?:triggered|modulated)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 13,
   "papers_fulltext_2plus": 13
  },
@@ -117,6 +127,7 @@
   "definition": "The seafloor's deformation under infragravity-wave pressure, inverted for shear velocity.",
   "pattern": "seafloor compliance|compliance (?:function|measurement|method)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 4
  },
@@ -128,6 +139,7 @@
   "definition": "Rayleigh/Love wave dispersion and phase velocity for crustal and lithospheric structure.",
   "pattern": "surface[- ]wave|Rayleigh[- ]wave|dispersion curves?|phase[- ]velocit",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 42
  },
@@ -139,6 +151,7 @@
   "definition": "Detecting and locating tectonic or volcanic tremor (envelope cross-correlation, beamforming).",
   "pattern": "tremor (?:detection|location|catalog)|envelope cross[- ]correlation|detect\\w* (?:tectonic )?tremor",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 10
  },
@@ -150,6 +163,7 @@
   "definition": "Characterizing and removing tilt, compliance and current noise from ocean-bottom seismic records.",
   "pattern": "tilt noise|compliance noise|noise removal|noise reduction|transfer function|current[- ](?:induced|generated) noise|noise sources?",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 31
  },
@@ -161,6 +175,7 @@
   "definition": "Measuring vertical seafloor deformation from bottom pressure records.",
   "pattern": "seafloor geodesy|(?:bottom|seafloor) pressure (?:record|measurement|data|time series|observation)s?|vertical (?:deformation|displacement)|pressure[- ]based geodesy",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 34,
   "papers_fulltext_2plus": 67
  },
@@ -172,6 +187,7 @@
   "definition": "In-situ calibration (deadweight piston gauge, A-0-A) to remove quartz gauge drift.",
   "pattern": "self[- ]calibrat\\w*|drift[- ]correct\\w*|\\bA-0-A\\b|deadweight|piston gauge|gauge drift",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 16
  },
@@ -183,6 +199,7 @@
   "definition": "Direct-path acoustic ranging between transponders to measure horizontal extension.",
   "pattern": "acoustic (?:ranging|extensometer)s?|direct[- ]path (?:acoustic )?ranging|horizontal (?:geodesy|extension|deformation)|baseline (?:length|change)s?|GNSS-A",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 20
  },
@@ -194,6 +211,7 @@
   "definition": "Onshore GPS/GNSS time series and leveling for strain, locking and slow slip.",
   "pattern": "\\bGNSS\\b|\\bGPS\\b|leveling|levelling",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 28,
   "papers_fulltext_2plus": 77
  },
@@ -205,6 +223,7 @@
   "definition": "Modeling deformation with Mogi, sill, dike or finite-element sources.",
   "pattern": "\\bMogi\\b|deformation (?:source )?model\\w*|point source|finite[- ]element|dike (?:intrusion )?model\\w*|sill model\\w*|analytical model\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 27
  },
@@ -216,6 +235,7 @@
   "definition": "Forecasting eruptions from inflation, seismicity or their patterns.",
   "pattern": "eruption forecast\\w*|forecast\\w* (?:the next |an |future )?eruption|inflation[- ]predictable",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 11
  },
@@ -227,6 +247,7 @@
   "definition": "Listening with hydrophones to biological, geophysical and anthropogenic sound.",
   "pattern": "passive acoustic|hydrophone (?:data|recordings?|array)|acoustic monitoring",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 26,
   "papers_fulltext_2plus": 45
  },
@@ -238,6 +259,7 @@
   "definition": "Detecting, classifying and localizing marine mammal calls.",
   "pattern": "(?:whale|mammal|orca) (?:call|vocalization|detection|click)s?|call (?:detection|classification|localization)|vocalizations?",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 23
  },
@@ -249,6 +271,7 @@
   "definition": "Measuring ambient sound levels, spectra and soundscape trends.",
   "pattern": "sound (?:pressure )?levels?|noise levels?|power spectral densit\\w*|\\bPSDs?\\b|soundscapes?|ambient sound",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 54
  },
@@ -260,6 +283,7 @@
   "definition": "Detecting earthquakes and eruptions from T-phases recorded by hydrophones (SOSUS).",
   "pattern": "T[- ]phases?|T[- ]waves?|hydroacoustic\\w*|\\bSOSUS\\b",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 23,
   "papers_fulltext_2plus": 32
  },
@@ -271,19 +295,57 @@
   "definition": "Acoustic propagation, sound speed structure, ducts and transmission loss.",
   "pattern": "sound[- ]speed|acoustic propagation|transmission loss|sound channel|acoustic duct|propagation loss",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 5,
   "papers_fulltext_2plus": 25
+ },
+ {
+  "id": "fiber-sensing",
+  "name": "Fiber-optic sensing",
+  "kind": "method",
+  "group": "fiber_sensing",
+  "definition": "Using optical fiber itself as the sensor: distributed acoustic and temperature sensing, and optical fiber strain.",
+  "pattern": "distributed acoustic sensing|\\bDAS\\b|distributed temperature sensing|\\bDTS\\b|fib(?:er|re)[- ]optic(?:al)? (?:sensing|strain\\w*)|optical[- ]fib(?:er|re) (?:sensing|strain\\w*)|\\bSMART cables?\\b",
+  "ignore_case": false,
+  "parent": null,
+  "papers_abstract": 36,
+  "papers_fulltext_2plus": 30
  },
  {
   "id": "das",
   "name": "Distributed acoustic sensing (DAS)",
   "kind": "method",
-  "group": "acoustics",
-  "definition": "Using optical fiber as dense strain sensors (DAS/DTS) on seafloor cables.",
-  "pattern": "distributed acoustic sensing|\\bDAS\\b|distributed temperature sensing|\\bDTS\\b|fib(?:er|re)[- ]optic (?:sensing|strain)",
+  "group": "fiber_sensing",
+  "definition": "Strain or strain rate along a fiber from Rayleigh backscatter, every few meters over tens of km.",
+  "pattern": "distributed acoustic sensing|\\bDAS\\b",
   "ignore_case": false,
+  "parent": "fiber-sensing",
   "papers_abstract": 32,
   "papers_fulltext_2plus": 25
+ },
+ {
+  "id": "dts",
+  "name": "Distributed temperature sensing (DTS)",
+  "kind": "method",
+  "group": "fiber_sensing",
+  "definition": "Temperature along a fiber from Raman (or Brillouin) backscatter.",
+  "pattern": "distributed temperature sensing|\\bDTS\\b",
+  "ignore_case": false,
+  "parent": "fiber-sensing",
+  "papers_abstract": 0,
+  "papers_fulltext_2plus": 1
+ },
+ {
+  "id": "fiber-strain",
+  "name": "Optical fiber strain (strainmeters)",
+  "kind": "method",
+  "group": "fiber_sensing",
+  "definition": "Interferometric optical-fiber strainmeters measuring long-baseline strain on land or the seafloor.",
+  "pattern": "optical[- ]fib(?:er|re) strain\\w*|fib(?:er|re)[- ]optic(?:al)? strainmeters?|interferometric strainmeters?|laser strainmeters?|seafloor strainmeters?|strainmeters?",
+  "ignore_case": false,
+  "parent": "fiber-sensing",
+  "papers_abstract": 5,
+  "papers_fulltext_2plus": 13
  },
  {
   "id": "sonar-imaging",
@@ -293,6 +355,7 @@
   "definition": "Imaging vent plumes and gas bubbles with multibeam or imaging sonar (COVIS, rotary sonar).",
   "pattern": "\\bCOVIS\\b|multibeam sonar|imaging sonar|rotary sonar|acoustic backscatter|water[- ]column (?:imaging|backscatter|acoustic)|acoustic flares?|bubble plume (?:imaging|detection)",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 15
  },
@@ -304,6 +367,7 @@
   "definition": "Measuring zooplankton and fish with echosounders (EK60, ZPLSC).",
   "pattern": "echo ?sounders?|\\bEK-?60\\b|bio-?acoustic|acoustic scatter(?:ers|ing)|\\bZPLSC\\b",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 23
  },
@@ -315,6 +379,7 @@
   "definition": "Measuring water-column properties with CTDs, profiling moorings and gliders.",
   "pattern": "\\bCTDs?\\b|shallow profiler|deep profiler|profiling (?:mooring|float|platform)|\\bgliders?\\b|vertical profiles?",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 23,
   "papers_fulltext_2plus": 85
  },
@@ -326,6 +391,7 @@
   "definition": "Measuring currents with ADCPs and point current meters.",
   "pattern": "\\bADCPs?\\b|acoustic Doppler|current meters?|velocimeters?",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 37
  },
@@ -337,6 +403,7 @@
   "definition": "Measuring benthic oxygen flux by eddy correlation above the seafloor.",
   "pattern": "eddy (?:correlation|covariance)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 2
  },
@@ -348,6 +415,7 @@
   "definition": "Regional ocean circulation models (ROMS) and particle tracking.",
   "pattern": "\\bROMS\\b|circulation model|ocean model\\w*|regional model|particle tracking|Lagrangian",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 30
  },
@@ -359,6 +427,7 @@
   "definition": "Combining observations with models (Kalman filters, optimal interpolation).",
   "pattern": "data assimilation|Kalman|optimal interpolation",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 5,
   "papers_fulltext_2plus": 14
  },
@@ -370,6 +439,7 @@
   "definition": "Satellite observations of ocean color, temperature and sea level.",
   "pattern": "satellite|remote sensing|altimetr",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 39,
   "papers_fulltext_2plus": 81
  },
@@ -381,6 +451,7 @@
   "definition": "Spectral, harmonic, wavelet and statistical analysis of long time series.",
   "pattern": "time[- ]series analys\\w*|spectral analys\\w*|wavelet|harmonic analys\\w*|tidal analys\\w*|cross[- ]spectr\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 34
  },
@@ -392,6 +463,7 @@
   "definition": "Sampling and analyzing vent fluids, porewaters and seawater chemistry.",
   "pattern": "vent fluids?|fluid sampl\\w*|pore ?waters?|interstitial waters?|fluid chemistry|geochemi\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 184,
   "papers_fulltext_2plus": 145
  },
@@ -403,6 +475,7 @@
   "definition": "Isotopic tracers (δ13C, δ18O, δD, helium, radiocarbon, U/Th) for sources and ages.",
   "pattern": "isotop\\w*|δ13C|δ18O|δD\\b|radiocarbon|\\bU/Th\\b|129I|3He",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 67,
   "papers_fulltext_2plus": 54
  },
@@ -414,6 +487,7 @@
   "definition": "16S rRNA, metagenomics, metatranscriptomics and genome sequencing of microbes.",
   "pattern": "metagenom\\w*|metatranscriptom\\w*|metaproteom\\w*|16S rRNA|genome sequenc\\w*|amplicon|sequencing",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 46,
   "papers_fulltext_2plus": 39
  },
@@ -425,6 +499,7 @@
   "definition": "Isolating and growing strains to describe physiology and new taxa.",
   "pattern": "isolated (?:from|strain)|cultivat\\w*|enrichment cultures?|pure cultures?|strain [A-Z]\\w*\\d|sp\\. nov|gen\\. nov",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 21,
   "papers_fulltext_2plus": 30
  },
@@ -436,6 +511,7 @@
   "definition": "In-situ or shipboard incubations, stable isotope probing (SIP) and rate measurements.",
   "pattern": "incubations?|stable isotope probing|\\bSIP\\b|rate measurements?",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 31
  },
@@ -447,6 +523,7 @@
   "definition": "Analyzing camera, video and photomosaic imagery of the seafloor and fauna.",
   "pattern": "\\bvideo\\b|imagery|image analys\\w*|photo(?:graph\\w*|mosaic\\w*)|time[- ]lapse|still camera|HD camera|CamHD",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 29,
   "papers_fulltext_2plus": 78
  },
@@ -458,6 +535,7 @@
   "definition": "Supervised and unsupervised learning, neural networks and deep learning.",
   "pattern": "machine learning|deep learning|neural networks?|random forest|convolutional|autoencoder|unsupervised|transformer model",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 34
  },
@@ -469,6 +547,7 @@
   "definition": "High-resolution and repeat bathymetry from AUVs, ships and ROVs.",
   "pattern": "bathymetr\\w*|multibeam (?:bathymetry|survey|map\\w*)|\\bAUV\\b|\\bROV\\b|repeat (?:survey|mapping)|high[- ]resolution (?:map|mapping)|side[- ]scan",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 61,
   "papers_fulltext_2plus": 171
  },
@@ -480,6 +559,7 @@
   "definition": "Drilling and coring (ODP/IODP) and downhole logging.",
   "pattern": "\\bODP\\b|\\bIODP\\b|drilling|logging[- ]while[- ]drilling|\\bLWD\\b|piston core\\w*|downhole|borehole",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 92,
   "papers_fulltext_2plus": 86
  },
@@ -491,6 +571,7 @@
   "definition": "Controlled-source EM and magnetotelluric soundings of resistivity.",
   "pattern": "electromagnetic|\\bCSEM\\b|magnetotelluric",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 19
  },
@@ -502,6 +583,7 @@
   "definition": "Gravity and magnetic anomaly measurements of crustal structure.",
   "pattern": "gravity (?:survey|measurement|anomal|data)\\w*|magnetic (?:anomal|survey|structure|data)\\w*|magnetization",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 25
  },
@@ -513,6 +595,7 @@
   "definition": "Petrology, glass and melt-inclusion chemistry of erupted lavas.",
   "pattern": "petrolog\\w*|melt inclusions?|lava (?:geochemistry|composition|chemistry)|basalt (?:glass|geochemistry)|\\bMORB\\b",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 24
  },
@@ -524,6 +607,7 @@
   "definition": "Dating turbidites and coastal records of past great earthquakes.",
   "pattern": "turbidite\\w*|paleoseism\\w*|paleo-?earthquake",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 13,
   "papers_fulltext_2plus": 33
  },
@@ -535,6 +619,7 @@
   "definition": "How strongly the plate interface is locked, accumulating strain.",
   "pattern": "locking|locked|coupling|strain accumulation|interseismic",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 54,
   "papers_fulltext_2plus": 117
  },
@@ -546,6 +631,7 @@
   "definition": "Aseismic slip transients on the plate interface (including shallow SSEs).",
   "pattern": "slow[- ]slip|\\bSSEs?\\b|aseismic slip|slip transients?",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 33,
   "papers_fulltext_2plus": 70
  },
@@ -557,6 +643,7 @@
   "definition": "Recurring tremor with slow slip downdip of the locked zone.",
   "pattern": "episodic tremor|\\bETS\\b",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 24
  },
@@ -568,6 +655,7 @@
   "definition": "Emergent tremor and LFE/VLFE slow earthquakes.",
   "pattern": "tectonic tremor|non-?volcanic tremor|low[- ]frequency earthquakes?|\\bLFEs?\\b|\\bVLFEs?\\b|very low[- ]frequency earthquakes?",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 12,
   "papers_fulltext_2plus": 35
  },
@@ -579,6 +667,7 @@
   "definition": "M8-9 subduction earthquakes, their recurrence and rupture.",
   "pattern": "great (?:megathrust )?earthquakes?|megathrust (?:earthquakes?|ruptures?)|1700 (?:Cascadia )?earthquake|recurrence",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 34,
   "papers_fulltext_2plus": 74
  },
@@ -590,6 +679,7 @@
   "definition": "Tsunami generation, detection and warning.",
   "pattern": "tsunami\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 48,
   "papers_fulltext_2plus": 91
  },
@@ -601,6 +691,7 @@
   "definition": "Real-time warning systems and their offshore sensors.",
   "pattern": "early warning|\\bEEW\\b|ShakeAlert|G-FAST",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 34
  },
@@ -612,6 +703,7 @@
   "definition": "Fluid flow, pore pressure and overpressure in forearcs.",
   "pattern": "overpressur\\w*|pore[- ]?(?:fluid )?pressure|fluid (?:migration|flow|expulsion|transport)|dewatering",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 55,
   "papers_fulltext_2plus": 77
  },
@@ -623,6 +715,7 @@
   "definition": "Structure of the accretionary wedge at the toe of the margin.",
   "pattern": "accretionary (?:prism|wedge|complex)|protothrust\\w*|deformation front|d[ée]collement|frontal thrust",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 53,
   "papers_fulltext_2plus": 67
  },
@@ -634,6 +727,7 @@
   "definition": "Earthquakes on and near the offshore plate boundary.",
   "pattern": "plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 4,
   "papers_fulltext_2plus": 20
  },
@@ -645,8 +739,81 @@
   "definition": "Seamounts on the downgoing plate and their effects.",
   "pattern": "subducted seamounts?|seamount subduction",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 15
+ },
+ {
+  "id": "shallow-slow-slip",
+  "name": "Shallow slow slip",
+  "kind": "concept",
+  "group": "subduction",
+  "definition": "Slow slip on the shallow megathrust or protothrusts, updip of the locked zone.",
+  "pattern": "shallow (?:slow[- ]slip|SSEs?|aseismic slip)|(?:near[- ]trench|updip) slow[- ]slip|slow[- ]slip (?:near|at|on) (?:the trench|protothrusts?)|slow slip (?:event )?on protothrusts?",
+  "ignore_case": true,
+  "parent": "slow-slip",
+  "papers_abstract": 6,
+  "papers_fulltext_2plus": 13
+ },
+ {
+  "id": "segmentation",
+  "name": "Subduction zone segmentation",
+  "kind": "concept",
+  "group": "subduction",
+  "definition": "Along-strike segments of the margin and their boundaries.",
+  "pattern": "segmentation|segment boundar\\w*|along[- ]strike (?:variation|segment)\\w*|\\bsegmented\\b",
+  "ignore_case": true,
+  "parent": null,
+  "papers_abstract": 9,
+  "papers_fulltext_2plus": 40
+ },
+ {
+  "id": "faulting",
+  "name": "Faulting",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "Faults and fault slip: normal, thrust and strike-slip.",
+  "pattern": "\\bfault(?:s|ing|ed)?\\b|thrust faults?|normal faults?|strike[- ]slip",
+  "ignore_case": true,
+  "parent": null,
+  "papers_abstract": 96,
+  "papers_fulltext_2plus": 163
+ },
+ {
+  "id": "cascadia-strike-slip-faults",
+  "name": "Cascadia strike-slip faults",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "The WNW-trending left-lateral strike-slip faults that cut the Oregon-Washington margin.",
+  "pattern": "(?:strike[- ]slip|left[- ]lateral|wrench) faults?|\\bWecoma\\b|Daisy Bank|Alvin Canyon|Heceta|Coquille|Thompson Ridge|Nitinat|Kalaloch|Grays Canyon|Willapa",
+  "ignore_case": true,
+  "parent": "faulting",
+  "papers_abstract": 10,
+  "papers_fulltext_2plus": 41
+ },
+ {
+  "id": "alvin-canyon-fault",
+  "name": "Alvin Canyon Fault",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "A strike-slip fault near Hydrate Ridge that drains fluids from the margin (Pythia's Oasis).",
+  "pattern": "Alvin Canyon",
+  "ignore_case": true,
+  "parent": "cascadia-strike-slip-faults",
+  "papers_abstract": 3,
+  "papers_fulltext_2plus": 6
+ },
+ {
+  "id": "daisy-bank-fault",
+  "name": "Daisy Bank Fault",
+  "kind": "concept",
+  "group": "faults",
+  "definition": "A left-lateral strike-slip fault on the central Oregon shelf and slope.",
+  "pattern": "Daisy Bank",
+  "ignore_case": true,
+  "parent": "cascadia-strike-slip-faults",
+  "papers_abstract": 0,
+  "papers_fulltext_2plus": 4
  },
  {
   "id": "eruptions",
@@ -656,8 +823,57 @@
   "definition": "Eruptions at Axial and other ridges: timing, volume, dikes and lava.",
   "pattern": "eruptions?|erupted|eruptive",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 173,
   "papers_fulltext_2plus": 110
+ },
+ {
+  "id": "eruption-axial-1998",
+  "name": "Axial Seamount 1998 eruption",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "The January 1998 eruption of Axial Seamount.",
+  "pattern": "1998 (?:eruption|lava|event|swarm|episode)|(?:eruption|event|swarm) (?:of|in) (?:January |January-February )?1998|January\\W+February 1998",
+  "ignore_case": true,
+  "parent": "eruptions",
+  "papers_abstract": 18,
+  "papers_fulltext_2plus": 19
+ },
+ {
+  "id": "eruption-axial-2011",
+  "name": "Axial Seamount 2011 eruption",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "The April 2011 eruption of Axial Seamount.",
+  "pattern": "2011 (?:eruption|lava|event)|(?:eruption|event) (?:of|in) (?:April )?2011",
+  "ignore_case": true,
+  "parent": "eruptions",
+  "papers_abstract": 12,
+  "papers_fulltext_2plus": 22
+ },
+ {
+  "id": "eruption-axial-2015",
+  "name": "Axial Seamount 2015 eruption",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "The April 2015 eruption of Axial Seamount, recorded by the Cabled Array.",
+  "pattern": "2015 (?:eruption|lava|event|diking)|(?:eruption|event) (?:of|in) (?:April )?2015",
+  "ignore_case": true,
+  "parent": "eruptions",
+  "papers_abstract": 37,
+  "papers_fulltext_2plus": 41
+ },
+ {
+  "id": "eruption-coaxial-1993",
+  "name": "CoAxial segment 1993 dike intrusion",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "The June-July 1993 dike intrusion and eruption on the CoAxial segment.",
+  "pattern": "CoAxial|1993 (?:eruption|event|dike|diking|seismic)",
+  "ignore_case": true,
+  "parent": "eruptions",
+  "papers_abstract": 32,
+  "papers_fulltext_2plus": 13
  },
  {
   "id": "magma-reservoir",
@@ -667,8 +883,21 @@
   "definition": "Melt storage, sills, the axial magma chamber and its supply.",
   "pattern": "magma (?:reservoir|chamber|plumbing|storage|supply|body|lens)|melt (?:lens|sill|reservoir|fraction)|\\bAMC\\b|magma supply",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 48,
   "papers_fulltext_2plus": 64
+ },
+ {
+  "id": "stacked-sills",
+  "name": "Stacked sills",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "Several melt sills or lenses stacked beneath the summit.",
+  "pattern": "stacked (?:melt )?(?:sills?|lenses)|multiple (?:melt )?(?:sills|lenses)|sill complex|melt lenses",
+  "ignore_case": true,
+  "parent": "magma-reservoir",
+  "papers_abstract": 2,
+  "papers_fulltext_2plus": 8
  },
  {
   "id": "inflation-cycle",
@@ -678,6 +907,7 @@
   "definition": "Volcano uplift between eruptions and collapse during them.",
   "pattern": "inflation|deflation|re-?inflat\\w*|uplift rate",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 40,
   "papers_fulltext_2plus": 53
  },
@@ -689,6 +919,7 @@
   "definition": "Dike propagation along rift zones and seafloor spreading events.",
   "pattern": "dikes?|dykes?|diking|dyking|rifting|rift zones?|spreading event",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 62,
   "papers_fulltext_2plus": 76
  },
@@ -700,8 +931,21 @@
   "definition": "Faults around the caldera that accommodate inflation and deflation.",
   "pattern": "ring[- ]faults?|caldera faults?|caldera collapse|caldera formation",
   "ignore_case": true,
+  "parent": "faulting",
   "papers_abstract": 21,
   "papers_fulltext_2plus": 28
+ },
+ {
+  "id": "outward-dipping-faults",
+  "name": "Buried outward-dipping ring faults",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "The buried, outward-dipping ring faults beneath Axial's caldera.",
+  "pattern": "outward[- ]dipping|buried (?:ring )?faults?|ring[- ]fault system",
+  "ignore_case": true,
+  "parent": "ring-faults",
+  "papers_abstract": 9,
+  "papers_fulltext_2plus": 16
  },
  {
   "id": "lava-flows",
@@ -711,6 +955,7 @@
   "definition": "Lava flow morphology, emplacement and pyroclastic deposits.",
   "pattern": "lava flows?|pillow|lobate|sheet flows?|pyroclastic|volcaniclastic|tephra|ash deposit",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 58,
   "papers_fulltext_2plus": 58
  },
@@ -722,19 +967,33 @@
   "definition": "Earthquake swarms and microseismicity tied to volcanic activity.",
   "pattern": "microearthquakes?|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 34
  },
  {
-  "id": "hotspot",
-  "name": "Hotspot-ridge interaction (Cobb hotspot)",
+  "id": "hotspot-volcanism",
+  "name": "Hotspot volcanism (Cobb hotspot)",
   "kind": "concept",
   "group": "volcanic",
-  "definition": "The Cobb hotspot's influence on Axial and the ridge.",
-  "pattern": "\\bCobb\\b|hot ?spot",
+  "definition": "Hotspot volcanism and the Cobb hotspot's interaction with the ridge at Axial.",
+  "pattern": "\\bCobb\\b|hot ?spot|plume[- ]ridge|intraplate volcan\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 41,
   "papers_fulltext_2plus": 51
+ },
+ {
+  "id": "porosity",
+  "name": "Porosity and permeability",
+  "kind": "concept",
+  "group": "volcanic",
+  "definition": "Porosity and permeability of crust and sediments, controlling fluid flow.",
+  "pattern": "porosit\\w*|permeabilit\\w*",
+  "ignore_case": true,
+  "parent": null,
+  "papers_abstract": 37,
+  "papers_fulltext_2plus": 60
  },
  {
   "id": "crustal-structure",
@@ -744,6 +1003,7 @@
   "definition": "Layering and formation of young oceanic crust.",
   "pattern": "crustal (?:structure|accretion|thickness)|oceanic crust|upper crust|sheeted dy?ke|layer 2A",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 38,
   "papers_fulltext_2plus": 60
  },
@@ -755,6 +1015,7 @@
   "definition": "Tides modulating earthquakes, venting and seepage.",
   "pattern": "tidal (?:triggering|modulation|forcing|loading|stress)|\\btides?\\b",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 88
  },
@@ -766,6 +1027,7 @@
   "definition": "Vents, plumes and heat flux from hydrothermal systems.",
   "pattern": "hydrothermal (?:vent\\w*|plumes?|discharge|activity|flux|circulation)|black smokers?|event plumes?|megaplumes?",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 146,
   "papers_fulltext_2plus": 92
  },
@@ -777,6 +1039,7 @@
   "definition": "Low-temperature diffuse venting from cracks and mats.",
   "pattern": "diffuse (?:flow|venting|vents?|fluids?)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 20,
   "papers_fulltext_2plus": 32
  },
@@ -788,6 +1051,7 @@
   "definition": "Composition and evolution of vent fluids.",
   "pattern": "vent fluid (?:chemistry|composition)|phase separation|chlorinity|fluid composition",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 19
  },
@@ -799,6 +1063,7 @@
   "definition": "Chimney growth and polymetallic sulfide deposits.",
   "pattern": "chimneys?|sulfide (?:deposits?|spire|minerals?)|anhydrite|massive sulfide",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 26,
   "papers_fulltext_2plus": 31
  },
@@ -810,6 +1075,7 @@
   "definition": "Microbes living in and below young crust and vents.",
   "pattern": "subseafloor|sub-seafloor|deep biosphere|microbial communit\\w*|thermophil\\w*|hyperthermophil\\w*|methanogen\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 83,
   "papers_fulltext_2plus": 63
  },
@@ -821,6 +1087,7 @@
   "definition": "Animals and food webs at hydrothermal vents.",
   "pattern": "tubeworms?|vent (?:fauna|communit\\w*|ecosystems?|animals?)|Ridgeia|polychaetes?|food webs?|chemosynthe\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 56,
   "papers_fulltext_2plus": 59
  },
@@ -832,6 +1099,7 @@
   "definition": "Methane hydrate stability, distribution and free gas beneath it.",
   "pattern": "gas hydrates?|methane hydrates?|hydrate stability|\\bBSRs?\\b|bottom[- ]simulating reflect\\w*|free gas",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 156,
   "papers_fulltext_2plus": 53
  },
@@ -843,6 +1111,7 @@
   "definition": "Methane escaping from seeps as bubbles and dissolved gas.",
   "pattern": "methane (?:seep\\w*|bubbles?|emissions?|release|venting|flux\\w*)|cold seeps?|bubble plumes?|gas (?:seepage|venting|emissions?|flares?)|ebullition",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 82,
   "papers_fulltext_2plus": 59
  },
@@ -854,6 +1123,7 @@
   "definition": "Methane consumed by archaeal-bacterial consortia in sediments.",
   "pattern": "anaerobic oxidation of methane|\\bAOM\\b|\\bANME\\w*|methanotroph\\w*",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 36,
   "papers_fulltext_2plus": 23
  },
@@ -865,6 +1135,7 @@
   "definition": "Carbonates precipitated from methane-derived carbon at seeps.",
   "pattern": "authigenic carbonates?|seep carbonates?|chemoherms?|clathrites?",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 19,
   "papers_fulltext_2plus": 13
  },
@@ -876,6 +1147,7 @@
   "definition": "Mats, clams and fauna at methane seeps.",
   "pattern": "Beggiatoa|Calyptogena|bacterial mats?|clam fields?|seep (?:fauna|communit\\w*|ecosystems?|habitats?)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 32
  },
@@ -887,6 +1159,7 @@
   "definition": "Wind-driven upwelling and its seasonal cycle on the shelf.",
   "pattern": "upwelling|downwelling",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 62
  },
@@ -898,6 +1171,7 @@
   "definition": "Low dissolved oxygen on the shelf and deoxygenation trends.",
   "pattern": "hypoxi\\w*|deoxygenation|low[- ]oxygen|oxygen minimum|dissolved oxygen",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 21,
   "papers_fulltext_2plus": 45
  },
@@ -909,6 +1183,7 @@
   "definition": "pH, pCO2 and carbonate saturation changes.",
   "pattern": "acidification|\\bpCO2\\b|carbonate (?:chemistry|system|saturation)|aragonite",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 19
  },
@@ -920,6 +1195,7 @@
   "definition": "The 2014-2016 warm Blob, El Niño and their effects.",
   "pattern": "marine heat ?waves?|\\bBlob\\b|El Ni[ñn]o|warm anomal\\w*",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 22
  },
@@ -931,6 +1207,7 @@
   "definition": "Columbia River plume and freshwater influence on the shelf.",
   "pattern": "Columbia River|river plumes?|freshwater (?:input|discharge|plume)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 23
  },
@@ -942,6 +1219,7 @@
   "definition": "Internal waves and internal tides on the shelf and slope.",
   "pattern": "internal (?:waves?|tides?|bores?)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 6,
   "papers_fulltext_2plus": 16
  },
@@ -953,6 +1231,7 @@
   "definition": "Along-slope currents, undercurrents and circulation around seamounts.",
   "pattern": "undercurrent|along[- ]slope (?:flow|current)|circulation|boundary currents?|California Current",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 56,
   "papers_fulltext_2plus": 105
  },
@@ -964,6 +1243,7 @@
   "definition": "Chlorophyll, blooms and particulate organic carbon.",
   "pattern": "phytoplankton|chlorophyll|primary produc\\w*|particulate organic|algal blooms?|harmful algal|domoic",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 25,
   "papers_fulltext_2plus": 62
  },
@@ -975,6 +1255,7 @@
   "definition": "Pelagic animals and their vertical migration.",
   "pattern": "zooplankton|diel vertical migration|\\bDVM\\b|krill|fish(?:es)?\\b|nekton",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 49
  },
@@ -986,6 +1267,7 @@
   "definition": "Sediment-water exchange and bottom boundary layer dynamics.",
   "pattern": "benthic (?:boundary layer|flux\\w*|respiration|oxygen)|bottom boundary layer|sediment oxygen|seafloor flux",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 16
  },
@@ -997,6 +1279,7 @@
   "definition": "Whales and other marine mammals and their calls.",
   "pattern": "whales?|marine mammals?|orcas?|dolphins?|cetacean\\w*",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 38,
   "papers_fulltext_2plus": 43
  },
@@ -1008,6 +1291,7 @@
   "definition": "Shipping and other human-made underwater noise.",
   "pattern": "ship(?:ping)? noise|vessel noise|anthropogenic (?:noise|sound)|underwater radiated noise|container ship",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 16
  },
@@ -1019,6 +1303,7 @@
   "definition": "Ambient sound and seismic noise from wind, rain, waves and storms.",
   "pattern": "wind[- ](?:dependent|driven|generated) (?:noise|sound)|rain(?:fall)? noise|underwater rainfall|storms?|microseisms?|ocean waves|\\bhum\\b",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 86
  },
@@ -1030,6 +1315,7 @@
   "definition": "Measuring ocean temperature change from acoustic or seismic travel times.",
   "pattern": "ocean (?:acoustic )?thermometry|seismic ocean thermometry|travel[- ]time (?:changes|fluctuations)",
   "ignore_case": true,
+  "parent": null,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 3
  },
@@ -1041,18 +1327,20 @@
   "definition": "Cabled observatory infrastructure, design and operations.",
   "pattern": "cabled (?:observator\\w*|array|network)|seafloor observator\\w*|\\bNEPTUNE\\b|Regional Cabled Array|\\bOOI\\b|Ocean Observatories Initiative",
   "ignore_case": false,
+  "parent": null,
   "papers_abstract": 154,
   "papers_fulltext_2plus": 181
  },
  {
-  "id": "instrument-drift",
-  "name": "Instrument drift, calibration and data quality",
+  "id": "pressure-drift",
+  "name": "Pressure gauge drift",
   "kind": "concept",
   "group": "observatory",
-  "definition": "Sensor drift, calibration and quality control.",
-  "pattern": "drift|calibrat\\w*|quality control|\\bQA/QC\\b|data quality",
+  "definition": "Long-term drift of quartz pressure gauges, which mimics or hides deformation.",
+  "pattern": "(?:gauge|sensor|pressure|quartz) drift|drift rates?|long[- ]term drift|exponential drift|drift (?:correction|removal)|drifts? (?:of|in) (?:the )?(?:pressure )?gauges?",
   "ignore_case": true,
-  "papers_abstract": 47,
-  "papers_fulltext_2plus": 164
+  "parent": null,
+  "papers_abstract": 14,
+  "papers_fulltext_2plus": 20
  }
 ]

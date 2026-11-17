@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 I = re.I
 
-# (id, name, group, definition, pattern, flags)
+# (id, name, group, definition, pattern, flags[, parent]): a child (stacked sills) is also its parent (magma reservoirs).
 METHODS = [
     # Seismology
     ("ambient-noise-interferometry", "Ambient noise interferometry", "seismology",
@@ -100,9 +100,19 @@ METHODS = [
     ("sound-propagation", "Sound propagation and sound speed", "acoustics",
      "Acoustic propagation, sound speed structure, ducts and transmission loss.",
      r"sound[- ]speed|acoustic propagation|transmission loss|sound channel|acoustic duct|propagation loss", I),
-    ("das", "Distributed acoustic sensing (DAS)", "acoustics",
-     "Using optical fiber as dense strain sensors (DAS/DTS) on seafloor cables.",
-     r"distributed acoustic sensing|\bDAS\b|distributed temperature sensing|\bDTS\b|fib(?:er|re)[- ]optic (?:sensing|strain)", 0),
+    # Fiber sensing: the cable as the sensor.
+    ("fiber-sensing", "Fiber-optic sensing", "fiber_sensing",
+     "Using optical fiber itself as the sensor: distributed acoustic and temperature sensing, and optical fiber strain.",
+     r"distributed acoustic sensing|\bDAS\b|distributed temperature sensing|\bDTS\b|fib(?:er|re)[- ]optic(?:al)? (?:sensing|strain\w*)|optical[- ]fib(?:er|re) (?:sensing|strain\w*)|\bSMART cables?\b", 0),
+    ("das", "Distributed acoustic sensing (DAS)", "fiber_sensing",
+     "Strain or strain rate along a fiber from Rayleigh backscatter, every few meters over tens of km.",
+     r"distributed acoustic sensing|\bDAS\b", 0, "fiber-sensing"),
+    ("dts", "Distributed temperature sensing (DTS)", "fiber_sensing",
+     "Temperature along a fiber from Raman (or Brillouin) backscatter.",
+     r"distributed temperature sensing|\bDTS\b", 0, "fiber-sensing"),
+    ("fiber-strain", "Optical fiber strain (strainmeters)", "fiber_sensing",
+     "Interferometric optical-fiber strainmeters measuring long-baseline strain on land or the seafloor.",
+     r"optical[- ]fib(?:er|re) strain\w*|fib(?:er|re)[- ]optic(?:al)? strainmeters?|interferometric strainmeters?|laser strainmeters?|seafloor strainmeters?|strainmeters?", 0, "fiber-sensing"),
     ("sonar-imaging", "Sonar imaging of plumes and bubbles", "acoustics",
      "Imaging vent plumes and gas bubbles with multibeam or imaging sonar (COVIS, rotary sonar).",
      r"\bCOVIS\b|multibeam sonar|imaging sonar|rotary sonar|acoustic backscatter|water[- ]column (?:imaging|backscatter|acoustic)|acoustic flares?|bubble plume (?:imaging|detection)", 0),
@@ -196,22 +206,49 @@ CONCEPTS = [
     ("offshore-seismicity", "Offshore and plate-boundary seismicity", "subduction", "Earthquakes on and near the offshore plate boundary.",
      r"plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab", I),
     ("subducted-seamounts", "Subducted seamounts", "subduction", "Seamounts on the downgoing plate and their effects.", r"subducted seamounts?|seamount subduction", I),
+    ("shallow-slow-slip", "Shallow slow slip", "subduction", "Slow slip on the shallow megathrust or protothrusts, updip of the locked zone.",
+     r"shallow (?:slow[- ]slip|SSEs?|aseismic slip)|(?:near[- ]trench|updip) slow[- ]slip|slow[- ]slip (?:near|at|on) (?:the trench|protothrusts?)|slow slip (?:event )?on protothrusts?", I, "slow-slip"),
+    ("segmentation", "Subduction zone segmentation", "subduction", "Along-strike segments of the margin and their boundaries.",
+     r"segmentation|segment boundar\w*|along[- ]strike (?:variation|segment)\w*|\bsegmented\b", I),
+    ("faulting", "Faulting", "faults", "Faults and fault slip: normal, thrust and strike-slip.",
+     r"\bfault(?:s|ing|ed)?\b|thrust faults?|normal faults?|strike[- ]slip", I),
+    ("cascadia-strike-slip-faults", "Cascadia strike-slip faults", "faults", "The WNW-trending left-lateral strike-slip faults that cut the Oregon-Washington margin.",
+     r"(?:strike[- ]slip|left[- ]lateral|wrench) faults?|\bWecoma\b|Daisy Bank|Alvin Canyon|Heceta|Coquille|Thompson Ridge|Nitinat|Kalaloch|Grays Canyon|Willapa", I, "faulting"),
+    ("alvin-canyon-fault", "Alvin Canyon Fault", "faults", "A strike-slip fault near Hydrate Ridge that drains fluids from the margin (Pythia's Oasis).",
+     r"Alvin Canyon", I, "cascadia-strike-slip-faults"),
+    ("daisy-bank-fault", "Daisy Bank Fault", "faults", "A left-lateral strike-slip fault on the central Oregon shelf and slope.",
+     r"Daisy Bank", I, "cascadia-strike-slip-faults"),
     # Volcanoes and ridges
     ("eruptions", "Submarine eruptions", "volcanic", "Eruptions at Axial and other ridges: timing, volume, dikes and lava.",
      r"eruptions?|erupted|eruptive", I),
+    ("eruption-axial-1998", "Axial Seamount 1998 eruption", "volcanic", "The January 1998 eruption of Axial Seamount.",
+     r"1998 (?:eruption|lava|event|swarm|episode)|(?:eruption|event|swarm) (?:of|in) (?:January |January-February )?1998|January\W+February 1998", I, "eruptions"),
+    ("eruption-axial-2011", "Axial Seamount 2011 eruption", "volcanic", "The April 2011 eruption of Axial Seamount.",
+     r"2011 (?:eruption|lava|event)|(?:eruption|event) (?:of|in) (?:April )?2011", I, "eruptions"),
+    ("eruption-axial-2015", "Axial Seamount 2015 eruption", "volcanic", "The April 2015 eruption of Axial Seamount, recorded by the Cabled Array.",
+     r"2015 (?:eruption|lava|event|diking)|(?:eruption|event) (?:of|in) (?:April )?2015", I, "eruptions"),
+    ("eruption-coaxial-1993", "CoAxial segment 1993 dike intrusion", "volcanic", "The June-July 1993 dike intrusion and eruption on the CoAxial segment.",
+     r"CoAxial|1993 (?:eruption|event|dike|diking|seismic)", I, "eruptions"),
     ("magma-reservoir", "Magma reservoirs and plumbing", "volcanic", "Melt storage, sills, the axial magma chamber and its supply.",
      r"magma (?:reservoir|chamber|plumbing|storage|supply|body|lens)|melt (?:lens|sill|reservoir|fraction)|\bAMC\b|magma supply", I),
+    ("stacked-sills", "Stacked sills", "volcanic", "Several melt sills or lenses stacked beneath the summit.",
+     r"stacked (?:melt )?(?:sills?|lenses)|multiple (?:melt )?(?:sills|lenses)|sill complex|melt lenses", I, "magma-reservoir"),
     ("inflation-cycle", "Inflation-deflation cycle", "volcanic", "Volcano uplift between eruptions and collapse during them.",
      r"inflation|deflation|re-?inflat\w*|uplift rate", I),
     ("dike-intrusion", "Dike intrusion and rifting", "volcanic", "Dike propagation along rift zones and seafloor spreading events.",
      r"dikes?|dykes?|diking|dyking|rifting|rift zones?|spreading event", I),
     ("ring-faults", "Caldera ring faults", "volcanic", "Faults around the caldera that accommodate inflation and deflation.",
-     r"ring[- ]faults?|caldera faults?|caldera collapse|caldera formation", I),
+     r"ring[- ]faults?|caldera faults?|caldera collapse|caldera formation", I, "faulting"),
+    ("outward-dipping-faults", "Buried outward-dipping ring faults", "volcanic", "The buried, outward-dipping ring faults beneath Axial's caldera.",
+     r"outward[- ]dipping|buried (?:ring )?faults?|ring[- ]fault system", I, "ring-faults"),
     ("lava-flows", "Lava flows and volcaniclastics", "volcanic", "Lava flow morphology, emplacement and pyroclastic deposits.",
      r"lava flows?|pillow|lobate|sheet flows?|pyroclastic|volcaniclastic|tephra|ash deposit", I),
     ("volcanic-seismicity", "Volcanic seismicity", "volcanic", "Earthquake swarms and microseismicity tied to volcanic activity.",
      r"microearthquakes?|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic", I),
-    ("hotspot", "Hotspot-ridge interaction (Cobb hotspot)", "volcanic", "The Cobb hotspot's influence on Axial and the ridge.", r"\bCobb\b|hot ?spot", I),
+    ("hotspot-volcanism", "Hotspot volcanism (Cobb hotspot)", "volcanic", "Hotspot volcanism and the Cobb hotspot's interaction with the ridge at Axial.",
+     r"\bCobb\b|hot ?spot|plume[- ]ridge|intraplate volcan\w*", I),
+    ("porosity", "Porosity and permeability", "volcanic", "Porosity and permeability of crust and sediments, controlling fluid flow.",
+     r"porosit\w*|permeabilit\w*", I),
     ("crustal-structure", "Oceanic crustal structure and accretion", "volcanic", "Layering and formation of young oceanic crust.",
      r"crustal (?:structure|accretion|thickness)|oceanic crust|upper crust|sheeted dy?ke|layer 2A", I),
     ("tidal-forcing", "Tidal forcing of geological processes", "volcanic", "Tides modulating earthquakes, venting and seepage.",
@@ -270,8 +307,8 @@ CONCEPTS = [
     # Observatories and instruments
     ("cabled-observatories", "Cabled seafloor observatories", "observatory", "Cabled observatory infrastructure, design and operations.",
      r"cabled (?:observator\w*|array|network)|seafloor observator\w*|\bNEPTUNE\b|Regional Cabled Array|\bOOI\b|Ocean Observatories Initiative", 0),
-    ("instrument-drift", "Instrument drift, calibration and data quality", "observatory", "Sensor drift, calibration and quality control.",
-     r"drift|calibrat\w*|quality control|\bQA/QC\b|data quality", I),
+    ("pressure-drift", "Pressure gauge drift", "observatory", "Long-term drift of quartz pressure gauges, which mimics or hides deformation.",
+     r"(?:gauge|sensor|pressure|quartz) drift|drift rates?|long[- ]term drift|exponential drift|drift (?:correction|removal)|drifts? (?:of|in) (?:the )?(?:pressure )?gauges?", I),
 ]
 
 
@@ -292,10 +329,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--counts", action="store_true")
     args = parser.parse_args()
-    entries = [{"id": i, "name": n, "kind": "method", "group": g, "definition": d, "pattern": p, "ignore_case": bool(f)}
-               for i, n, g, d, p, f in METHODS] + \
-              [{"id": i, "name": n, "kind": "concept", "group": g, "definition": d, "pattern": p, "ignore_case": bool(f)}
-               for i, n, g, d, p, f in CONCEPTS]
+    def entry(kind, t):
+        i, n, g, d, p, f, *parent = t
+        return {"id": i, "name": n, "kind": kind, "group": g, "definition": d, "pattern": p, "ignore_case": bool(f),
+                "parent": parent[0] if parent else None}
+    entries = [entry("method", t) for t in METHODS] + [entry("concept", t) for t in CONCEPTS]
+    ids = {e["id"] for e in entries}
+    assert all(e["parent"] in ids for e in entries if e["parent"]), "a parent that is not an entry"
     if args.counts:
         abstract, full = corpus()
         for e in entries:
@@ -307,10 +347,10 @@ def main() -> int:
         lines = ["# Method and concept vocabulary (draft for review)", "",
                  "Papers counted: the abstract layer (934 works) and, in full text (433 papers), papers with two or more passages using the entry.", ""]
         for kind in ("method", "concept"):
-            lines += [f"## {kind.title()}s", "", "| Group | Entry | Definition | Words papers use | Abstracts | Full text |", "|---|---|---|---|---|---|"]
+            lines += [f"## {kind.title()}s", "", "| Group | Entry | Under | Definition | Words papers use | Abstracts | Full text |", "|---|---|---|---|---|---|---|"]
             for e in sorted((x for x in entries if x["kind"] == kind), key=lambda x: (x["group"], -x["papers_abstract"])):
                 words = e["pattern"].replace("|", " / ").replace("\\b", "")
-                lines.append(f"| {e['group']} | **{e['name']}** | {e['definition']} | `{words[:140]}` | {e['papers_abstract']} | {e['papers_fulltext_2plus']} |")
+                lines.append(f"| {e['group']} | **{e['name']}** | {e['parent'] or ''} | {e['definition']} | `{words[:140]}` | {e['papers_abstract']} | {e['papers_fulltext_2plus']} |")
             lines.append("")
         (HERE / "vocabulary_review.md").write_text("\n".join(lines) + "\n")
         for kind in ("method", "concept"):
