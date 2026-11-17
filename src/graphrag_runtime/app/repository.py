@@ -17,6 +17,9 @@ class Repository(Protocol):
     def papers_naming(self, terms: Sequence[str], *, limit: int) -> list[dict[str, Any]]: ...
 
     def papers_linked(self, terms: Sequence[str], *, limit: int) -> list[dict[str, Any]]: ...
+    def paper_links(self, terms: Sequence[str], *, paper_ids: Sequence[str], predicates: Sequence[str] | None,
+                    rca_only: bool, limit: int) -> list[dict[str, Any]]: ...
+    def papers_by_author(self, surname: str, *, year: int | None, limit: int) -> list[dict[str, Any]]: ...
     def chunks_by_id(self, collection_id: str, chunk_ids: Sequence[str]) -> list[dict[str, Any]]: ...
     def neighbors(self, seeds: Sequence[dict[str, str]], *, hops: int, limit: int) -> list[dict[str, Any]]: ...
     def route_tools(self, query: str, *, limit: int) -> list[dict[str, Any]]: ...
@@ -153,10 +156,25 @@ class PostgresRepository:
         return result
 
     def papers_linked(self, terms: Sequence[str], *, limit: int) -> list[dict[str, Any]]:
-        """Papers the literature links tie to the sensor (naming or describing it), each with the link's evidence passage."""
+        """Papers the literature links tie to the sensor (used or mentioned), each with the link's evidence passage."""
         with self._cursor() as cursor:
             cursor.execute("SELECT * FROM graphrag_api.papers_linked(%s,%s)", (list(terms), limit))
-            rows = self._dict_rows(cursor)
+            return self._link_rows(self._dict_rows(cursor))
+
+    def paper_links(self, terms: Sequence[str], *, paper_ids: Sequence[str], predicates: Sequence[str] | None,
+                    rca_only: bool, limit: int) -> list[dict[str, Any]]:
+        """Papers linked to the terms, or the papers' own links, each with its evidence passage."""
+        with self._cursor() as cursor:
+            cursor.execute("SELECT * FROM graphrag_api.paper_links(%s,%s,%s,%s,%s)",
+                           (list(terms), list(predicates) if predicates else None, list(paper_ids), rca_only, limit))
+            return self._link_rows(self._dict_rows(cursor))
+
+    def papers_by_author(self, surname: str, *, year: int | None, limit: int) -> list[dict[str, Any]]:
+        with self._cursor() as cursor:
+            cursor.execute("SELECT * FROM graphrag_api.papers_by_author(%s,%s,%s)", (surname, year, limit))
+            return self._dict_rows(cursor)
+
+    def _link_rows(self, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         result = []
         for row in rows:
             row["text"] = row.pop("body")

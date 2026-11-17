@@ -8,6 +8,7 @@
   "pattern": "ambient (?:seismic )?noise (?:cross[- ]?)?correlation|noise (?:cross[- ]?)?correlation functions?|(?:ambient |seismic |passive |coda[- ]wave )?noise interferometry|seismic interferometry|coda[- ]wave interferometry|\\bNCCFs?\\b|\\bdv/v\\b|relative (?:seismic )?velocity (?:changes?|variations?)|seismic velocity (?:changes?|variations?)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 10
  },
@@ -17,11 +18,12 @@
   "kind": "method",
   "group": "seismology",
   "definition": "Locating and relocating earthquake hypocenters (double-difference, NonLinLoc, HYPO71) from arrival times.",
-  "pattern": "earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\\bhypoDD\\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)",
+  "pattern": "earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\\bhypoDD\\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)|(?:located|relocated) (?:\\S+ ){0,3}(?:earthquakes|events|microearthquakes)|\\brelocations?\\b",
   "ignore_case": true,
   "parent": null,
-  "papers_abstract": 9,
-  "papers_fulltext_2plus": 33
+  "background": false,
+  "papers_abstract": 10,
+  "papers_fulltext_2plus": 41
  },
  {
   "id": "earthquake-detection",
@@ -32,6 +34,7 @@
   "pattern": "earthquake (?:detection|catalog(?:ue)?s?)|\\bSTA/LTA\\b|phase pick(?:ing|er)|PhaseNet|EQTransformer|automat(?:ed|ic) (?:detection|catalog)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 42
  },
@@ -44,6 +47,7 @@
   "pattern": "template[- ]matching|matched[- ]filter",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 4,
   "papers_fulltext_2plus": 6
  },
@@ -56,6 +60,7 @@
   "pattern": "tomograph\\w*|full[- ]waveform inversion|\\bFWI\\b|travel[- ]?time inversion",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 16,
   "papers_fulltext_2plus": 37
  },
@@ -68,6 +73,7 @@
   "pattern": "seismic reflection|multichannel seismic|\\bMCS\\b|3-?D seismic|reflection (?:profil|imag|data)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 36,
   "papers_fulltext_2plus": 50
  },
@@ -80,6 +86,7 @@
   "pattern": "focal mechanisms?|moment tensors?",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 37
  },
@@ -92,6 +99,7 @@
   "pattern": "stress drops?|corner frequenc|source spectr",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 22
  },
@@ -104,6 +112,7 @@
   "pattern": "\\bb[- ]values?\\b|Gutenberg[- ]Richter|frequency[- ]magnitude",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 15
  },
@@ -116,6 +125,7 @@
   "pattern": "tidal (?:triggering|modulation|stress(?:es)?|loading)|tidally (?:triggered|modulated)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 13,
   "papers_fulltext_2plus": 13
  },
@@ -125,11 +135,12 @@
   "kind": "method",
   "group": "seismology",
   "definition": "The seafloor's deformation under infragravity-wave pressure, inverted for shear velocity.",
-  "pattern": "seafloor compliance|compliance (?:function|measurement|method)",
+  "pattern": "seafloor compliance|compliance (?:function|measurement|method)|Rayleigh[- ]wave admittance|\\badmittance\\b",
   "ignore_case": true,
   "parent": null,
-  "papers_abstract": 3,
-  "papers_fulltext_2plus": 4
+  "background": false,
+  "papers_abstract": 5,
+  "papers_fulltext_2plus": 6
  },
  {
   "id": "surface-waves",
@@ -140,6 +151,7 @@
   "pattern": "surface[- ]wave|Rayleigh[- ]wave|dispersion curves?|phase[- ]velocit",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 42
  },
@@ -152,6 +164,7 @@
   "pattern": "tremor (?:detection|location|catalog)|envelope cross[- ]correlation|detect\\w* (?:tectonic )?tremor",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 10
  },
@@ -164,6 +177,7 @@
   "pattern": "tilt noise|compliance noise|noise removal|noise reduction|transfer function|current[- ](?:induced|generated) noise|noise sources?",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 31
  },
@@ -176,6 +190,7 @@
   "pattern": "seafloor geodesy|(?:bottom|seafloor) pressure (?:record|measurement|data|time series|observation)s?|vertical (?:deformation|displacement)|pressure[- ]based geodesy",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 34,
   "papers_fulltext_2plus": 67
  },
@@ -188,6 +203,7 @@
   "pattern": "self[- ]calibrat\\w*|drift[- ]correct\\w*|\\bA-0-A\\b|deadweight|piston gauge|gauge drift",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 16
  },
@@ -200,6 +216,7 @@
   "pattern": "acoustic (?:ranging|extensometer)s?|direct[- ]path (?:acoustic )?ranging|horizontal (?:geodesy|extension|deformation)|baseline (?:length|change)s?|GNSS-A",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 20
  },
@@ -212,6 +229,7 @@
   "pattern": "\\bGNSS\\b|\\bGPS\\b|leveling|levelling",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 28,
   "papers_fulltext_2plus": 77
  },
@@ -224,6 +242,7 @@
   "pattern": "\\bMogi\\b|deformation (?:source )?model\\w*|point source|finite[- ]element|dike (?:intrusion )?model\\w*|sill model\\w*|analytical model\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 27
  },
@@ -236,6 +255,7 @@
   "pattern": "eruption forecast\\w*|forecast\\w* (?:the next |an |future )?eruption|inflation[- ]predictable",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 11
  },
@@ -248,6 +268,7 @@
   "pattern": "passive acoustic|hydrophone (?:data|recordings?|array)|acoustic monitoring",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 26,
   "papers_fulltext_2plus": 45
  },
@@ -260,6 +281,7 @@
   "pattern": "(?:whale|mammal|orca) (?:call|vocalization|detection|click)s?|call (?:detection|classification|localization)|vocalizations?",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 23
  },
@@ -272,6 +294,7 @@
   "pattern": "sound (?:pressure )?levels?|noise levels?|power spectral densit\\w*|\\bPSDs?\\b|soundscapes?|ambient sound",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 54
  },
@@ -284,6 +307,7 @@
   "pattern": "T[- ]phases?|T[- ]waves?|hydroacoustic\\w*|\\bSOSUS\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 23,
   "papers_fulltext_2plus": 32
  },
@@ -296,6 +320,7 @@
   "pattern": "sound[- ]speed|acoustic propagation|transmission loss|sound channel|acoustic duct|propagation loss",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 5,
   "papers_fulltext_2plus": 25
  },
@@ -308,6 +333,7 @@
   "pattern": "distributed acoustic sensing|\\bDAS\\b|distributed temperature sensing|\\bDTS\\b|fib(?:er|re)[- ]optic(?:al)? (?:sensing|strain\\w*)|optical[- ]fib(?:er|re) (?:sensing|strain\\w*)|\\bSMART cables?\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 36,
   "papers_fulltext_2plus": 30
  },
@@ -320,6 +346,7 @@
   "pattern": "distributed acoustic sensing|\\bDAS\\b",
   "ignore_case": false,
   "parent": "fiber-sensing",
+  "background": false,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 25
  },
@@ -332,6 +359,7 @@
   "pattern": "distributed temperature sensing|\\bDTS\\b",
   "ignore_case": false,
   "parent": "fiber-sensing",
+  "background": false,
   "papers_abstract": 0,
   "papers_fulltext_2plus": 1
  },
@@ -344,6 +372,7 @@
   "pattern": "optical[- ]fib(?:er|re) strain\\w*|fib(?:er|re)[- ]optic(?:al)? strainmeters?|interferometric strainmeters?|laser strainmeters?|seafloor strainmeters?|strainmeters?",
   "ignore_case": false,
   "parent": "fiber-sensing",
+  "background": false,
   "papers_abstract": 5,
   "papers_fulltext_2plus": 13
  },
@@ -356,6 +385,7 @@
   "pattern": "\\bCOVIS\\b|multibeam sonar|imaging sonar|rotary sonar|acoustic backscatter|water[- ]column (?:imaging|backscatter|acoustic)|acoustic flares?|bubble plume (?:imaging|detection)",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 15
  },
@@ -368,6 +398,7 @@
   "pattern": "echo ?sounders?|\\bEK-?60\\b|bio-?acoustic|acoustic scatter(?:ers|ing)|\\bZPLSC\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 7,
   "papers_fulltext_2plus": 23
  },
@@ -380,6 +411,7 @@
   "pattern": "\\bCTDs?\\b|shallow profiler|deep profiler|profiling (?:mooring|float|platform)|\\bgliders?\\b|vertical profiles?",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 23,
   "papers_fulltext_2plus": 85
  },
@@ -392,6 +424,7 @@
   "pattern": "\\bADCPs?\\b|acoustic Doppler|current meters?|velocimeters?",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 37
  },
@@ -404,6 +437,7 @@
   "pattern": "eddy (?:correlation|covariance)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 2
  },
@@ -416,6 +450,7 @@
   "pattern": "\\bROMS\\b|circulation model|ocean model\\w*|regional model|particle tracking|Lagrangian",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 30
  },
@@ -428,6 +463,7 @@
   "pattern": "data assimilation|Kalman|optimal interpolation",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 5,
   "papers_fulltext_2plus": 14
  },
@@ -440,6 +476,7 @@
   "pattern": "satellite|remote sensing|altimetr",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 39,
   "papers_fulltext_2plus": 81
  },
@@ -452,6 +489,7 @@
   "pattern": "time[- ]series analys\\w*|spectral analys\\w*|wavelet|harmonic analys\\w*|tidal analys\\w*|cross[- ]spectr\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 34
  },
@@ -464,6 +502,7 @@
   "pattern": "vent fluids?|fluid sampl\\w*|pore ?waters?|interstitial waters?|fluid chemistry|geochemi\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 184,
   "papers_fulltext_2plus": 145
  },
@@ -476,6 +515,7 @@
   "pattern": "isotop\\w*|δ13C|δ18O|δD\\b|radiocarbon|\\bU/Th\\b|129I|3He",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 67,
   "papers_fulltext_2plus": 54
  },
@@ -488,6 +528,7 @@
   "pattern": "metagenom\\w*|metatranscriptom\\w*|metaproteom\\w*|16S rRNA|genome sequenc\\w*|amplicon|sequencing",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 46,
   "papers_fulltext_2plus": 39
  },
@@ -500,6 +541,7 @@
   "pattern": "isolated (?:from|strain)|cultivat\\w*|enrichment cultures?|pure cultures?|strain [A-Z]\\w*\\d|sp\\. nov|gen\\. nov",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 21,
   "papers_fulltext_2plus": 30
  },
@@ -512,6 +554,7 @@
   "pattern": "incubations?|stable isotope probing|\\bSIP\\b|rate measurements?",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 31
  },
@@ -524,6 +567,7 @@
   "pattern": "\\bvideo\\b|imagery|image analys\\w*|photo(?:graph\\w*|mosaic\\w*)|time[- ]lapse|still camera|HD camera|CamHD",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 29,
   "papers_fulltext_2plus": 78
  },
@@ -536,6 +580,7 @@
   "pattern": "machine learning|deep learning|neural networks?|random forest|convolutional|autoencoder|unsupervised|transformer model",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 34
  },
@@ -548,6 +593,7 @@
   "pattern": "bathymetr\\w*|multibeam (?:bathymetry|survey|map\\w*)|\\bAUV\\b|\\bROV\\b|repeat (?:survey|mapping)|high[- ]resolution (?:map|mapping)|side[- ]scan",
   "ignore_case": false,
   "parent": null,
+  "background": true,
   "papers_abstract": 61,
   "papers_fulltext_2plus": 171
  },
@@ -560,6 +606,7 @@
   "pattern": "\\bODP\\b|\\bIODP\\b|drilling|logging[- ]while[- ]drilling|\\bLWD\\b|piston core\\w*|downhole|borehole",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 92,
   "papers_fulltext_2plus": 86
  },
@@ -572,6 +619,7 @@
   "pattern": "electromagnetic|\\bCSEM\\b|magnetotelluric",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 11,
   "papers_fulltext_2plus": 19
  },
@@ -584,6 +632,7 @@
   "pattern": "gravity (?:survey|measurement|anomal|data)\\w*|magnetic (?:anomal|survey|structure|data)\\w*|magnetization",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 25
  },
@@ -596,6 +645,7 @@
   "pattern": "petrolog\\w*|melt inclusions?|lava (?:geochemistry|composition|chemistry)|basalt (?:glass|geochemistry)|\\bMORB\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 24
  },
@@ -608,6 +658,7 @@
   "pattern": "turbidite\\w*|paleoseism\\w*|paleo-?earthquake",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 13,
   "papers_fulltext_2plus": 33
  },
@@ -620,6 +671,7 @@
   "pattern": "locking|locked|coupling|strain accumulation|interseismic",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 54,
   "papers_fulltext_2plus": 117
  },
@@ -632,6 +684,7 @@
   "pattern": "slow[- ]slip|\\bSSEs?\\b|aseismic slip|slip transients?",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 33,
   "papers_fulltext_2plus": 70
  },
@@ -644,6 +697,7 @@
   "pattern": "episodic tremor|\\bETS\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 24
  },
@@ -656,6 +710,7 @@
   "pattern": "tectonic tremor|non-?volcanic tremor|low[- ]frequency earthquakes?|\\bLFEs?\\b|\\bVLFEs?\\b|very low[- ]frequency earthquakes?",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 12,
   "papers_fulltext_2plus": 35
  },
@@ -668,6 +723,7 @@
   "pattern": "great (?:megathrust )?earthquakes?|megathrust (?:earthquakes?|ruptures?)|1700 (?:Cascadia )?earthquake|recurrence",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 34,
   "papers_fulltext_2plus": 74
  },
@@ -680,6 +736,7 @@
   "pattern": "tsunami\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 48,
   "papers_fulltext_2plus": 91
  },
@@ -692,6 +749,7 @@
   "pattern": "early warning|\\bEEW\\b|ShakeAlert|G-FAST",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 34
  },
@@ -704,6 +762,7 @@
   "pattern": "overpressur\\w*|pore[- ]?(?:fluid )?pressure|fluid (?:migration|flow|expulsion|transport)|dewatering",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 55,
   "papers_fulltext_2plus": 77
  },
@@ -716,6 +775,7 @@
   "pattern": "accretionary (?:prism|wedge|complex)|protothrust\\w*|deformation front|d[ée]collement|frontal thrust",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 53,
   "papers_fulltext_2plus": 67
  },
@@ -725,11 +785,12 @@
   "kind": "concept",
   "group": "subduction",
   "definition": "Earthquakes on and near the offshore plate boundary.",
-  "pattern": "plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab",
+  "pattern": "plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab|interplate (?:earthquakes|seismicity)|megathrust (?:earthquakes|seismicity)|earthquakes? (?:off(?:shore)?|beneath the (?:continental )?(?:shelf|slope|margin))|seismicity (?:offshore|on the plate (?:boundary|interface))",
   "ignore_case": true,
   "parent": null,
-  "papers_abstract": 4,
-  "papers_fulltext_2plus": 20
+  "background": false,
+  "papers_abstract": 16,
+  "papers_fulltext_2plus": 57
  },
  {
   "id": "subducted-seamounts",
@@ -740,6 +801,7 @@
   "pattern": "subducted seamounts?|seamount subduction",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 15
  },
@@ -752,6 +814,7 @@
   "pattern": "shallow (?:slow[- ]slip|SSEs?|aseismic slip)|(?:near[- ]trench|updip) slow[- ]slip|slow[- ]slip (?:near|at|on) (?:the trench|protothrusts?)|slow slip (?:event )?on protothrusts?",
   "ignore_case": true,
   "parent": "slow-slip",
+  "background": false,
   "papers_abstract": 6,
   "papers_fulltext_2plus": 13
  },
@@ -764,6 +827,7 @@
   "pattern": "segmentation|segment boundar\\w*|along[- ]strike (?:variation|segment)\\w*|\\bsegmented\\b",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 40
  },
@@ -776,6 +840,7 @@
   "pattern": "\\bfault(?:s|ing|ed)?\\b|thrust faults?|normal faults?|strike[- ]slip",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 96,
   "papers_fulltext_2plus": 163
  },
@@ -788,6 +853,7 @@
   "pattern": "(?:strike[- ]slip|left[- ]lateral|wrench) faults?|\\bWecoma\\b|Daisy Bank|Alvin Canyon|Heceta|Coquille|Thompson Ridge|Nitinat|Kalaloch|Grays Canyon|Willapa",
   "ignore_case": true,
   "parent": "faulting",
+  "background": false,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 41
  },
@@ -800,6 +866,7 @@
   "pattern": "Alvin Canyon",
   "ignore_case": true,
   "parent": "cascadia-strike-slip-faults",
+  "background": false,
   "papers_abstract": 3,
   "papers_fulltext_2plus": 6
  },
@@ -812,6 +879,7 @@
   "pattern": "Daisy Bank",
   "ignore_case": true,
   "parent": "cascadia-strike-slip-faults",
+  "background": false,
   "papers_abstract": 0,
   "papers_fulltext_2plus": 4
  },
@@ -824,6 +892,7 @@
   "pattern": "Blanco (?:Transform|Fracture Zone|Ridge|fault)",
   "ignore_case": true,
   "parent": "faulting",
+  "background": false,
   "papers_abstract": 4,
   "papers_fulltext_2plus": 8
  },
@@ -836,6 +905,7 @@
   "pattern": "Mendocino (?:Triple Junction|triple junction|Fracture Zone|fracture zone|transform)|\\bMTJ\\b",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 8
  },
@@ -848,6 +918,7 @@
   "pattern": "eruptions?|erupted|eruptive",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 173,
   "papers_fulltext_2plus": 110
  },
@@ -860,6 +931,7 @@
   "pattern": "1998 (?:eruption|lava|event|swarm|episode)|(?:eruption|event|swarm) (?:of|in) (?:January |January-February )?1998|January\\W+February 1998",
   "ignore_case": true,
   "parent": "eruptions",
+  "background": false,
   "papers_abstract": 18,
   "papers_fulltext_2plus": 19
  },
@@ -872,6 +944,7 @@
   "pattern": "2011 (?:eruption|lava|event)|(?:eruption|event) (?:of|in) (?:April )?2011",
   "ignore_case": true,
   "parent": "eruptions",
+  "background": false,
   "papers_abstract": 12,
   "papers_fulltext_2plus": 22
  },
@@ -884,6 +957,7 @@
   "pattern": "2015 (?:eruption|lava|event|diking)|(?:eruption|event) (?:of|in) (?:April )?2015",
   "ignore_case": true,
   "parent": "eruptions",
+  "background": false,
   "papers_abstract": 37,
   "papers_fulltext_2plus": 41
  },
@@ -896,6 +970,7 @@
   "pattern": "CoAxial|1993 (?:eruption|event|dike|diking|seismic)",
   "ignore_case": true,
   "parent": "eruptions",
+  "background": false,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 13
  },
@@ -908,6 +983,7 @@
   "pattern": "magma (?:reservoir|chamber|plumbing|storage|supply|body|lens)|melt (?:lens|sill|reservoir|fraction)|\\bAMC\\b|magma supply",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 48,
   "papers_fulltext_2plus": 64
  },
@@ -920,6 +996,7 @@
   "pattern": "stacked (?:melt )?(?:sills?|lenses)|multiple (?:melt )?(?:sills|lenses)|sill complex|melt lenses",
   "ignore_case": true,
   "parent": "magma-reservoir",
+  "background": false,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 8
  },
@@ -932,6 +1009,7 @@
   "pattern": "inflation|deflation|re-?inflat\\w*|uplift rate",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 40,
   "papers_fulltext_2plus": 53
  },
@@ -944,6 +1022,7 @@
   "pattern": "dikes?|dykes?|diking|dyking|rifting|rift zones?|spreading event",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 62,
   "papers_fulltext_2plus": 76
  },
@@ -956,6 +1035,7 @@
   "pattern": "ring[- ]faults?|caldera faults?|caldera collapse|caldera formation",
   "ignore_case": true,
   "parent": "faulting",
+  "background": false,
   "papers_abstract": 21,
   "papers_fulltext_2plus": 28
  },
@@ -968,6 +1048,7 @@
   "pattern": "outward[- ]dipping|buried (?:ring )?faults?|ring[- ]fault system",
   "ignore_case": true,
   "parent": "ring-faults",
+  "background": false,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 16
  },
@@ -980,6 +1061,7 @@
   "pattern": "lava flows?|pillow|lobate|sheet flows?|pyroclastic|volcaniclastic|tephra|ash deposit",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 58,
   "papers_fulltext_2plus": 58
  },
@@ -989,11 +1071,12 @@
   "kind": "concept",
   "group": "volcanic",
   "definition": "Earthquake swarms and microseismicity tied to volcanic activity.",
-  "pattern": "microearthquakes?|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic",
+  "pattern": "microearthquakes?|micro-?seismicity|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic|caldera (?:seismicity|earthquakes)|seismicity (?:rates?|beneath|within|at Axial|of the caldera)",
   "ignore_case": true,
   "parent": null,
-  "papers_abstract": 18,
-  "papers_fulltext_2plus": 34
+  "background": false,
+  "papers_abstract": 25,
+  "papers_fulltext_2plus": 54
  },
  {
   "id": "hotspot-volcanism",
@@ -1004,6 +1087,7 @@
   "pattern": "\\bCobb\\b|hot ?spot|plume[- ]ridge|intraplate volcan\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 41,
   "papers_fulltext_2plus": 51
  },
@@ -1016,6 +1100,7 @@
   "pattern": "porosit\\w*|permeabilit\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 37,
   "papers_fulltext_2plus": 60
  },
@@ -1028,6 +1113,7 @@
   "pattern": "crustal (?:structure|accretion|thickness)|oceanic crust|upper crust|sheeted dy?ke|layer 2A",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 38,
   "papers_fulltext_2plus": 60
  },
@@ -1040,6 +1126,7 @@
   "pattern": "tidal (?:triggering|modulation|forcing|loading|stress)|\\btides?\\b",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 88
  },
@@ -1052,6 +1139,7 @@
   "pattern": "hydrothermal (?:vent\\w*|plumes?|discharge|activity|flux|circulation)|black smokers?|event plumes?|megaplumes?",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 146,
   "papers_fulltext_2plus": 92
  },
@@ -1064,6 +1152,7 @@
   "pattern": "diffuse (?:flow|venting|vents?|fluids?)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 20,
   "papers_fulltext_2plus": 32
  },
@@ -1076,6 +1165,7 @@
   "pattern": "vent fluid (?:chemistry|composition)|phase separation|chlorinity|fluid composition",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 17,
   "papers_fulltext_2plus": 19
  },
@@ -1088,6 +1178,7 @@
   "pattern": "chimneys?|sulfide (?:deposits?|spire|minerals?)|anhydrite|massive sulfide",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 26,
   "papers_fulltext_2plus": 31
  },
@@ -1100,6 +1191,7 @@
   "pattern": "subseafloor|sub-seafloor|deep biosphere|microbial communit\\w*|thermophil\\w*|hyperthermophil\\w*|methanogen\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 83,
   "papers_fulltext_2plus": 63
  },
@@ -1112,6 +1204,7 @@
   "pattern": "tubeworms?|vent (?:fauna|communit\\w*|ecosystems?|animals?)|Ridgeia|polychaetes?|food webs?|chemosynthe\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 56,
   "papers_fulltext_2plus": 59
  },
@@ -1124,6 +1217,7 @@
   "pattern": "gas hydrates?|methane hydrates?|hydrate stability|\\bBSRs?\\b|bottom[- ]simulating reflect\\w*|free gas",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 156,
   "papers_fulltext_2plus": 53
  },
@@ -1136,6 +1230,7 @@
   "pattern": "methane (?:seep\\w*|bubbles?|emissions?|release|venting|flux\\w*)|cold seeps?|bubble plumes?|gas (?:seepage|venting|emissions?|flares?)|ebullition",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 82,
   "papers_fulltext_2plus": 59
  },
@@ -1148,6 +1243,7 @@
   "pattern": "anaerobic oxidation of methane|\\bAOM\\b|\\bANME\\w*|methanotroph\\w*",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 36,
   "papers_fulltext_2plus": 23
  },
@@ -1160,6 +1256,7 @@
   "pattern": "authigenic carbonates?|seep carbonates?|chemoherms?|clathrites?",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 19,
   "papers_fulltext_2plus": 13
  },
@@ -1172,6 +1269,7 @@
   "pattern": "Beggiatoa|Calyptogena|bacterial mats?|clam fields?|seep (?:fauna|communit\\w*|ecosystems?|habitats?)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 32
  },
@@ -1184,6 +1282,7 @@
   "pattern": "upwelling|downwelling",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 32,
   "papers_fulltext_2plus": 62
  },
@@ -1196,6 +1295,7 @@
   "pattern": "hypoxi\\w*|deoxygenation|low[- ]oxygen|oxygen minimum|dissolved oxygen",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 21,
   "papers_fulltext_2plus": 45
  },
@@ -1208,6 +1308,7 @@
   "pattern": "acidification|\\bpCO2\\b|carbonate (?:chemistry|system|saturation)|aragonite",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 15,
   "papers_fulltext_2plus": 19
  },
@@ -1220,6 +1321,7 @@
   "pattern": "marine heat ?waves?|\\bBlob\\b|El Ni[ñn]o|warm anomal\\w*",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 10,
   "papers_fulltext_2plus": 22
  },
@@ -1232,6 +1334,7 @@
   "pattern": "Columbia River|river plumes?|freshwater (?:input|discharge|plume)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 9,
   "papers_fulltext_2plus": 23
  },
@@ -1244,6 +1347,7 @@
   "pattern": "internal (?:waves?|tides?|bores?)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 6,
   "papers_fulltext_2plus": 16
  },
@@ -1256,6 +1360,7 @@
   "pattern": "undercurrent|along[- ]slope (?:flow|current)|circulation|boundary currents?|California Current",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 56,
   "papers_fulltext_2plus": 105
  },
@@ -1268,6 +1373,7 @@
   "pattern": "phytoplankton|chlorophyll|primary produc\\w*|particulate organic|algal blooms?|harmful algal|domoic",
   "ignore_case": true,
   "parent": null,
+  "background": true,
   "papers_abstract": 25,
   "papers_fulltext_2plus": 62
  },
@@ -1280,6 +1386,7 @@
   "pattern": "zooplankton|diel vertical migration|\\bDVM\\b|krill|fish(?:es)?\\b|nekton",
   "ignore_case": false,
   "parent": null,
+  "background": false,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 49
  },
@@ -1292,6 +1399,7 @@
   "pattern": "benthic (?:boundary layer|flux\\w*|respiration|oxygen)|bottom boundary layer|sediment oxygen|seafloor flux",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 8,
   "papers_fulltext_2plus": 16
  },
@@ -1304,6 +1412,7 @@
   "pattern": "whales?|marine mammals?|orcas?|dolphins?|cetacean\\w*",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 38,
   "papers_fulltext_2plus": 43
  },
@@ -1316,6 +1425,7 @@
   "pattern": "ship(?:ping)? noise|vessel noise|anthropogenic (?:noise|sound)|underwater radiated noise|container ship",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 16
  },
@@ -1328,6 +1438,7 @@
   "pattern": "wind[- ](?:dependent|driven|generated) (?:noise|sound)|rain(?:fall)? noise|underwater rainfall|storms?|microseisms?|ocean waves|\\bhum\\b",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 22,
   "papers_fulltext_2plus": 86
  },
@@ -1340,6 +1451,7 @@
   "pattern": "ocean (?:acoustic )?thermometry|seismic ocean thermometry|travel[- ]time (?:changes|fluctuations)",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 2,
   "papers_fulltext_2plus": 3
  },
@@ -1352,6 +1464,7 @@
   "pattern": "cabled (?:observator\\w*|array|network)|seafloor observator\\w*|\\bNEPTUNE\\b|Regional Cabled Array|\\bOOI\\b|Ocean Observatories Initiative",
   "ignore_case": false,
   "parent": null,
+  "background": true,
   "papers_abstract": 154,
   "papers_fulltext_2plus": 181
  },
@@ -1364,6 +1477,7 @@
   "pattern": "(?:gauge|sensor|pressure|quartz) drift|drift rates?|long[- ]term drift|exponential drift|drift (?:correction|removal)|drifts? (?:of|in) (?:the )?(?:pressure )?gauges?",
   "ignore_case": true,
   "parent": null,
+  "background": false,
   "papers_abstract": 14,
   "papers_fulltext_2plus": 20
  }

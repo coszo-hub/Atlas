@@ -1,0 +1,1010 @@
+[
+ {
+  "id": "METHOD-ambient-noise-interferometry",
+  "kind": "method",
+  "name": "Ambient noise interferometry",
+  "pattern": "ambient (?:seismic )?noise (?:cross[- ]?)?correlation|noise (?:cross[- ]?)?correlation functions?|(?:ambient |seismic |passive |coda[- ]wave )?noise interferometry|seismic interferometry|coda[- ]wave interferometry|\\bNCCFs?\\b|\\bdv/v\\b|relative (?:seismic )?velocity (?:changes?|variations?)|seismic velocity (?:changes?|variations?)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-earthquake-location",
+  "kind": "method",
+  "name": "Earthquake location and relocation",
+  "pattern": "earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\\bhypoDD\\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)|(?:located|relocated) (?:\\S+ ){0,3}(?:earthquakes|events|microearthquakes)|\\brelocations?\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-earthquake-detection",
+  "kind": "method",
+  "name": "Earthquake detection and cataloging",
+  "pattern": "earthquake (?:detection|catalog(?:ue)?s?)|\\bSTA/LTA\\b|phase pick(?:ing|er)|PhaseNet|EQTransformer|automat(?:ed|ic) (?:detection|catalog)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-template-matching",
+  "kind": "method",
+  "name": "Template matching (matched filter)",
+  "pattern": "template[- ]matching|matched[- ]filter",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-seismic-tomography",
+  "kind": "method",
+  "name": "Seismic tomography and waveform inversion",
+  "pattern": "tomograph\\w*|full[- ]waveform inversion|\\bFWI\\b|travel[- ]?time inversion",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-seismic-reflection",
+  "kind": "method",
+  "name": "Seismic reflection imaging",
+  "pattern": "seismic reflection|multichannel seismic|\\bMCS\\b|3-?D seismic|reflection (?:profil|imag|data)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-focal-mechanisms",
+  "kind": "method",
+  "name": "Focal mechanisms and moment tensors",
+  "pattern": "focal mechanisms?|moment tensors?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-source-parameters",
+  "kind": "method",
+  "name": "Earthquake source parameters",
+  "pattern": "stress drops?|corner frequenc|source spectr",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-b-value",
+  "kind": "method",
+  "name": "b-value / frequency-magnitude analysis",
+  "pattern": "\\bb[- ]values?\\b|Gutenberg[- ]Richter|frequency[- ]magnitude",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-tidal-triggering",
+  "kind": "method",
+  "name": "Tidal triggering and modulation analysis",
+  "pattern": "tidal (?:triggering|modulation|stress(?:es)?|loading)|tidally (?:triggered|modulated)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-seafloor-compliance",
+  "kind": "method",
+  "name": "Seafloor compliance",
+  "pattern": "seafloor compliance|compliance (?:function|measurement|method)|Rayleigh[- ]wave admittance|\\badmittance\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-surface-waves",
+  "kind": "method",
+  "name": "Surface-wave dispersion",
+  "pattern": "surface[- ]wave|Rayleigh[- ]wave|dispersion curves?|phase[- ]velocit",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-tremor-detection",
+  "kind": "method",
+  "name": "Tremor detection and location",
+  "pattern": "tremor (?:detection|location|catalog)|envelope cross[- ]correlation|detect\\w* (?:tectonic )?tremor",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-noise-removal",
+  "kind": "method",
+  "name": "Seismic noise characterization and removal",
+  "pattern": "tilt noise|compliance noise|noise removal|noise reduction|transfer function|current[- ](?:induced|generated) noise|noise sources?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-seafloor-pressure-geodesy",
+  "kind": "method",
+  "name": "Seafloor pressure geodesy",
+  "pattern": "seafloor geodesy|(?:bottom|seafloor) pressure (?:record|measurement|data|time series|observation)s?|vertical (?:deformation|displacement)|pressure[- ]based geodesy",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-pressure-calibration",
+  "kind": "method",
+  "name": "Pressure-gauge self-calibration and drift correction",
+  "pattern": "self[- ]calibrat\\w*|drift[- ]correct\\w*|\\bA-0-A\\b|deadweight|piston gauge|gauge drift",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-acoustic-ranging",
+  "kind": "method",
+  "name": "Acoustic ranging (horizontal geodesy)",
+  "pattern": "acoustic (?:ranging|extensometer)s?|direct[- ]path (?:acoustic )?ranging|horizontal (?:geodesy|extension|deformation)|baseline (?:length|change)s?|GNSS-A",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-gnss-geodesy",
+  "kind": "method",
+  "name": "GNSS/GPS geodesy and leveling",
+  "pattern": "\\bGNSS\\b|\\bGPS\\b|leveling|levelling",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-deformation-modeling",
+  "kind": "method",
+  "name": "Deformation source modeling",
+  "pattern": "\\bMogi\\b|deformation (?:source )?model\\w*|point source|finite[- ]element|dike (?:intrusion )?model\\w*|sill model\\w*|analytical model\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-eruption-forecasting",
+  "kind": "method",
+  "name": "Eruption forecasting",
+  "pattern": "eruption forecast\\w*|forecast\\w* (?:the next |an |future )?eruption|inflation[- ]predictable",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-passive-acoustics",
+  "kind": "method",
+  "name": "Passive acoustic monitoring",
+  "pattern": "passive acoustic|hydrophone (?:data|recordings?|array)|acoustic monitoring",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-call-detection",
+  "kind": "method",
+  "name": "Animal call detection and classification",
+  "pattern": "(?:whale|mammal|orca) (?:call|vocalization|detection|click)s?|call (?:detection|classification|localization)|vocalizations?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-sound-levels",
+  "kind": "method",
+  "name": "Sound levels and soundscapes",
+  "pattern": "sound (?:pressure )?levels?|noise levels?|power spectral densit\\w*|\\bPSDs?\\b|soundscapes?|ambient sound",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-hydroacoustic-tphases",
+  "kind": "method",
+  "name": "Hydroacoustic T-phase analysis",
+  "pattern": "T[- ]phases?|T[- ]waves?|hydroacoustic\\w*|\\bSOSUS\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-sound-propagation",
+  "kind": "method",
+  "name": "Sound propagation and sound speed",
+  "pattern": "sound[- ]speed|acoustic propagation|transmission loss|sound channel|acoustic duct|propagation loss",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-fiber-sensing",
+  "kind": "method",
+  "name": "Fiber-optic sensing",
+  "pattern": "distributed acoustic sensing|\\bDAS\\b|distributed temperature sensing|\\bDTS\\b|fib(?:er|re)[- ]optic(?:al)? (?:sensing|strain\\w*)|optical[- ]fib(?:er|re) (?:sensing|strain\\w*)|\\bSMART cables?\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-das",
+  "kind": "method",
+  "name": "Distributed acoustic sensing (DAS)",
+  "pattern": "distributed acoustic sensing|\\bDAS\\b",
+  "flags": "",
+  "parent": "METHOD-fiber-sensing"
+ },
+ {
+  "id": "METHOD-dts",
+  "kind": "method",
+  "name": "Distributed temperature sensing (DTS)",
+  "pattern": "distributed temperature sensing|\\bDTS\\b",
+  "flags": "",
+  "parent": "METHOD-fiber-sensing"
+ },
+ {
+  "id": "METHOD-fiber-strain",
+  "kind": "method",
+  "name": "Optical fiber strain (strainmeters)",
+  "pattern": "optical[- ]fib(?:er|re) strain\\w*|fib(?:er|re)[- ]optic(?:al)? strainmeters?|interferometric strainmeters?|laser strainmeters?|seafloor strainmeters?|strainmeters?",
+  "flags": "",
+  "parent": "METHOD-fiber-sensing"
+ },
+ {
+  "id": "METHOD-sonar-imaging",
+  "kind": "method",
+  "name": "Sonar imaging of plumes and bubbles",
+  "pattern": "\\bCOVIS\\b|multibeam sonar|imaging sonar|rotary sonar|acoustic backscatter|water[- ]column (?:imaging|backscatter|acoustic)|acoustic flares?|bubble plume (?:imaging|detection)",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-echosounder",
+  "kind": "method",
+  "name": "Echosounder bioacoustics",
+  "pattern": "echo ?sounders?|\\bEK-?60\\b|bio-?acoustic|acoustic scatter(?:ers|ing)|\\bZPLSC\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-profiling",
+  "kind": "method",
+  "name": "Water-column profiling (CTD, profilers, gliders)",
+  "pattern": "\\bCTDs?\\b|shallow profiler|deep profiler|profiling (?:mooring|float|platform)|\\bgliders?\\b|vertical profiles?",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-current-measurement",
+  "kind": "method",
+  "name": "Current measurement (ADCP, current meters)",
+  "pattern": "\\bADCPs?\\b|acoustic Doppler|current meters?|velocimeters?",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-eddy-covariance",
+  "kind": "method",
+  "name": "Eddy covariance (benthic flux)",
+  "pattern": "eddy (?:correlation|covariance)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-ocean-modeling",
+  "kind": "method",
+  "name": "Numerical ocean modeling",
+  "pattern": "\\bROMS\\b|circulation model|ocean model\\w*|regional model|particle tracking|Lagrangian",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-data-assimilation",
+  "kind": "method",
+  "name": "Data assimilation",
+  "pattern": "data assimilation|Kalman|optimal interpolation",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-remote-sensing",
+  "kind": "method",
+  "name": "Satellite remote sensing",
+  "pattern": "satellite|remote sensing|altimetr",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-time-series-analysis",
+  "kind": "method",
+  "name": "Time-series and spectral analysis",
+  "pattern": "time[- ]series analys\\w*|spectral analys\\w*|wavelet|harmonic analys\\w*|tidal analys\\w*|cross[- ]spectr\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-fluid-geochemistry",
+  "kind": "method",
+  "name": "Fluid and porewater geochemistry",
+  "pattern": "vent fluids?|fluid sampl\\w*|pore ?waters?|interstitial waters?|fluid chemistry|geochemi\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-isotopes",
+  "kind": "method",
+  "name": "Stable and radiogenic isotopes",
+  "pattern": "isotop\\w*|δ13C|δ18O|δD\\b|radiocarbon|\\bU/Th\\b|129I|3He",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-genomics",
+  "kind": "method",
+  "name": "Microbial genomics and sequencing",
+  "pattern": "metagenom\\w*|metatranscriptom\\w*|metaproteom\\w*|16S rRNA|genome sequenc\\w*|amplicon|sequencing",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-cultivation",
+  "kind": "method",
+  "name": "Microbial isolation and cultivation",
+  "pattern": "isolated (?:from|strain)|cultivat\\w*|enrichment cultures?|pure cultures?|strain [A-Z]\\w*\\d|sp\\. nov|gen\\. nov",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-incubation-experiments",
+  "kind": "method",
+  "name": "Incubation experiments and isotope probing",
+  "pattern": "incubations?|stable isotope probing|\\bSIP\\b|rate measurements?",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-imagery-analysis",
+  "kind": "method",
+  "name": "Seafloor imagery and video analysis",
+  "pattern": "\\bvideo\\b|imagery|image analys\\w*|photo(?:graph\\w*|mosaic\\w*)|time[- ]lapse|still camera|HD camera|CamHD",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-machine-learning",
+  "kind": "method",
+  "name": "Machine learning",
+  "pattern": "machine learning|deep learning|neural networks?|random forest|convolutional|autoencoder|unsupervised|transformer model",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-seafloor-mapping",
+  "kind": "method",
+  "name": "Seafloor mapping and repeat bathymetry",
+  "pattern": "bathymetr\\w*|multibeam (?:bathymetry|survey|map\\w*)|\\bAUV\\b|\\bROV\\b|repeat (?:survey|mapping)|high[- ]resolution (?:map|mapping)|side[- ]scan",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-drilling-logging",
+  "kind": "method",
+  "name": "Scientific drilling, coring and logging",
+  "pattern": "\\bODP\\b|\\bIODP\\b|drilling|logging[- ]while[- ]drilling|\\bLWD\\b|piston core\\w*|downhole|borehole",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-em-surveys",
+  "kind": "method",
+  "name": "Electromagnetic and magnetotelluric surveys",
+  "pattern": "electromagnetic|\\bCSEM\\b|magnetotelluric",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-potential-fields",
+  "kind": "method",
+  "name": "Gravity and magnetic surveys",
+  "pattern": "gravity (?:survey|measurement|anomal|data)\\w*|magnetic (?:anomal|survey|structure|data)\\w*|magnetization",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "METHOD-petrology",
+  "kind": "method",
+  "name": "Petrology and lava geochemistry",
+  "pattern": "petrolog\\w*|melt inclusions?|lava (?:geochemistry|composition|chemistry)|basalt (?:glass|geochemistry)|\\bMORB\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "METHOD-paleoseismology",
+  "kind": "method",
+  "name": "Turbidite paleoseismology",
+  "pattern": "turbidite\\w*|paleoseism\\w*|paleo-?earthquake",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-megathrust-locking",
+  "kind": "concept",
+  "name": "Megathrust locking and coupling",
+  "pattern": "locking|locked|coupling|strain accumulation|interseismic",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-slow-slip",
+  "kind": "concept",
+  "name": "Slow slip events",
+  "pattern": "slow[- ]slip|\\bSSEs?\\b|aseismic slip|slip transients?",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-ets",
+  "kind": "concept",
+  "name": "Episodic tremor and slip",
+  "pattern": "episodic tremor|\\bETS\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-tectonic-tremor",
+  "kind": "concept",
+  "name": "Tectonic tremor and low-frequency earthquakes",
+  "pattern": "tectonic tremor|non-?volcanic tremor|low[- ]frequency earthquakes?|\\bLFEs?\\b|\\bVLFEs?\\b|very low[- ]frequency earthquakes?",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-great-earthquakes",
+  "kind": "concept",
+  "name": "Great megathrust earthquakes",
+  "pattern": "great (?:megathrust )?earthquakes?|megathrust (?:earthquakes?|ruptures?)|1700 (?:Cascadia )?earthquake|recurrence",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-tsunami",
+  "kind": "concept",
+  "name": "Tsunamis",
+  "pattern": "tsunami\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-early-warning",
+  "kind": "concept",
+  "name": "Earthquake and tsunami early warning",
+  "pattern": "early warning|\\bEEW\\b|ShakeAlert|G-FAST",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-subduction-fluids",
+  "kind": "concept",
+  "name": "Subduction zone fluids and overpressure",
+  "pattern": "overpressur\\w*|pore[- ]?(?:fluid )?pressure|fluid (?:migration|flow|expulsion|transport)|dewatering",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-accretionary-prism",
+  "kind": "concept",
+  "name": "Accretionary prism, protothrusts and the deformation front",
+  "pattern": "accretionary (?:prism|wedge|complex)|protothrust\\w*|deformation front|d[ée]collement|frontal thrust",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-offshore-seismicity",
+  "kind": "concept",
+  "name": "Offshore and plate-boundary seismicity",
+  "pattern": "plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab|interplate (?:earthquakes|seismicity)|megathrust (?:earthquakes|seismicity)|earthquakes? (?:off(?:shore)?|beneath the (?:continental )?(?:shelf|slope|margin))|seismicity (?:offshore|on the plate (?:boundary|interface))",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-subducted-seamounts",
+  "kind": "concept",
+  "name": "Subducted seamounts",
+  "pattern": "subducted seamounts?|seamount subduction",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-shallow-slow-slip",
+  "kind": "concept",
+  "name": "Shallow slow slip",
+  "pattern": "shallow (?:slow[- ]slip|SSEs?|aseismic slip)|(?:near[- ]trench|updip) slow[- ]slip|slow[- ]slip (?:near|at|on) (?:the trench|protothrusts?)|slow slip (?:event )?on protothrusts?",
+  "flags": "i",
+  "parent": "CONCEPT-slow-slip"
+ },
+ {
+  "id": "CONCEPT-segmentation",
+  "kind": "concept",
+  "name": "Subduction zone segmentation",
+  "pattern": "segmentation|segment boundar\\w*|along[- ]strike (?:variation|segment)\\w*|\\bsegmented\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-faulting",
+  "kind": "concept",
+  "name": "Faulting",
+  "pattern": "\\bfault(?:s|ing|ed)?\\b|thrust faults?|normal faults?|strike[- ]slip",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-cascadia-strike-slip-faults",
+  "kind": "concept",
+  "name": "Cascadia strike-slip faults",
+  "pattern": "(?:strike[- ]slip|left[- ]lateral|wrench) faults?|\\bWecoma\\b|Daisy Bank|Alvin Canyon|Heceta|Coquille|Thompson Ridge|Nitinat|Kalaloch|Grays Canyon|Willapa",
+  "flags": "i",
+  "parent": "CONCEPT-faulting"
+ },
+ {
+  "id": "CONCEPT-alvin-canyon-fault",
+  "kind": "concept",
+  "name": "Alvin Canyon Fault",
+  "pattern": "Alvin Canyon",
+  "flags": "i",
+  "parent": "CONCEPT-cascadia-strike-slip-faults"
+ },
+ {
+  "id": "CONCEPT-daisy-bank-fault",
+  "kind": "concept",
+  "name": "Daisy Bank Fault",
+  "pattern": "Daisy Bank",
+  "flags": "i",
+  "parent": "CONCEPT-cascadia-strike-slip-faults"
+ },
+ {
+  "id": "CONCEPT-blanco-transform",
+  "kind": "concept",
+  "name": "Blanco Transform Fault",
+  "pattern": "Blanco (?:Transform|Fracture Zone|Ridge|fault)",
+  "flags": "i",
+  "parent": "CONCEPT-faulting"
+ },
+ {
+  "id": "CONCEPT-mendocino-triple-junction",
+  "kind": "concept",
+  "name": "Mendocino Triple Junction",
+  "pattern": "Mendocino (?:Triple Junction|triple junction|Fracture Zone|fracture zone|transform)|\\bMTJ\\b",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-eruptions",
+  "kind": "concept",
+  "name": "Submarine eruptions",
+  "pattern": "eruptions?|erupted|eruptive",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-eruption-axial-1998",
+  "kind": "concept",
+  "name": "Axial Seamount 1998 eruption",
+  "pattern": "1998 (?:eruption|lava|event|swarm|episode)|(?:eruption|event|swarm) (?:of|in) (?:January |January-February )?1998|January\\W+February 1998",
+  "flags": "i",
+  "parent": "CONCEPT-eruptions"
+ },
+ {
+  "id": "CONCEPT-eruption-axial-2011",
+  "kind": "concept",
+  "name": "Axial Seamount 2011 eruption",
+  "pattern": "2011 (?:eruption|lava|event)|(?:eruption|event) (?:of|in) (?:April )?2011",
+  "flags": "i",
+  "parent": "CONCEPT-eruptions"
+ },
+ {
+  "id": "CONCEPT-eruption-axial-2015",
+  "kind": "concept",
+  "name": "Axial Seamount 2015 eruption",
+  "pattern": "2015 (?:eruption|lava|event|diking)|(?:eruption|event) (?:of|in) (?:April )?2015",
+  "flags": "i",
+  "parent": "CONCEPT-eruptions"
+ },
+ {
+  "id": "CONCEPT-eruption-coaxial-1993",
+  "kind": "concept",
+  "name": "CoAxial segment 1993 dike intrusion",
+  "pattern": "CoAxial|1993 (?:eruption|event|dike|diking|seismic)",
+  "flags": "i",
+  "parent": "CONCEPT-eruptions"
+ },
+ {
+  "id": "CONCEPT-magma-reservoir",
+  "kind": "concept",
+  "name": "Magma reservoirs and plumbing",
+  "pattern": "magma (?:reservoir|chamber|plumbing|storage|supply|body|lens)|melt (?:lens|sill|reservoir|fraction)|\\bAMC\\b|magma supply",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-stacked-sills",
+  "kind": "concept",
+  "name": "Stacked sills",
+  "pattern": "stacked (?:melt )?(?:sills?|lenses)|multiple (?:melt )?(?:sills|lenses)|sill complex|melt lenses",
+  "flags": "i",
+  "parent": "CONCEPT-magma-reservoir"
+ },
+ {
+  "id": "CONCEPT-inflation-cycle",
+  "kind": "concept",
+  "name": "Inflation-deflation cycle",
+  "pattern": "inflation|deflation|re-?inflat\\w*|uplift rate",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-dike-intrusion",
+  "kind": "concept",
+  "name": "Dike intrusion and rifting",
+  "pattern": "dikes?|dykes?|diking|dyking|rifting|rift zones?|spreading event",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-ring-faults",
+  "kind": "concept",
+  "name": "Caldera ring faults",
+  "pattern": "ring[- ]faults?|caldera faults?|caldera collapse|caldera formation",
+  "flags": "i",
+  "parent": "CONCEPT-faulting"
+ },
+ {
+  "id": "CONCEPT-outward-dipping-faults",
+  "kind": "concept",
+  "name": "Buried outward-dipping ring faults",
+  "pattern": "outward[- ]dipping|buried (?:ring )?faults?|ring[- ]fault system",
+  "flags": "i",
+  "parent": "CONCEPT-ring-faults"
+ },
+ {
+  "id": "CONCEPT-lava-flows",
+  "kind": "concept",
+  "name": "Lava flows and volcaniclastics",
+  "pattern": "lava flows?|pillow|lobate|sheet flows?|pyroclastic|volcaniclastic|tephra|ash deposit",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-volcanic-seismicity",
+  "kind": "concept",
+  "name": "Volcanic seismicity",
+  "pattern": "microearthquakes?|micro-?seismicity|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic|caldera (?:seismicity|earthquakes)|seismicity (?:rates?|beneath|within|at Axial|of the caldera)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-hotspot-volcanism",
+  "kind": "concept",
+  "name": "Hotspot volcanism (Cobb hotspot)",
+  "pattern": "\\bCobb\\b|hot ?spot|plume[- ]ridge|intraplate volcan\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-porosity",
+  "kind": "concept",
+  "name": "Porosity and permeability",
+  "pattern": "porosit\\w*|permeabilit\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-crustal-structure",
+  "kind": "concept",
+  "name": "Oceanic crustal structure and accretion",
+  "pattern": "crustal (?:structure|accretion|thickness)|oceanic crust|upper crust|sheeted dy?ke|layer 2A",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-tidal-forcing",
+  "kind": "concept",
+  "name": "Tidal forcing of geological processes",
+  "pattern": "tidal (?:triggering|modulation|forcing|loading|stress)|\\btides?\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-hydrothermal-venting",
+  "kind": "concept",
+  "name": "Hydrothermal venting and plumes",
+  "pattern": "hydrothermal (?:vent\\w*|plumes?|discharge|activity|flux|circulation)|black smokers?|event plumes?|megaplumes?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-diffuse-flow",
+  "kind": "concept",
+  "name": "Diffuse flow",
+  "pattern": "diffuse (?:flow|venting|vents?|fluids?)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-vent-chemistry",
+  "kind": "concept",
+  "name": "Vent fluid chemistry and phase separation",
+  "pattern": "vent fluid (?:chemistry|composition)|phase separation|chlorinity|fluid composition",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-sulfide-chimneys",
+  "kind": "concept",
+  "name": "Sulfide chimneys and mineral deposits",
+  "pattern": "chimneys?|sulfide (?:deposits?|spire|minerals?)|anhydrite|massive sulfide",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-subseafloor-biosphere",
+  "kind": "concept",
+  "name": "Subseafloor microbial biosphere",
+  "pattern": "subseafloor|sub-seafloor|deep biosphere|microbial communit\\w*|thermophil\\w*|hyperthermophil\\w*|methanogen\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-vent-ecology",
+  "kind": "concept",
+  "name": "Vent ecosystems and fauna",
+  "pattern": "tubeworms?|vent (?:fauna|communit\\w*|ecosystems?|animals?)|Ridgeia|polychaetes?|food webs?|chemosynthe\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-gas-hydrates",
+  "kind": "concept",
+  "name": "Gas hydrates and free gas",
+  "pattern": "gas hydrates?|methane hydrates?|hydrate stability|\\bBSRs?\\b|bottom[- ]simulating reflect\\w*|free gas",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-methane-seepage",
+  "kind": "concept",
+  "name": "Methane seepage and bubble plumes",
+  "pattern": "methane (?:seep\\w*|bubbles?|emissions?|release|venting|flux\\w*)|cold seeps?|bubble plumes?|gas (?:seepage|venting|emissions?|flares?)|ebullition",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-aom",
+  "kind": "concept",
+  "name": "Anaerobic oxidation of methane",
+  "pattern": "anaerobic oxidation of methane|\\bAOM\\b|\\bANME\\w*|methanotroph\\w*",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-authigenic-carbonates",
+  "kind": "concept",
+  "name": "Authigenic carbonates",
+  "pattern": "authigenic carbonates?|seep carbonates?|chemoherms?|clathrites?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-seep-ecology",
+  "kind": "concept",
+  "name": "Seep ecosystems",
+  "pattern": "Beggiatoa|Calyptogena|bacterial mats?|clam fields?|seep (?:fauna|communit\\w*|ecosystems?|habitats?)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-upwelling",
+  "kind": "concept",
+  "name": "Coastal upwelling and downwelling",
+  "pattern": "upwelling|downwelling",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-hypoxia",
+  "kind": "concept",
+  "name": "Hypoxia and deoxygenation",
+  "pattern": "hypoxi\\w*|deoxygenation|low[- ]oxygen|oxygen minimum|dissolved oxygen",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-acidification",
+  "kind": "concept",
+  "name": "Ocean acidification and carbonate chemistry",
+  "pattern": "acidification|\\bpCO2\\b|carbonate (?:chemistry|system|saturation)|aragonite",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-marine-heatwaves",
+  "kind": "concept",
+  "name": "Marine heatwaves and El Niño",
+  "pattern": "marine heat ?waves?|\\bBlob\\b|El Ni[ñn]o|warm anomal\\w*",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-river-plumes",
+  "kind": "concept",
+  "name": "River plumes and freshwater",
+  "pattern": "Columbia River|river plumes?|freshwater (?:input|discharge|plume)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-internal-waves",
+  "kind": "concept",
+  "name": "Internal waves and tides",
+  "pattern": "internal (?:waves?|tides?|bores?)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-ocean-circulation",
+  "kind": "concept",
+  "name": "Ocean circulation and currents",
+  "pattern": "undercurrent|along[- ]slope (?:flow|current)|circulation|boundary currents?|California Current",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-primary-production",
+  "kind": "concept",
+  "name": "Phytoplankton and primary production",
+  "pattern": "phytoplankton|chlorophyll|primary produc\\w*|particulate organic|algal blooms?|harmful algal|domoic",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-zooplankton-fish",
+  "kind": "concept",
+  "name": "Zooplankton, fish and diel migration",
+  "pattern": "zooplankton|diel vertical migration|\\bDVM\\b|krill|fish(?:es)?\\b|nekton",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-benthic-processes",
+  "kind": "concept",
+  "name": "Benthic boundary layer and seafloor fluxes",
+  "pattern": "benthic (?:boundary layer|flux\\w*|respiration|oxygen)|bottom boundary layer|sediment oxygen|seafloor flux",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-marine-mammals",
+  "kind": "concept",
+  "name": "Marine mammals",
+  "pattern": "whales?|marine mammals?|orcas?|dolphins?|cetacean\\w*",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-anthropogenic-noise",
+  "kind": "concept",
+  "name": "Ship and anthropogenic noise",
+  "pattern": "ship(?:ping)? noise|vessel noise|anthropogenic (?:noise|sound)|underwater radiated noise|container ship",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-weather-noise",
+  "kind": "concept",
+  "name": "Wind, rain and wave noise",
+  "pattern": "wind[- ](?:dependent|driven|generated) (?:noise|sound)|rain(?:fall)? noise|underwater rainfall|storms?|microseisms?|ocean waves|\\bhum\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-ocean-thermometry",
+  "kind": "concept",
+  "name": "Ocean thermometry",
+  "pattern": "ocean (?:acoustic )?thermometry|seismic ocean thermometry|travel[- ]time (?:changes|fluctuations)",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-cabled-observatories",
+  "kind": "concept",
+  "name": "Cabled seafloor observatories",
+  "pattern": "cabled (?:observator\\w*|array|network)|seafloor observator\\w*|\\bNEPTUNE\\b|Regional Cabled Array|\\bOOI\\b|Ocean Observatories Initiative",
+  "flags": "",
+  "parent": null
+ },
+ {
+  "id": "CONCEPT-pressure-drift",
+  "kind": "concept",
+  "name": "Pressure gauge drift",
+  "pattern": "(?:gauge|sensor|pressure|quartz) drift|drift rates?|long[- ]term drift|exponential drift|drift (?:correction|removal)|drifts? (?:of|in) (?:the )?(?:pressure )?gauges?",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "SITE-axial-seamount",
+  "kind": "site",
+  "name": "Axial Seamount",
+  "pattern": "Axial (?:[Ss]eamount|[Vv]olcano|caldera)|\\bAxial\\b",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "SITE-ashes",
+  "kind": "site",
+  "name": "ASHES vent field",
+  "pattern": "\\bASHES\\b|Mushroom vent|Inferno vent",
+  "flags": "i",
+  "parent": "SITE-axial-seamount"
+ },
+ {
+  "id": "SITE-international-district",
+  "kind": "site",
+  "name": "International District vent field",
+  "pattern": "International District",
+  "flags": "i",
+  "parent": "SITE-axial-seamount"
+ },
+ {
+  "id": "SITE-axial-central-caldera",
+  "kind": "site",
+  "name": "Axial Central Caldera",
+  "pattern": "Central Caldera|caldera cent(?:er|re)",
+  "flags": "i",
+  "parent": "SITE-axial-seamount"
+ },
+ {
+  "id": "SITE-axial-eastern-caldera",
+  "kind": "site",
+  "name": "Axial Eastern Caldera",
+  "pattern": "Eastern Caldera",
+  "flags": "i",
+  "parent": "SITE-axial-seamount"
+ },
+ {
+  "id": "SITE-axial-base",
+  "kind": "site",
+  "name": "Axial Base",
+  "pattern": "Axial Base|base of Axial",
+  "flags": "i",
+  "parent": "SITE-axial-seamount"
+ },
+ {
+  "id": "SITE-southern-hydrate-ridge",
+  "kind": "site",
+  "name": "Southern Hydrate Ridge",
+  "pattern": "[Ss]outh(?:ern)? Hydrate Ridge|\\bSHR\\b|[Ss]outhern [Ss]ummit",
+  "flags": "i",
+  "parent": "SITE-hydrate-ridge"
+ },
+ {
+  "id": "SITE-northern-hydrate-ridge",
+  "kind": "site",
+  "name": "Northern Hydrate Ridge",
+  "pattern": "[Nn]orth(?:ern)? Hydrate Ridge|\\bNHR\\b",
+  "flags": "i",
+  "parent": "SITE-hydrate-ridge"
+ },
+ {
+  "id": "SITE-hydrate-ridge",
+  "kind": "site",
+  "name": "Hydrate Ridge",
+  "pattern": "Hydrate Ridge",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "SITE-oregon-slope-base",
+  "kind": "site",
+  "name": "Oregon Slope Base",
+  "pattern": "Slope Base",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "SITE-oregon-shelf",
+  "kind": "site",
+  "name": "Oregon Shelf",
+  "pattern": "Oregon (?:[Ss]helf|inner shelf|mid-?shelf)|central Oregon shelf|Newport (?:[Hh]ydrographic )?[Ll]ine",
+  "flags": "i",
+  "parent": null
+ },
+ {
+  "id": "SITE-oregon-offshore",
+  "kind": "site",
+  "name": "Oregon Offshore",
+  "pattern": "Oregon Offshore",
+  "flags": "i",
+  "parent": null
+ }
+]

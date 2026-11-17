@@ -50,6 +50,18 @@ class FakeRepository:
                  "metadata": {"node_local_id": "RCA-LIT-001", "locator": None, "places": [], "paper_key": "10.1/z",
                               "passages_naming": 4, "terms_named": ["EARTHSCOPE-OO-HYS14"],
                               "link": {"predicate": "NAMES_SENSOR", "match": ["named"], "layers": ["fulltext"]}}}]
+    def paper_links(self, terms, **kwargs):
+        self.calls.append(("paper_links", list(terms), kwargs))
+        return [{"chunk_id": "LINK-2", "collection_id": "literature_links", "collection_label": "literature_links",
+                 "title": "Paper", "text": "Paper (2026) applies the method Ambient noise interferometry", "score": 1.0,
+                 "lexical_score": 0.0, "vector_score": 0.0,
+                 "citations": [{"source_id": "OOI-ZOT-165", "title": "Paper", "url": "https://doi.org/10.1/y"}],
+                 "metadata": {"node_local_id": "OOI-ZOT-165", "locator": None, "places": [], "paper_key": "10.1/y",
+                              "passages_naming": 1, "terms_named": ["METHOD-ambient-noise-interferometry"],
+                              "link": {"predicate": "APPLIES_METHOD", "uses_rca_data": True}}}]
+    def papers_by_author(self, surname, **kwargs):
+        self.calls.append(("papers_by_author", surname, kwargs))
+        return [{"paper_id": "COSZO-REF-015", "title": "Seafloor deformation", "citation": "Chadwick, W. W.", "publication_year": 2012}]
     def chunks_by_id(self, collection_id, chunk_ids):
         self.calls.append(("chunks_by_id", collection_id, list(chunk_ids)))
         return [{"chunk_id": chunk_ids[0], "collection_id": collection_id, "collection_label": collection_id,
@@ -116,6 +128,25 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.repo.calls[-1], ("papers_linked", terms, {"limit": 30}))
         for bad in ({"terms": []}, {"terms": ["AX"]}, {"terms": ["x'); DROP"]}, {"terms": ["HYS14"], "limit": 51}):
             self.assertEqual(self.client.post("/v1/papers-linked", headers=self.headers, json=bad).status_code, 422)
+
+    def test_paper_links_take_terms_or_papers_and_predicates(self):
+        body = {"terms": ["METHOD-ambient-noise-interferometry"], "predicates": ["APPLIES_METHOD"], "rca_only": True, "limit": 50}
+        response = self.client.post("/v1/paper-links", headers=self.headers, json=body)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["hits"][0]["metadata"]["link"]["predicate"], "APPLIES_METHOD")
+        self.assertEqual(self.repo.calls[-1], ("paper_links", body["terms"], {"paper_ids": [], "predicates": ["APPLIES_METHOD"],
+                                                                            "rca_only": True, "limit": 50}))
+        self.assertEqual(self.client.post("/v1/paper-links", headers=self.headers, json={"paper_ids": ["COSZO-REF-015"]}).status_code, 200)
+        for bad in ({}, {"terms": ["x'); DROP"]}, {"terms": ["HYS14"], "predicates": ["DROP"]}, {"terms": ["HYS14"], "limit": 81}):
+            self.assertEqual(self.client.post("/v1/paper-links", headers=self.headers, json=bad).status_code, 422)
+
+    def test_papers_by_author_take_a_surname_and_year(self):
+        response = self.client.post("/v1/papers-by-author", headers=self.headers, json={"surname": "Chadwick", "year": 2012})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["papers"][0]["paper_id"], "COSZO-REF-015")
+        self.assertEqual(self.repo.calls[-1], ("papers_by_author", "Chadwick", {"year": 2012, "limit": 5}))
+        for bad in ({"surname": "x'); DROP"}, {"surname": "C"}, {"surname": "Chadwick", "year": 12}):
+            self.assertEqual(self.client.post("/v1/papers-by-author", headers=self.headers, json=bad).status_code, 422)
 
     def test_chunks_are_fetched_by_id_within_one_collection(self):
         ids = ["ooi_assets_RS03CCAL-MJ03F-05-BOTPTA301", "ooi_assets_depth_deeper_than_2000_m"]

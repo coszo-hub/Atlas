@@ -28,7 +28,7 @@ METHODS = [
      r"ambient (?:seismic )?noise (?:cross[- ]?)?correlation|noise (?:cross[- ]?)?correlation functions?|(?:ambient |seismic |passive |coda[- ]wave )?noise interferometry|seismic interferometry|coda[- ]wave interferometry|\bNCCFs?\b|\bdv/v\b|relative (?:seismic )?velocity (?:changes?|variations?)|seismic velocity (?:changes?|variations?)", I),
     ("earthquake-location", "Earthquake location and relocation", "seismology",
      "Locating and relocating earthquake hypocenters (double-difference, NonLinLoc, HYPO71) from arrival times.",
-     r"earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\bhypoDD\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)", I),
+     r"earthquake (?:locations?|relocations?)|hypocent(?:er|re)s? (?:location|relocation)|double[- ]difference|\bhypoDD\b|NonLinLoc|HYPO71|relocated (?:earthquakes|events|hypocent)|(?:located|relocated) (?:\S+ ){0,3}(?:earthquakes|events|microearthquakes)|\brelocations?\b", I),
     ("earthquake-detection", "Earthquake detection and cataloging", "seismology",
      "Detecting and picking events to build catalogs (STA/LTA, phase pickers, automated catalogs).",
      r"earthquake (?:detection|catalog(?:ue)?s?)|\bSTA/LTA\b|phase pick(?:ing|er)|PhaseNet|EQTransformer|automat(?:ed|ic) (?:detection|catalog)", I),
@@ -55,7 +55,7 @@ METHODS = [
      r"tidal (?:triggering|modulation|stress(?:es)?|loading)|tidally (?:triggered|modulated)", I),
     ("seafloor-compliance", "Seafloor compliance", "seismology",
      "The seafloor's deformation under infragravity-wave pressure, inverted for shear velocity.",
-     r"seafloor compliance|compliance (?:function|measurement|method)", I),
+     r"seafloor compliance|compliance (?:function|measurement|method)|Rayleigh[- ]wave admittance|\badmittance\b", I),
     ("surface-waves", "Surface-wave dispersion", "seismology",
      "Rayleigh/Love wave dispersion and phase velocity for crustal and lithospheric structure.",
      r"surface[- ]wave|Rayleigh[- ]wave|dispersion curves?|phase[- ]velocit", I),
@@ -204,7 +204,7 @@ CONCEPTS = [
     ("accretionary-prism", "Accretionary prism, protothrusts and the deformation front", "subduction", "Structure of the accretionary wedge at the toe of the margin.",
      r"accretionary (?:prism|wedge|complex)|protothrust\w*|deformation front|d[ée]collement|frontal thrust", I),
     ("offshore-seismicity", "Offshore and plate-boundary seismicity", "subduction", "Earthquakes on and near the offshore plate boundary.",
-     r"plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab", I),
+     r"plate[- ]boundary (?:earthquakes|seismicity)|offshore (?:earthquakes|seismicity)|forearc seismicity|intraslab|interplate (?:earthquakes|seismicity)|megathrust (?:earthquakes|seismicity)|earthquakes? (?:off(?:shore)?|beneath the (?:continental )?(?:shelf|slope|margin))|seismicity (?:offshore|on the plate (?:boundary|interface))", I),
     ("subducted-seamounts", "Subducted seamounts", "subduction", "Seamounts on the downgoing plate and their effects.", r"subducted seamounts?|seamount subduction", I),
     ("shallow-slow-slip", "Shallow slow slip", "subduction", "Slow slip on the shallow megathrust or protothrusts, updip of the locked zone.",
      r"shallow (?:slow[- ]slip|SSEs?|aseismic slip)|(?:near[- ]trench|updip) slow[- ]slip|slow[- ]slip (?:near|at|on) (?:the trench|protothrusts?)|slow slip (?:event )?on protothrusts?", I, "slow-slip"),
@@ -248,7 +248,7 @@ CONCEPTS = [
     ("lava-flows", "Lava flows and volcaniclastics", "volcanic", "Lava flow morphology, emplacement and pyroclastic deposits.",
      r"lava flows?|pillow|lobate|sheet flows?|pyroclastic|volcaniclastic|tephra|ash deposit", I),
     ("volcanic-seismicity", "Volcanic seismicity", "volcanic", "Earthquake swarms and microseismicity tied to volcanic activity.",
-     r"microearthquakes?|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic", I),
+     r"microearthquakes?|micro-?seismicity|earthquake swarms?|seismic swarms?|volcanic seismicity|volcano-tectonic|caldera (?:seismicity|earthquakes)|seismicity (?:rates?|beneath|within|at Axial|of the caldera)", I),
     ("hotspot-volcanism", "Hotspot volcanism (Cobb hotspot)", "volcanic", "Hotspot volcanism and the Cobb hotspot's interaction with the ridge at Axial.",
      r"\bCobb\b|hot ?spot|plume[- ]ridge|intraplate volcan\w*", I),
     ("porosity", "Porosity and permeability", "volcanic", "Porosity and permeability of crust and sediments, controlling fluid flow.",
@@ -316,6 +316,15 @@ CONCEPTS = [
 ]
 
 
+# Entries papers often name as their setting rather than their subject (the Cabled Array, the Cobb hotspot, Axial's
+# eruptions and inflation, faults, tides): a paper counts as applying or studying one only when its title names it,
+# its abstract names it twice, or many of its full-text passages do (src/literature_links/build_literature_links.py).
+BACKGROUND = {"cabled-observatories", "hotspot-volcanism", "eruptions", "faulting", "inflation-cycle", "tidal-forcing",
+              "remote-sensing", "surface-waves", "fluid-geochemistry", "dike-intrusion", "magma-reservoir",
+              "ocean-circulation", "accretionary-prism", "megathrust-locking", "great-earthquakes", "tsunami",
+              "seafloor-mapping", "hydrothermal-venting", "porosity", "primary-production"}
+
+
 def corpus():
     """paper id -> (abstract-layer text, full text)."""
     abstract, full = defaultdict(str), defaultdict(list)
@@ -336,10 +345,11 @@ def main() -> int:
     def entry(kind, t):
         i, n, g, d, p, f, *parent = t
         return {"id": i, "name": n, "kind": kind, "group": g, "definition": d, "pattern": p, "ignore_case": bool(f),
-                "parent": parent[0] if parent else None}
+                "parent": parent[0] if parent else None, "background": i in BACKGROUND}
     entries = [entry("method", t) for t in METHODS] + [entry("concept", t) for t in CONCEPTS]
     ids = {e["id"] for e in entries}
     assert all(e["parent"] in ids for e in entries if e["parent"]), "a parent that is not an entry"
+    assert BACKGROUND <= ids, BACKGROUND - ids
     if args.counts:
         abstract, full = corpus()
         for e in entries:

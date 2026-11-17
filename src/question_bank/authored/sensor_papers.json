@@ -125,7 +125,8 @@
    "RCA-LIT-231",
    "COSZO-REF-073",
    "OOI-ZOT-048",
-   "RCA-LIT-073"
+   "RCA-LIT-073",
+   "OOI-ZOT-076"
   ],
   "mentioned": [
    "COSZO-REF-084",
@@ -139,7 +140,8 @@
    "RCA-LIT-231",
    "COSZO-REF-073",
    "OOI-ZOT-160",
-   "OOI-ZOT-048"
+   "OOI-ZOT-048",
+   "OOI-ZOT-076"
   ],
   "mentioned": [
    "COSZO-REF-065"
@@ -150,7 +152,9 @@
    "RCA-LIT-231",
    "COSZO-REF-073",
    "OOI-ZOT-048",
-   "OOI-ZOT-043"
+   "OOI-ZOT-043",
+   "OOI-ZOT-076",
+   "OOI-ZOT-019"
   ],
   "mentioned": [
    "COSZO-REF-065",
@@ -159,7 +163,9 @@
   ]
  },
  "RS03ASHS-MJ03B-09-BOTPTA304": {
-  "used": [],
+  "used": [
+   "RCA-LIT-528"
+  ],
   "mentioned": [
    "COSZO-REF-129",
    "COSZO-REF-065"
@@ -171,9 +177,11 @@
   "note": "no paper in the corpus names or uses it"
  },
  "RS01SUM1-LJ01B-09-PRESTB102": {
-  "used": [],
+  "used": [
+   "COSZO-REF-160"
+  ],
   "mentioned": [],
-  "note": "no paper in the corpus names or uses it"
+  "note": "Marcon et al. (2021) used its 1 Hz tidal pressure (the SBE 54 'tsunami pressure sensor' on the LJ01B junction box)"
  },
  "SCPRAAA301": {
   "used": [
@@ -402,5 +410,6 @@
   "mentioned": [
    "COSZO-REF-089"
   ]
- }
+ },
+ "_adjudicated": "2026-11-17, after the first rule-based links were compared with the gold (train sensors only), each read in the paper: COSZO-REF-160 used the Hydrate Ridge flank PREST (named by its junction box, LJ01B, so the candidate search had missed it); OOI-ZOT-076 (Hefner et al. 2020) models the 2015 eruption from the Central, Eastern and International District BOTPT records; OOI-ZOT-019 (Barkat et al. 2024) used the International District pressure recorder for its vent-temperature and tidal-pressure phase lags. RCA-LIT-528 (Seiple 2025) plots the relative depth between the ASHES bottom pressure recorder and a control BPR, so it used the ASHES BOTPT."
 }

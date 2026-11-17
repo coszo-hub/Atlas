@@ -15,7 +15,7 @@ from .answering import AnsweringError, GeminiAnswerer
 from .config import Settings
 from .embeddings import BGE384Provider, EmbeddingProvider, checked_embedding
 from .models import (AnswerRequest, AnswerResponse, ChunksByIdRequest, ContextRequest, ContextResponse, NeighborsRequest, NeighborsResponse,
-                     PapersLinkedRequest, PapersNamingRequest, PassagesRequest, SearchRequest, SearchResponse, ToolsRequest, ToolsResponse)
+                     PaperLinksRequest, PapersByAuthorRequest, PapersLinkedRequest, PapersNamingRequest, PassagesRequest, SearchRequest, SearchResponse, ToolsRequest, ToolsResponse)
 from .repository import PostgresRepository, Repository
 
 LOGGER = logging.getLogger(__name__)
@@ -105,6 +105,26 @@ def create_app(*, settings: Settings | None = None, repository: Repository | Non
             return {"query": " ".join(body.terms), "hits": repo.papers_linked(body.terms, limit=body.limit)}
         except Exception:
             LOGGER.exception("papers-linked lookup failed")
+            raise HTTPException(503, "paper lookup temporarily unavailable") from None
+
+    @app.post("/v1/paper-links", response_model=SearchResponse)
+    def paper_links(body: PaperLinksRequest, _: None = Depends(authorize)) -> dict[str, Any]:
+        if not body.terms and not body.paper_ids:
+            raise HTTPException(422, "terms or paper_ids required")
+        try:
+            return {"query": " ".join([*body.terms, *body.paper_ids]),
+                    "hits": repo.paper_links(body.terms, paper_ids=body.paper_ids, predicates=body.predicates,
+                                             rca_only=body.rca_only, limit=body.limit)}
+        except Exception:
+            LOGGER.exception("paper-links lookup failed")
+            raise HTTPException(503, "paper lookup temporarily unavailable") from None
+
+    @app.post("/v1/papers-by-author")
+    def papers_by_author(body: PapersByAuthorRequest, _: None = Depends(authorize)) -> dict[str, Any]:
+        try:
+            return {"papers": repo.papers_by_author(body.surname, year=body.year, limit=body.limit)}
+        except Exception:
+            LOGGER.exception("papers-by-author lookup failed")
             raise HTTPException(503, "paper lookup temporarily unavailable") from None
 
     @app.post("/v1/chunks", response_model=SearchResponse)

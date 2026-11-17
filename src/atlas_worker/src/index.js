@@ -9,6 +9,7 @@ import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
 import { watchLive, isWatchQuestion, watchRecords, watchSensorRecords } from "./watch.js";
+import { linkPlan, listRecord, pickPaper, profileRecord } from "./links.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -231,7 +232,7 @@ function selectedEvidenceHits(context, question) {
   let hits = prioritizedHits(context, question, isInstrumentInventoryQuestion(question) ? 16 : answerMode(question) === "compact" ? 8 : 6);
   // Live status checks lead a status question; each DAS experiment's own record leads a question about them all.
   const lead = [...(context.watch || []), ...(context.orientation || []), ...(context.live || []), ...(context.experiments || []), ...(context.access || []), ...(context.assets || []), ...(context.inventory || []),
-    ...(context.papers || [])];
+    ...(context.papers || []), ...(context.links || [])];
   if (lead.length) {
     const ids = new Set(lead.map((hit) => hit.chunk_id));
     hits = [...lead, ...hits.filter((hit) => !ids.has(hit.chunk_id))];
@@ -480,7 +481,7 @@ async function dataAccessRecords(question, env, code = false) {
 // each with the link's evidence passage), then papers the full-text layer finds by its codes (papers_naming) and by its
 // name's meaning, for any the links miss. One passage a paper, links first, 25 papers at most. A failure leaves the
 // question to the main evidence.
-async function papersFor(question, env) {
+async function papersFor(question, env, { withMethods = false } = {}) {
   const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
   try {
     const asked = questionCodes(question);
@@ -509,10 +510,38 @@ async function papersFor(question, env) {
     const papers = [...linked, ...named.map((hit) => withRangeNote(hit, codes)), ...described.filter((hit) => !place || String(hit.text || "").toLowerCase().includes(place))].filter((hit) => {
       const key = paperKey(hit);
       return key && !seen.has(key) && seen.add(key);
-    }).slice(0, 25).map((hit) => ({ ...hit, layer: true }));
+    }).slice(0, 25).map((hit) => hit.collection_id === "literature_links" ? listRecord(hit, { withMethods }) : { ...hit, layer: true });
     return [...records.map(withRouteCitations), ...papers];
   } catch (error) {
     console.error("paper lookup failed", error instanceof Error ? error.message : "unknown");
+    return [];
+  }
+}
+
+// The literature links a plan asks for (linkPlan): a paper's own links (found by its first author and year), the papers
+// applying a method or studying a concept (with RCA data when asked), or the papers about a site, one record a paper.
+async function linkedRecords(plan, env) {
+  const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
+  try {
+    if (plan.kind === "profile") {
+      const found = (await postJson(`${api}/v1/papers-by-author`, { surname: plan.surname, year: plan.year, limit: 5 }, headers)).papers || [];
+      const papers = pickPaper(found, plan.hint);
+      if (!papers.length) return [];
+      const hits = (await postJson(`${api}/v1/paper-links`, { paper_ids: papers.map((p) => p.paper_id), limit: 80 }, headers)).hits || [];
+      return papers.map((paper) => profileRecord(paper, hits)).filter(Boolean);
+    }
+    const terms = plan.terms.map((term) => term.id);
+    const body = plan.kind === "topic"
+      ? { terms, predicates: ["APPLIES_METHOD", "STUDIES_CONCEPT"], rca_only: Boolean(plan.rca), limit: 60 }
+      : { terms, predicates: ["ABOUT_SITE"], limit: 60 };
+    const hits = (await postJson(`${api}/v1/paper-links`, body, headers)).hits || [];
+    const seen = new Set();
+    return hits.filter((hit) => {
+      const key = paperKey(hit) || hit.chunk_id;
+      return !seen.has(key) && seen.add(key);
+    }).map((hit) => listRecord(hit));
+  } catch (error) {
+    console.error("paper links lookup failed", error instanceof Error ? error.message : "unknown");
     return [];
   }
 }
@@ -921,17 +950,27 @@ export default {
       // An overview of the DAS experiments is answered from their records; one paper's pages would crowd them.
       // Papers: an instrument's linked papers, and papers on the method or topic asked about, the topic first when the
       // question asks about more than an instrument.
-      if (asksForPapers(query)) {
+      // The literature links answer what they can (linkPlan): the papers on a method, concept or site, the methods used
+      // on an instrument's data; a paper's own links join the evidence of a question about it.
+      const plan = linkPlan(query, { instrument: Boolean(askedType(query).length || questionCodes(query).length) });
+      if (asksForPapers(query) || (plan && plan.kind !== "profile")) {
         const leads = topicLeads(query);
-        const [byInstrument, byTopic] = await Promise.all([
-          isPaperUsageQuestion(query) && !(leads && !askedType(query).length && !questionCodes(query).length) ? papersFor(query, env) : [],
-          leads ? papersOnTopic(query, env, requestedModel) : [],
+        const sensorMethods = plan?.kind === "sensor_methods";
+        const listed = plan && ["topic", "site"].includes(plan.kind);
+        const [byInstrument, byLinks] = await Promise.all([
+          sensorMethods || (isPaperUsageQuestion(query) && !(leads && !askedType(query).length && !questionCodes(query).length))
+            ? papersFor(query, env, { withMethods: sensorMethods }) : [],
+          listed ? linkedRecords(plan, env) : [],
         ]);
+        // By meaning too, when the links found few papers on the topic (a topic the vocabulary does not have).
+        const byTopic = leads && !sensorMethods && plan?.kind !== "site" && byLinks.length < 5 ? await papersOnTopic(query, env, requestedModel) : [];
         const seen = new Set();
-        context.papers = (leads ? [...byTopic, ...byInstrument] : byInstrument).filter((hit) => {
+        context.papers = [...byLinks, ...(leads ? [...byTopic, ...byInstrument] : [...byInstrument, ...byTopic])].filter((hit) => {
           const key = paperKey(hit) || hit.chunk_id;
           return !seen.has(key) && seen.add(key);
         });
+      } else if (plan?.kind === "profile") {
+        context.links = await linkedRecords(plan, env);
       }
       if (isAssetQuestion(query)) context.assets = await assetRecords(query, env);
       if (isOrientationQuestion(query)) context.orientation = await orientationRecords(query, env);

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Annotated, Any, Optional
+from typing import Annotated, Any, Optional, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -40,6 +40,23 @@ class PapersLinkedRequest(StrictModel):
     """A sensor's identities (station code, designator, inventory ID, instrument-record node) whose linked papers are wanted."""
     terms: list[Annotated[str, Field(pattern=r"^[A-Za-z0-9._-]{3,60}$")]] = Field(min_length=1, max_length=12)
     limit: int = Field(default=30, ge=1, le=50)
+
+
+class PaperLinksRequest(StrictModel):
+    """Papers linked to the terms (a sensor's identities, a METHOD-, CONCEPT- or SITE- id), or the links of the papers
+    given; the predicates asked (USES_SENSOR, MENTIONS_SENSOR, APPLIES_METHOD, STUDIES_CONCEPT, ABOUT_SITE, NAMES_FEATURE)."""
+    terms: list[Annotated[str, Field(pattern=r"^[A-Za-z0-9._-]{2,80}$")]] = Field(default_factory=list, max_length=16)
+    paper_ids: list[Annotated[str, Field(pattern=r"^[A-Za-z0-9._-]{2,80}$")]] = Field(default_factory=list, max_length=12)
+    predicates: list[Literal["USES_SENSOR", "MENTIONS_SENSOR", "APPLIES_METHOD", "STUDIES_CONCEPT", "ABOUT_SITE", "NAMES_FEATURE"]] | None = None
+    rca_only: bool = False
+    limit: int = Field(default=40, ge=1, le=80)
+
+
+class PapersByAuthorRequest(StrictModel):
+    """A first author's surname and the year ("Chadwick et al. (2012)")."""
+    surname: str = Field(pattern=r"^[A-Za-zÀ-ÿĀ-ž'’ -]{2,40}$")
+    year: int | None = Field(default=None, ge=1900, le=2100)
+    limit: int = Field(default=5, ge=1, le=20)
 
 
 class ChunksByIdRequest(StrictModel):
