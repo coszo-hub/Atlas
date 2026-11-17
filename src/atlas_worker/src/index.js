@@ -9,7 +9,7 @@ import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
 import INSTRUMENT_IDS from "./instrument_ids.json" with { type: "json" };
 import RECIPE_IDS from "./recipe_ids.json" with { type: "json" };
 import { watchLive, isWatchQuestion, watchRecords, watchSensorRecords } from "./watch.js";
-import { instrumentAsked, linkPlan, listRecord, pickPaper, profileRecord } from "./links.js";
+import { instrumentAsked, linkAppendix, linkPlan, listRecord, pickPaper, profileRecord, recentPapers } from "./links.js";
 import TASK_RECIPES from "./task_recipes.json" with { type: "json" };
 
 const MAX_QUERY_LENGTH = 1_000;
@@ -519,30 +519,32 @@ async function papersFor(question, env, { withMethods = false } = {}) {
 }
 
 // The literature links a plan asks for (linkPlan): a paper's own links (found by its first author and year), the papers
-// applying a method or studying a concept (with RCA data when asked), or the papers about a site, one record a paper.
+// applying a method or studying a concept (with RCA data when asked), or the papers about a site; a long list keeps
+// its most recent papers (recentPapers). records: one evidence record a paper; raw: the links, for the list after
+// the answer (linkAppendix).
 async function linkedRecords(plan, env) {
   const api = env.ATLAS_API_ORIGIN.replace(/\/$/, ""), headers = { "x-api-key": env.ATLAS_API_KEY };
   try {
     if (plan.kind === "profile") {
       const found = (await postJson(`${api}/v1/papers-by-author`, { surname: plan.surname, year: plan.year, limit: 5 }, headers)).papers || [];
       const papers = pickPaper(found, plan.hint);
-      if (!papers.length) return [];
-      const hits = (await postJson(`${api}/v1/paper-links`, { paper_ids: papers.map((p) => p.paper_id), limit: 80 }, headers)).hits || [];
-      return papers.map((paper) => profileRecord(paper, hits)).filter(Boolean);
+      if (!papers.length) return { records: [], raw: [] };
+      const hits = (await postJson(`${api}/v1/paper-links`, { paper_ids: papers.map((p) => p.paper_id), limit: 120 }, headers)).hits || [];
+      return { records: papers.map((paper) => profileRecord(paper, hits)).filter(Boolean), raw: hits };
     }
     const terms = plan.terms.map((term) => term.id);
     const body = plan.kind === "topic"
-      ? { terms, predicates: ["APPLIES_METHOD", "STUDIES_CONCEPT"], rca_only: Boolean(plan.rca), limit: 60 }
-      : { terms, predicates: ["ABOUT_SITE"], limit: 60 };
-    const hits = (await postJson(`${api}/v1/paper-links`, body, headers)).hits || [];
-    const seen = new Set();
-    return hits.filter((hit) => {
-      const key = paperKey(hit) || hit.chunk_id;
-      return !seen.has(key) && seen.add(key);
-    }).map((hit) => listRecord(hit));
+      ? { terms, predicates: ["APPLIES_METHOD", "STUDIES_CONCEPT"], rca_only: Boolean(plan.rca), limit: 400 }
+      : { terms, predicates: ["ABOUT_SITE"], limit: 400 };
+    let hits = (await postJson(`${api}/v1/paper-links`, body, headers)).hits || [];
+    // A topic at a site ("gas hydrates at Hydrate Ridge"): the papers also about that site, when there are any.
+    const siteNames = (plan.sites || []).map((site) => site.name);
+    const atSite = siteNames.length ? hits.filter((hit) => (hit.metadata?.link?.sites || []).some((name) => siteNames.includes(name))) : [];
+    if (atSite.length) hits = atSite;
+    return { records: recentPapers(hits).shown.map((hit) => listRecord(hit)), raw: hits };
   } catch (error) {
     console.error("paper links lookup failed", error instanceof Error ? error.message : "unknown");
-    return [];
+    return { records: [], raw: [] };
   }
 }
 
@@ -953,15 +955,18 @@ export default {
       // The literature links answer what they can (linkPlan): the papers on a method, concept or site, the methods used
       // on an instrument's data; a paper's own links join the evidence of a question about it.
       const plan = linkPlan(query, { instrument: instrumentAsked({ types: askedType(query), codes: questionCodes(query) }) });
-      if (asksForPapers(query) || (plan && plan.kind !== "profile")) {
+      let appendix = "";   // the papers' list from the links, added after the answer
+      if (asksForPapers(query) || (plan && !["profile", "site_overview"].includes(plan.kind))) {
         const leads = topicLeads(query);
         const sensorMethods = plan?.kind === "sensor_methods";
         const listed = plan && ["topic", "site"].includes(plan.kind);
-        const [byInstrument, byLinks] = await Promise.all([
-          sensorMethods || (isPaperUsageQuestion(query) && !(leads && !askedType(query).length && !questionCodes(query).length))
+        const [byInstrument, linked] = await Promise.all([
+          sensorMethods || plan?.kind === "sensor_papers" || (isPaperUsageQuestion(query) && !(leads && !askedType(query).length && !questionCodes(query).length))
             ? papersFor(query, env, { withMethods: sensorMethods }) : [],
-          listed ? linkedRecords(plan, env) : [],
+          listed ? linkedRecords(plan, env) : { records: [], raw: [] },
         ]);
+        const byLinks = linked.records;
+        appendix = linkAppendix(plan, listed ? linked.raw : byInstrument);
         // By meaning too, when the links found few papers on the topic (a topic the vocabulary does not have).
         const byTopic = leads && !sensorMethods && plan?.kind !== "site" && byLinks.length < 5 ? await papersOnTopic(query, env, requestedModel) : [];
         const seen = new Set();
@@ -969,8 +974,14 @@ export default {
           const key = paperKey(hit) || hit.chunk_id;
           return !seen.has(key) && seen.add(key);
         });
+      } else if (plan?.kind === "site_overview") {
+        const linked = await linkedRecords({ ...plan, kind: "site" }, env);
+        context.links = linked.records.slice(0, 10);
+        appendix = linkAppendix(plan, linked.raw);
       } else if (plan?.kind === "profile") {
-        context.links = await linkedRecords(plan, env);
+        const linked = await linkedRecords(plan, env);
+        context.links = linked.records;
+        appendix = linkAppendix(plan, linked.raw);
       }
       if (isAssetQuestion(query)) context.assets = await assetRecords(query, env);
       if (isOrientationQuestion(query)) context.orientation = await orientationRecords(query, env);
@@ -1042,7 +1053,8 @@ export default {
       }
       const generated = await generateAnswer(query, context, env, requestedModel);
       return response({
-        query, answer: task ? withTestedScript(generated.answer, task.text) : generated.answer, answer_model: generated.model,
+        query, answer: task ? withTestedScript(generated.answer, task.text) : appendix ? `${generated.answer}\n\n${appendix}` : generated.answer,
+        answer_model: generated.model,
         answer_citations: citations(evidenceHits),
         answer_links: answerLinks(query, evidenceHits),
         hits: (context.hits || []).map(publicHit),

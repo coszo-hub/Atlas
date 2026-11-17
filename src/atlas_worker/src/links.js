@@ -12,8 +12,11 @@ export const asksRcaData = (question) => new RegExp(SCOPE.source, "i").test(Stri
 // The methods, concepts and sites a question names, the most specific of each line ("DAS" rather than "fiber sensing").
 export function linkTermsIn(question) {
   const q = String(question || "");
-  const unscoped = q.replace(SCOPE, " ");
-  const found = TERMS.filter((term) => term.rx.test(term.kind === "site" ? q : unscoped));
+  const sites = TERMS.filter((term) => term.kind === "site" && term.rx.test(q));
+  // A site's name is not a topic: "Hydrate Ridge" is not a question about gas hydrates.
+  let unscoped = q.replace(SCOPE, " ");
+  for (const site of sites) unscoped = unscoped.replace(new RegExp(site.rx.source, `${site.rx.flags}g`), " ");
+  const found = [...sites, ...TERMS.filter((term) => term.kind !== "site" && term.rx.test(unscoped))];
   const ids = new Set(found.map((term) => term.id));
   return found.filter((term) => !TERMS.some((child) => child.parent === term.id && ids.has(child.id)))
     .map(({ id, kind, name }) => ({ id, kind, name }));
@@ -43,6 +46,7 @@ export function instrumentAsked({ types = [], codes = [] } = {}) {
 }
 
 const ASKS_PAPERS =/\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?|research)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has|about|on)\b|^\s*(?:papers?|publications?|studies)\b|\bwho\s+(?:has|have)\b|\bresearch\s+(?:has|have)\s+been\b/i;
+const OVERVIEW_ASK = /\b(?:tell me (?:more )?about|what do we know about|describe|(?:an? )?overview of|introduc\w* to|summar\w*|what(?:'s| is) (?:at|known about|there at))\b|^\s*(?:what|where) is (?:the )?(?:southern hydrate ridge|hydrate ridge|axial(?: seamount)?|ashes|the international district|slope base|axial base)\s*\??\s*$/i;
 const METHOD_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz](?:e|es|ed|is|ing)|tools?)\b/i;
 
 // What a question asks of the links:
@@ -58,11 +62,14 @@ export function linkPlan(question, { instrument = false } = {}) {
   const terms = linkTermsIn(q);
   const topics = terms.filter((term) => term.kind !== "site");
   const sites = terms.filter((term) => term.kind === "site");
-  if (instrument && METHOD_ASK.test(q) && !topics.length) return { kind: "sensor_methods" };
-  if (!ASKS_PAPERS.test(q)) return null;
-  if (topics.length && !(instrument && !topics.some((term) => term.kind === "method"))) {
-    return { kind: "topic", terms: topics, sites, rca: asksRcaData(q) };
+  // A question naming an instrument is about that instrument: its words ("the tidal pressure gauge") also match
+  // methods (seafloor pressure geodesy), which are not what it asks.
+  if (instrument) return METHOD_ASK.test(q) ? { kind: "sensor_methods" } : ASKS_PAPERS.test(q) ? { kind: "sensor_papers" } : null;
+  // "Tell me about Southern Hydrate Ridge": the general search answers; the site's recent papers join its evidence.
+  if (!ASKS_PAPERS.test(q)) {
+    return sites.length && !topics.length && OVERVIEW_ASK.test(q) ? { kind: "site_overview", terms: sites } : null;
   }
+  if (topics.length) return { kind: "topic", terms: topics, sites, rca: asksRcaData(q) };
   if (sites.length && !instrument) return { kind: "site", terms: sites };
   return null;
 }
@@ -116,6 +123,74 @@ export function listRecord(hit, { withMethods = false } = {}) {
   return { ...hit, text: `${text.slice(0, room)}${used}${methods}`, layer: true, paperList: true };
 }
 
+// A long list (310 papers about Axial Seamount) is answered with its most recent papers: the newest RECENT, with the
+// count and years of the rest. One record a paper.
+export const RECENT = 30;
+export function recentPapers(hits, limit = RECENT) {
+  const seen = new Set();
+  const papers = hits.filter((hit) => {
+    const key = hit.metadata?.node_local_id || hit.chunk_id;
+    return !seen.has(key) && seen.add(key);
+  });
+  const year = (hit) => Number(hit.metadata?.link?.publication_year) || 0;
+  const sorted = papers.length > limit ? [...papers].sort((a, b) => year(b) - year(a)) : papers;
+  const older = sorted.slice(limit);
+  const years = older.map(year).filter(Boolean);
+  return { shown: sorted.slice(0, limit), total: papers.length, older: older.length,
+    olderYears: years.length ? [Math.min(...years), Math.max(...years)] : null };
+}
+
+// The list added after the answer, straight from the links (the model writes the overview, not the list, so no paper
+// is dropped for want of room): the papers shown, each with its year and link, and what the links judged.
+export function linkAppendix(plan, hits) {
+  const links = hits.filter((hit) => hit.collection_id === "literature_links" && hit.metadata?.link);
+  if (!plan || !links.length) return "";
+  const line = (hit, note = "") => {
+    const link = hit.metadata.link;
+    const url = (hit.citations || []).map((c) => c.url).find((u) => /^https?:/.test(u || ""));
+    return `- ${hit.title} (${link.publication_year ?? "n.d."})${note ? `: ${note}` : ""}${url ? ` ${url}` : ""}`;
+  };
+  const caveat = "_From the literature links, judged by rule from each paper's own words; check a paper before relying on it._";
+  if (plan.kind === "sensor_papers") {
+    const used = recentPapers(links.filter((hit) => hit.metadata.link.predicate === "USES_SENSOR"), 200).shown;
+    const mentioned = recentPapers(links.filter((hit) => hit.metadata.link.predicate === "MENTIONS_SENSOR"), 200).shown;
+    return [`**Papers the links say used its data (${used.length})**`, ...used.map((hit) => line(hit)),
+      ...(mentioned.length ? ["", `**Papers the links say only mention it (${mentioned.length})**`, ...mentioned.map((hit) => line(hit))] : []),
+      "", caveat].join("\n");
+  }
+  if (plan.kind === "sensor_methods") {
+    const by = new Map();
+    for (const hit of links.filter((h) => h.metadata.link.predicate === "USES_SENSOR")) {
+      for (const method of hit.metadata.link.methods || []) by.set(method, [...(by.get(method) || []), hit]);
+    }
+    if (!by.size) return "";
+    return ["**Methods the links give for the papers that used its data**",
+      ...[...by].sort((a, b) => b[1].length - a[1].length).map(([method, papers]) =>
+        `- ${method}: ${papers.map((hit) => `${hit.title} (${hit.metadata.link.publication_year ?? "n.d."})`).join("; ")}`),
+      "", caveat].join("\n");
+  }
+  if (plan.kind === "profile") {
+    const rows = (predicate) => [...new Set(links.filter((h) => h.metadata.link.predicate === predicate).map((h) => h.metadata.link.target_name))];
+    const parts = [["Methods it applies", rows("APPLIES_METHOD")], ["What it studies", rows("STUDIES_CONCEPT")], ["Sites", rows("ABOUT_SITE")],
+      ["RCA sensors whose data it used", rows("USES_SENSOR")]].filter(([, xs]) => xs.length);
+    return parts.length ? ["**The paper's literature links**", ...parts.map(([label, xs]) => `- ${label}: ${xs.join("; ")}`), "", caveat].join("\n") : "";
+  }
+  if (plan.kind === "site_overview") {
+    const { shown, total } = recentPapers(links, 10);
+    return [`**Recent papers about ${plan.terms.map((t) => t.name).join(", ")} (${shown.length} of the ${total} the links give; ask "which papers are about it" for more)**`,
+      ...shown.map((hit) => line(hit)), "", caveat].join("\n");
+  }
+  const { shown, total, older, olderYears } = recentPapers(links);
+  const names = plan.terms.map((term) => term.name).join(", ");
+  const at = (plan.sites || []).length ? ` at ${plan.sites.map((site) => site.name).join(", ")}` : "";
+  const what = plan.kind === "site" ? `about ${names}` : `that ${plan.terms.some((t) => t.kind === "method") ? "applied" : "studied"} ${names}${at}${plan.rca ? " with RCA data" : ""}`;
+  const asked = new Set(plan.terms.map((term) => term.name));
+  return [older ? `**The ${shown.length} most recent of the ${total} papers the links give ${what}**` : `**The ${total} papers the links give ${what}**`,
+    ...shown.map((hit) => line(hit, asked.has(hit.metadata.link.target_name) ? "" : hit.metadata.link.target_name)),
+    ...(older ? ["", `${older} older papers (${olderYears ? olderYears.join("–") : "undated"}) are not listed: ask about a narrower topic, a site within it, or a period to see them.`] : []),
+    "", caveat].join("\n");
+}
+
 // What the answer is told to do with the links.
 export function linkInstruction(plan) {
   if (!plan) return "";
@@ -123,14 +198,19 @@ export function linkInstruction(plan) {
   if (plan.kind === "profile") {
     return `The evidence holds the literature links of the paper asked about, under 'Literature links of': the methods it applies, the concepts and features it studies, the sites it is about and the RCA sensors it used or mentions, each with how it was found and a quote. ${judged} answer from those that the quote supports, citing the paper (for a methods question, the methods; for what it studies, the concepts and features), and leave out a link whose quote shows the paper only mentions it.`;
   }
+  // The full list is added after the answer (linkAppendix): the answer is the overview, not the list.
+  const listed = "The system adds the list of these papers from the links after your answer, so do not list them all and do not add a list heading of your own: write a short overview (a few sentences, grouped by theme) naming the most notable papers with their citations.";
   if (plan.kind === "sensor_methods") {
-    return `The question asks which methods have been applied to an instrument's data. Each literature-link record of a paper that used the instrument's data ends with the methods that paper applies. Answer with the methods, each with the papers that applied it to this instrument's data (title and citation); a paper that only mentions the instrument does not count. ${judged} a paper whose quote does not show it used the data does not count.`;
+    return `The question asks which methods have been applied to an instrument's data. Each literature-link record of a paper that used the instrument's data ends with the methods that paper applies. Answer with the methods, each with the papers that applied it to this instrument's data (title and citation); a paper that only mentions the instrument does not count. ${judged} a paper whose quote does not show it used the data does not count. The system adds the methods-by-paper list from the links after your answer; your answer is the summary.`;
+  }
+  if (plan.kind === "sensor_papers") {
+    return `The question asks which papers used an instrument's data. Literature-link records in the evidence give each link's judgment, made by rule from the paper's own words: the paper 'used data from' the instrument or 'mentions, without analyzing its data,' it, with why and a quote. ${listed} Say what the papers that used its data did with it. If a record's quote plainly shows its judgment is wrong (a 'used' paper that only cites the instrument), say so. A paper found by meaning rather than by a link (a full-text passage) that plainly analyzed the instrument's data may be added by title.`;
   }
   if (plan.kind === "topic") {
     const names = plan.terms.map((term) => term.name).join(", ");
     const method = plan.terms.some((term) => term.kind === "method");
     const verb = method ? "applied" : "studied";
-    return `The question asks which papers ${verb} ${names}${plan.rca ? " with RCA or OOI data" : ""}. Literature-link records in the evidence each say a paper ${method ? "applies the method" : "studies"} it and how that was found${plan.rca ? ", and which RCA sensors' data the paper used" : ""}. ${judged} list under 'Papers that ${method ? "applied it" : "studied it"}' every paper whose record shows it ${verb} ${names}${plan.rca ? " (with the RCA data the record names)" : ""}, by title with its citation and a few words on what it did. A paper whose quote shows it only mentions or cites it goes under 'Papers that mention it'. Give every paper that qualifies, not the first few, and only scientific papers.`;
+    return `The question asks which papers ${verb} ${names}${plan.rca ? " with RCA or OOI data" : ""}. Literature-link records in the evidence each say a paper ${method ? "applies the method" : "studies"} it and how that was found${plan.rca ? ", and which RCA sensors' data the paper used" : ""}; when there are many, they are the most recent. ${judged} ${listed} Say what these papers did${plan.rca ? " and with which RCA data" : ""}, and point out any whose quote shows it only mentions or cites ${names}. Only scientific papers count.`;
   }
-  return `The question asks which papers are about ${plan.terms.map((term) => term.name).join(", ")}. Literature-link records in the evidence each say a paper is about the site (its title or abstract names it, or the RCA sensors whose data it used are there). List every one of those papers by title with its citation and a few words on its subject; give every paper, not the first few, and only scientific papers.`;
+  return `The question asks which papers are about ${plan.terms.map((term) => term.name).join(", ")}. Literature-link records in the evidence each say a paper is about the site (its title or abstract names it, or the RCA sensors whose data it used are there); when there are many, they are the most recent. ${listed} Say what research these papers cover (the main themes and instruments). Only scientific papers count.`;
 }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { authorYear, instrumentAsked, linkInstruction, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
+import { authorYear, instrumentAsked, linkAppendix, linkInstruction, recentPapers, linkPlan, linkTermsIn, listRecord, pickPaper, profileRecord } from "../src/links.js";
 
 test("a method, concept or site is matched with the words the links were built with", () => {
   assert.deepEqual(linkTermsIn("Which papers did ambient noise interferometry using RCA data?").map((t) => t.id), ["METHOD-ambient-noise-interferometry"]);
@@ -30,10 +30,14 @@ test("each kind of question gets its plan", () => {
   assert.equal(linkPlan("who has applied template matching to Regional Cabled Array data").kind, "topic");
   assert.equal(linkPlan("What research has been published on shallow slow slip?").terms[0].id, "CONCEPT-shallow-slow-slip");
   assert.equal(linkPlan("Which papers are about Axial Seamount?").kind, "site");
+  assert.equal(linkPlan("tell me about southern hydrate ridge").kind, "site_overview");
+  assert.equal(linkPlan("What is the depth at Southern Hydrate Ridge?"), null);
   assert.equal(linkPlan("what research has been done at slope base").terms[0].id, "SITE-oregon-slope-base");
   // An instrument's papers stay with the instrument lookup.
-  assert.equal(linkPlan("Which papers used data from HYSB1?", { instrument: true }), null);
+  assert.equal(linkPlan("Which papers used data from HYSB1?", { instrument: true }).kind, "sensor_papers");
   assert.equal(linkPlan("What is the depth of AXCC1?", { instrument: true }), null);
+  // The instrument's own words are not a method asked about.
+  assert.equal(linkPlan("Which papers used data from the Hydrate Ridge flank tidal pressure gauge?", { instrument: true }).kind, "sensor_papers");
 });
 
 test("a site written in capitals is not an instrument", () => {
@@ -59,4 +63,23 @@ test("a paper's links become one record; a list record says what RCA data the pa
   assert.match(listRecord(hit("APPLIES_METHOD", "M", "z")).text, /used data from RCA sensors: EARTHSCOPE-OO-HYSB1/);
   assert.match(listRecord(hit("USES_SENSOR", "S", "z"), { withMethods: true }).text, /Methods this paper applies \(its links\): Ambient noise interferometry/);
   assert.match(linkInstruction(linkPlan("Which papers did ambient noise interferometry using RCA data?")), /with RCA or OOI data/);
+});
+
+test("a long list keeps its most recent papers, and the list after the answer says how many are left out", () => {
+  const hit = (id, year, predicate = "ABOUT_SITE", target = "Axial Seamount") => ({ chunk_id: `L${id}`, collection_id: "literature_links",
+    title: `Paper ${id}`, citations: [{ url: `https://doi.org/10.1/${id}` }],
+    metadata: { node_local_id: `P${id}`, link: { predicate, target_name: target, publication_year: year } } });
+  const hits = Array.from({ length: 40 }, (_, i) => hit(i, 1990 + i));
+  const { shown, total, older, olderYears } = recentPapers(hits);
+  assert.equal(shown.length, 30);
+  assert.equal(shown[0].metadata.link.publication_year, 2029);
+  assert.deepEqual([total, older, olderYears], [40, 10, [1990, 1999]]);
+  const site = linkAppendix({ kind: "site", terms: [{ id: "SITE-axial-seamount", kind: "site", name: "Axial Seamount" }] }, hits);
+  assert.match(site, /The 30 most recent of the 40 papers the links give about Axial Seamount/);
+  assert.match(site, /10 older papers \(1990–1999\)/);
+  assert.match(site, /- Paper 39 \(2029\) https:\/\/doi\.org\/10\.1\/39/);
+  const sensor = linkAppendix({ kind: "sensor_papers" }, [hit(1, 2021, "USES_SENSOR", "HYSB1"), hit(2, 2018, "MENTIONS_SENSOR", "HYSB1")]);
+  assert.match(sensor, /used its data \(1\)\*\*\n- Paper 1 \(2021\)/);
+  assert.match(sensor, /only mention it \(1\)\*\*\n- Paper 2 \(2018\)/);
+  assert.equal(linkAppendix(null, hits), "");
 });

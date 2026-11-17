@@ -105,7 +105,7 @@ JOIN LATERAL (
     LIMIT 1
 ) c ON true
 ORDER BY l.rank, l.strength DESC, (l.paper_payload->>'publication_year') DESC NULLS LAST, l.paper_local_id
-LIMIT greatest(1, least(coalesce(result_limit, 40), 80))
+LIMIT greatest(1, least(coalesce(result_limit, 40), 400))
 $$;
 
 CREATE OR REPLACE FUNCTION graphrag_api.papers_linked(

@@ -61,10 +61,13 @@ def ask(question, model):
     body = {"query": question, **({"model": model} if model else {})}
     req = urllib.request.Request(WORKER, json.dumps(body).encode(), {"content-type": "application/json", "origin": "https://coszo.org",
                                                                       "user-agent": "curl/8.0 atlas-eval"})
-    try:
-        return json.load(urllib.request.urlopen(req, timeout=240)).get("answer") or ""
-    except Exception as error:
-        return f"ERROR {error}"
+    for attempt in range(3):   # a long answer's read was cut short now and then (IncompleteRead)
+        try:
+            return json.load(urllib.request.urlopen(req, timeout=240)).get("answer") or ""
+        except Exception as error:
+            last = error
+            time.sleep(10)
+    return f"ERROR {last}"
 
 
 def main():
@@ -74,11 +77,16 @@ def main():
     ap.add_argument("--model", default="ooi-gemma-4-26b")
     ap.add_argument("--types", default="2,3,4,5,8,9")
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--one-per-entity", action="store_true", help="Ask one phrasing of each entity's questions.")
+    ap.add_argument("--workers", type=int, default=3, help="Questions asked at once (the relay answers three at a time).")
     ap.add_argument("ids", nargs="*")
     args = ap.parse_args()
     path = ROOT / "src/question_bank" / ("links_train.jsonl" if args.split == "train" else "blind/links_blind.jsonl")
     types = {int(t) for t in args.types.split(",")}
     rows = [r for r in map(json.loads, path.read_text().splitlines()) if r["type"] in types and (not args.ids or r["id"] in args.ids)]
+    if args.one_per_entity:
+        seen = set()
+        rows = [r for r in rows if not ((r["type"], r["entity"]) in seen or seen.add((r["type"], r["entity"])))]
     vocab = {("METHOD-" if e["kind"] == "method" else "CONCEPT-") + e["id"]: e for e in json.loads((ROOT / "src/literature_links/vocabulary.json").read_text())}
     judged = set(json.loads((ROOT / "src/question_bank/authored/paper_topics.json").read_text())) - {"_rule"}
     docs, works = load_papers()
@@ -96,10 +104,10 @@ def main():
                            stderr=subprocess.DEVNULL)
             texts = {o["id"]: o["prompt"] or f"ERROR {o.get('error')}" for o in json.loads(opath.read_text())}
     else:
-        texts = {}
-        for r in rows:
-            texts[r["id"]] = ask(r["question"], args.model)
-            time.sleep(2)
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(args.workers) as pool:
+            answers = list(pool.map(lambda r: ask(r["question"], args.model), rows))
+        texts = {r["id"]: a for r, a in zip(rows, answers)}
 
     tally = defaultdict(lambda: [0, 0, 0, 0])   # gold found, gold, extra judged papers named, questions
     out = []
@@ -127,6 +135,11 @@ def main():
             result.update(missed=[w for w in want if w not in found])
         else:
             want = [p["paper"] for p in g["papers"]]
+            # A long list is answered with its most recent papers ("12 older papers (1998–2015) are not listed"):
+            # only the gold newer than those is expected.
+            cut = re.search(r"(\d+) older papers \((\d{4})–(\d{4})\)", text)
+            if cut and not args.evidence:
+                want = [p for p in want if (docs.get(p, {}).get("publication_year") or 0) > int(cut.group(3))]
             found = [p for p in want if match[p](text)]
             extra = [p for p in judged if p not in want and match[p](text)]
             k = {4: "4 papers on a concept", 5: "5 papers about a site", 9: "9 papers doing a method"}[t]

@@ -963,7 +963,7 @@
   "id": "SITE-southern-hydrate-ridge",
   "kind": "site",
   "name": "Southern Hydrate Ridge",
-  "pattern": "[Ss]outh(?:ern)? Hydrate Ridge|\\bSHR\\b|[Ss]outhern [Ss]ummit",
+  "pattern": "[Ss]outh(?:ern)? Hydrate Ridge|\\bSHR\\b|[Ss]outh(?:ern)? [Ss]ummit of Hydrate Ridge",
   "flags": "i",
   "parent": "SITE-hydrate-ridge"
  },
@@ -995,7 +995,7 @@
   "id": "SITE-oregon-shelf",
   "kind": "site",
   "name": "Oregon Shelf",
-  "pattern": "Oregon (?:[Ss]helf|inner shelf|mid-?shelf)|central Oregon shelf|Newport (?:[Hh]ydrographic )?[Ll]ine",
+  "pattern": "Oregon (?:continental )?(?:[Ss]helf|inner shelf|mid-?shelf)|shelf off (?:the coast of )?(?:central )?Oregon|central Oregon (?:continental )?shelf|Newport (?:[Hh]ydrographic )?[Ll]ine|\\bNH-?(?:10|20|25)\\b|Endurance Array",
   "flags": "i",
   "parent": null
  },

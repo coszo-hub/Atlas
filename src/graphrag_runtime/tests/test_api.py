@@ -137,7 +137,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.repo.calls[-1], ("paper_links", body["terms"], {"paper_ids": [], "predicates": ["APPLIES_METHOD"],
                                                                             "rca_only": True, "limit": 50}))
         self.assertEqual(self.client.post("/v1/paper-links", headers=self.headers, json={"paper_ids": ["COSZO-REF-015"]}).status_code, 200)
-        for bad in ({}, {"terms": ["x'); DROP"]}, {"terms": ["HYS14"], "predicates": ["DROP"]}, {"terms": ["HYS14"], "limit": 81}):
+        for bad in ({}, {"terms": ["x'); DROP"]}, {"terms": ["HYS14"], "predicates": ["DROP"]}, {"terms": ["HYS14"], "limit": 401}):
             self.assertEqual(self.client.post("/v1/paper-links", headers=self.headers, json=bad).status_code, 422)
 
     def test_papers_by_author_take_a_surname_and_year(self):

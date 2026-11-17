@@ -49,7 +49,7 @@ class PaperLinksRequest(StrictModel):
     paper_ids: list[Annotated[str, Field(pattern=r"^[A-Za-z0-9._-]{2,80}$")]] = Field(default_factory=list, max_length=12)
     predicates: list[Literal["USES_SENSOR", "MENTIONS_SENSOR", "APPLIES_METHOD", "STUDIES_CONCEPT", "ABOUT_SITE", "NAMES_FEATURE"]] | None = None
     rca_only: bool = False
-    limit: int = Field(default=40, ge=1, le=80)
+    limit: int = Field(default=40, ge=1, le=400)
 
 
 class PapersByAuthorRequest(StrictModel):

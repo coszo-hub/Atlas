@@ -39,7 +39,7 @@ OUTPUT = ROOT / "data/LiteratureLinks"
 STATION = re.compile(r"\b(?:OO\.)?(AXAS[12]|AXBA1|AXCC[12]|AXEC[123]|AXID1|HYS1[1-4]|HYSB1|CZ(?:MID|OFF|OSH|SHF))\b")
 # "HYS11-14", "HYS11–HYS14", "AXEC1-3", "AXEC1 to AXEC3": every station between the two.
 RANGE = re.compile(r"\b(AXAS|AXCC|AXEC|HYS)(\d{1,2})\s*(?:[-‐‑‒–—]|to)\s*(?:\1)?(\d{1,2})\b")
-REFDES = re.compile(r"\b((?:RS|CE)\d\d[A-Z0-9]{4})-([A-Z0-9]{5})-(?:(\d\d)-)?([A-Z0-9]{9})\b")
+REFDES = re.compile(r"\b((?:RS|CE)\d\d[A-Z0-9]{4})-?([A-Z0-9]{5})-(?:(\d\d)-)?([A-Z0-9]{9})\b")
 RCA_SIGNAL = re.compile(r"Regional Cabled Array|[Cc]abled [Aa]rray|Ocean Observatories Initiative|\bOOI\b|\bRSN\b|"
                         r"Regional Scale Nodes?|NEPTUNE|\b(?:RS0[13]|CE0[24])[A-Z0-9]{4}\b|" + STATION.pattern)
 AXIAL = re.compile(r"\bAxial\b")
@@ -104,7 +104,8 @@ SYSTEMS = [   # (name, pattern, which sensors, context the passage needs, counts
     # Axial's pressure records in general words ("seafloor pressure data from the Cabled Array"): the BOTPTs, in a paper
     # naming the RCA, from 2015 on (the autonomous BPRs before them are not these).
     ("Axial pressure", r"(?:[Ss]eafloor|[Bb]ottom) pressure (?:data|records?|recorders?|measurements|sensors?|gauges?|time series)|\bBPRs?\b",
-     _model("BPR/Tilt", "BOTPT"), r"Axial|caldera", True),
+     lambda d: _model("BPR/Tilt", "BOTPT")(d) and d["canonical_id"].startswith(("RS03CCAL", "RS03ECAL", "RS03INT", "RS03ASHS")),
+     r"Axial|caldera", True),
     ("PREST", r"\bPRESTs?\b|[Tt]idal (?:[Ss]eafloor )?[Pp]ressure|SBE ?54", _model("PREST", "Tidal"), None, True),
     ("HPIES", r"\bHPIES\b", _model("HPIES"), None, False),
     ("OsmoSampler", r"[Oo]smo ?[Ss]amplers?|osmotic (?:fluid )?sampler", _model("OsmoSampler", "Osmotic"), None, True),
@@ -313,8 +314,14 @@ def collect(rows=None) -> tuple[dict, dict, dict]:
                 for i in near:
                     add(pid, i, kind, layer, cid, page, text, m.span(), share=len(near) if len(near) > 1 else None)
             elif pid in rca_paper and kind == "system":
-                for i in ids:
-                    add(pid, i, "described", layer, cid, page, text, m.span(), share=len(ids))
+                # No site beside the name: the sensors in the region the passage is about (Axial, Hydrate Ridge, Slope
+                # Base), else all of them.
+                caldera = re.search(r"caldera|summit", text, re.I)
+                region = [i for i in ids if (AXIAL.search(text) and i.startswith("RS03") and not (caldera and i.startswith("RS03AXBS")))
+                          or (re.search(r"Hydrate Ridge|\bSHR\b", text) and i.startswith("RS01SUM"))
+                          or (re.search(r"Slope Base", text) and i.startswith(("RS01SLBS", "RS01SBP")))] or ids
+                for i in region:
+                    add(pid, i, "described", layer, cid, page, text, m.span(), share=len(region))
         if pid in rca_paper and year >= 2009:
             for site, (rx, needs_axial) in site_rx.items():
                 if needs_axial and not axial:
@@ -419,11 +426,11 @@ SITES = [
     ("SITE-axial-central-caldera", "Axial Central Caldera", r"Central Caldera|caldera cent(?:er|re)", ("RS03CCAL",)),
     ("SITE-axial-eastern-caldera", "Axial Eastern Caldera", r"Eastern Caldera", ("RS03ECAL",)),
     ("SITE-axial-base", "Axial Base", r"Axial Base|base of Axial", ("RS03AXBS", "RS03AXP")),
-    ("SITE-southern-hydrate-ridge", "Southern Hydrate Ridge", r"[Ss]outh(?:ern)? Hydrate Ridge|\bSHR\b|[Ss]outhern [Ss]ummit", ("RS01SUM",)),
+    ("SITE-southern-hydrate-ridge", "Southern Hydrate Ridge", r"[Ss]outh(?:ern)? Hydrate Ridge|\bSHR\b|[Ss]outh(?:ern)? [Ss]ummit of Hydrate Ridge", ("RS01SUM",)),
     ("SITE-northern-hydrate-ridge", "Northern Hydrate Ridge", r"[Nn]orth(?:ern)? Hydrate Ridge|\bNHR\b", ()),
     ("SITE-hydrate-ridge", "Hydrate Ridge", r"Hydrate Ridge", ()),
     ("SITE-oregon-slope-base", "Oregon Slope Base", r"Slope Base", ("RS01SLBS", "RS01SBP")),
-    ("SITE-oregon-shelf", "Oregon Shelf", r"Oregon (?:[Ss]helf|inner shelf|mid-?shelf)|central Oregon shelf|Newport (?:[Hh]ydrographic )?[Ll]ine", ("CE02SH",)),
+    ("SITE-oregon-shelf", "Oregon Shelf", r"Oregon (?:continental )?(?:[Ss]helf|inner shelf|mid-?shelf)|shelf off (?:the coast of )?(?:central )?Oregon|central Oregon (?:continental )?shelf|Newport (?:[Hh]ydrographic )?[Ll]ine|\bNH-?(?:10|20|25)\b|Endurance Array", ("CE02SH",)),
     ("SITE-oregon-offshore", "Oregon Offshore", r"Oregon Offshore", ("CE04OS",)),
 ]
 SITE_PARENT = {"SITE-ashes": "SITE-axial-seamount", "SITE-international-district": "SITE-axial-seamount",
@@ -472,7 +479,7 @@ def paper_sites(paper: dict, abstract: str, used_sensors: list[str], site_of_sen
             found[sid] = "named in its title or abstract"
     places = {site_of_sensor(s) for s in used_sensors} - {None}
     groups = {p[:4] for p in places}
-    if places and len(groups) <= 2:
+    if places and len(groups) == 1:   # sensors spread over Axial and the margin say nothing of one site
         for sid, _, _, prefixes in SITES:
             if prefixes and any(p.startswith(prefixes) for p in places):
                 found.setdefault(sid, "the sensors it used are there")
@@ -509,6 +516,16 @@ def build(output: Path) -> dict:
         relation, why, best = judge_sensor(l, papers[l["paper"]], abstracts.get(l["paper"], ""))
         if relation:
             judged[key] = (relation, why, best)
+    # A paper that names some sensors of a kind (the Central, Eastern and International District BOTPTs by designator)
+    # meant those when it describes the kind in general words: its descriptions do not add the others (ASHES).
+    named_kinds = defaultdict(set)
+    for (pid, sid), (relation, _, _) in judged.items():
+        if links[(pid, sid)]["kinds"] & (CODED | {"system"}) and min((h["share"] or 1) for h in links[(pid, sid)]["hits"]) == 1:
+            named_kinds[pid].add(rec[sid].get("instrument_type"))
+    for (pid, sid) in list(judged):
+        if rec[sid].get("instrument_type") in named_kinds[pid] and links[(pid, sid)]["kinds"] <= {"described"} | ({"system"} if
+                min((h["share"] or 1) for h in links[(pid, sid)]["hits"]) > 1 else set()):
+            del judged[(pid, sid)]
     used_by_paper = defaultdict(list)
     for (pid, sid), (relation, _, _) in judged.items():
         if relation == "used":
