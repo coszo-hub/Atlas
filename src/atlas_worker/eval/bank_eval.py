@@ -94,10 +94,15 @@ def score(row, text, names):   # noqa: C901
             checks.append((f"half of {len(g['channels'])} channels", have >= len(g["channels"]) / 2))
             checks.append(("first " + g["first"], found(date_rx(g["first"]), text)))
         if "azimuths" in g:
+            # The verdict is the answer's opening sentence about the station asked; a list of other stations after it
+            # ("Misoriented seismometers: AXEC1 ...") is not about this one.
             issue = g["components_disagree"] or g["not_north"]
-            said = found(r"misorient|not (?:correctly |properly )?(?:oriented|aligned)|rotated|disagree|inconsisten|orientation issue|off north", text)
-            ok = found(r"correctly oriented|aligned (?:with|to) (?:true )?north|oriented (?:to|toward|towards) (?:true )?north|no orientation issue|0\s*°", text)
-            checks.append(("misoriented" if issue else "oriented to north", said if issue else (ok and not said)))
+            opening = re.split(r"(?<=[.!?])\s|\n", plain(text).strip(), maxsplit=1)[0]
+            denied = re.search(r"\b(?:no|not have an?|does not have|doesn't have|without)\b[^.]{0,40}\b(?:orientation )?issue|correctly oriented|oriented correctly|properly oriented|aligned (?:with|to) (?:true )?north|oriented (?:to|toward|towards) (?:true )?north|\bat 0\s*°|\bis 0\s*°", opening, re.I)
+            # An azimuth other than north, east, south or west (0°, 90°, 180°, 270°) says it is rotated.
+            claimed = re.search(r"misorient|not (?:correctly |properly )?(?:oriented|aligned)|rotated|disagree|inconsisten", opening, re.I) or any(
+                int(d) not in (0, 90, 180, 270) for d in re.findall(r"\b(\d{1,3})\s*°", opening))
+            checks.append(("misoriented" if issue else "oriented to north", bool(claimed) if issue else bool(denied) and not claimed))
         if "calibration_in_force" in g and g["calibration_in_force"]:
             checks.append(("calibration " + g["calibration_in_force"], found(date_rx(g["calibration_in_force"]), text)))
         if "last_calibration_start" in g:

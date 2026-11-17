@@ -434,9 +434,15 @@ export function isInstrumentInventoryQuestion(question) {
 // "Is the pressure gauge at Slope Base operational?": a question about an instrument's current state, which the
 // live monitor answers (the map card's own check) and no corpus record can.
 export function isStatusQuestion(question) {
-  return /\b(?:operational|operating|working|online|offline|running|functioning|status|down|broken|healthy|recording|transmitting|streaming)\b/
-    .test(String(question || "").toLowerCase());
+  const q = String(question || "").toLowerCase();
+  // "Since when has it been recording?" asks for its history, not whether it records now.
+  if (DATE_RANGE.test(q)) return false;
+  return /\b(?:operational|operating|working|online|offline|running|functioning|status|down|broken|healthy|recording|transmitting|streaming)\b/.test(q);
 }
+// A question about the span of an instrument's data: its deployments answer it (the asset records), not the period a
+// download service happens to hold, which Gemma gave instead (ERDDAP from 2015-04-01 for a CTD deployed in 2014).
+const DATE_RANGE = /\b(?:date range|since when|start(?:s|ed)? and end|data record|been recording|first data|how long has|what years?|which years?)\b/i;
+export const isDateRangeQuestion = (question) => DATE_RANGE.test(String(question || ""));
 // OOI reference designators (RS01SLBS-MJ01A-06-PRESTA101, RS01SBPS-PC01A-4A-CTDPFA103, RS01SUM2-MJ01B-CTDPFA110), and
 // the OO seismic stations EarthScope serves (AXEC1, HYSB1), which Nereus does not track: their waveform is checked.
 // What a status question asks about, without the words that ask it: "Is the CTD at Southern Hydrate Ridge online?"
@@ -767,7 +773,11 @@ export function orientationStations(question, directory, instrumentIds) {
 
 // The stations an orientation question asks about by the place it names (none when it names no place).
 export function placeStations(question, directory, instrumentIds) {
-  return isOrientationQuestion(question) ? orientationStationParts(question, directory, instrumentIds).atPlace : [];
+  if (!isOrientationQuestion(question)) return [];
+  // A question naming stations ("does AXCC1 have an orientation issue?") is answered for them only: given the whole
+  // summary, Gemma answered and then listed every misoriented station.
+  const named = [...new Set(String(question || "").match(new RegExp(STATION_SOURCE, "g")) || [])];
+  return named.length ? named : orientationStationParts(question, directory, instrumentIds).atPlace;
 }
 
 // The orientation summary cut to a place's stations: each "Label: STA (...), STA (...)." list keeps those stations
@@ -1046,6 +1056,9 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
     : "";
   // The orientation summary lists every OO station; a question about one place is answered for that place's stations.
   // Where an instrument is: OOI asset management and a paper can each give its position, metres apart.
+  const dateRangeInstruction = isDateRangeQuestion(question)
+    ? " The question asks for the span of an instrument's data. Answer from its deployment history in the OOI asset-management record: the data start with its first deployment (give that date) and run to the end of its last deployment, or are ongoing when its latest deployment has no end (say ongoing, with when that deployment began); name any gap between deployments. Then, separately, say what span each download service holds when it differs (an ERDDAP dataset that starts later)."
+    : "";
   const positionInstruction = LOCATION_WORDS.test(String(question || ""))
     ? " When the evidence gives the asked instrument's position from more than one source (its OOI asset-management deployment record and a paper), give each position with its depth and its own citation, saying which source it is from; do not merge them or pick one. Give an earlier unit's position only as an earlier deployment."
     : "";
@@ -1086,7 +1099,7 @@ export function answerPrompt({ question, evidence, sources, mode, product = null
     ? "Use plain text, with no Markdown hashes or asterisks, and no URLs. Obey the 230-word limit."
     : "Structure the response as plain text: a brief direct answer, then section labels on their own lines and hyphen bullets where there are multiple locations, instruments, or findings. Do not use Markdown hashes or asterisks.";
   const citationInstruction = "Cite the evidence with the bracketed source numbers [n] from the evidence headers (for example [2] or [1, 3]), placed directly after the claim they support. Use only those numbers. Do not include chunk IDs, source IDs, database identifiers, URLs, titles in brackets, or any other provenance notation in the answer text; the interface renders the numbered source list separately below the answer.";
-  return `Retrieved RCA Atlas evidence:\n\n${evidence}\n\n---\nQuestion: ${question}\n\nRCA Atlas defaults to the OOI Regional Cabled Array and COSZO. Unless the user explicitly asks for a global comparison, answer in that scope and exclude tangential sites or literature outside it. First compare the individual named records in the evidence against the question. Then answer the user's exact question directly. Do not lead with a generic instrument definition when the user asks which instruments exist or where they are. ${compactInstruction}${stationInstruction}${positionInstruction} ${overviewInstruction} ${watchInstruction} ${sensorWatch} ${liveInstruction} ${inventoryInstruction} ${papersInstruction} ${formatInstruction} ${task ? "" : mode === "compact" ? "If a requested dataset is missing from the evidence, say so in one sentence." : "If the evidence leaves part of the question unanswered, say in one short closing section what is missing. When the evidence answers the question fully, add no such section and do not hedge a supported answer. A total, maximum, ranking or comparison over a period (a year, or since 2015) is complete only if the evidence covers every part of that period: when it covers some months of a year, give the figure for the months covered, name them, and say the others are missing; never present a partial sum as the total."} ${citationInstruction} Evidence headers mark scientific literature and websites. When sources disagree about a fact or number, give the scientific literature's value and cite it; a website, news post or blog that reports it differently does not override the paper. Answer each quantity the question asks for with the value a source states for that same quantity: do not substitute a related finding (a range where one effect is weak for the stated peak or best value, a total for a subset), and do not attach one study's sites, instruments or depths to another study. Do not invent live values or tool results. Evidence sources available to you: ${sourceListText}`;
+  return `Retrieved RCA Atlas evidence:\n\n${evidence}\n\n---\nQuestion: ${question}\n\nRCA Atlas defaults to the OOI Regional Cabled Array and COSZO. Unless the user explicitly asks for a global comparison, answer in that scope and exclude tangential sites or literature outside it. First compare the individual named records in the evidence against the question. Then answer the user's exact question directly. Do not lead with a generic instrument definition when the user asks which instruments exist or where they are. ${compactInstruction}${stationInstruction}${positionInstruction} ${overviewInstruction} ${watchInstruction} ${sensorWatch} ${liveInstruction} ${inventoryInstruction}${dateRangeInstruction} ${papersInstruction} ${formatInstruction} ${task ? "" : mode === "compact" ? "If a requested dataset is missing from the evidence, say so in one sentence." : "If the evidence leaves part of the question unanswered, say in one short closing section what is missing. When the evidence answers the question fully, add no such section and do not hedge a supported answer. A total, maximum, ranking or comparison over a period (a year, or since 2015) is complete only if the evidence covers every part of that period: when it covers some months of a year, give the figure for the months covered, name them, and say the others are missing; never present a partial sum as the total."} ${citationInstruction} Evidence headers mark scientific literature and websites. When sources disagree about a fact or number, give the scientific literature's value and cite it; a website, news post or blog that reports it differently does not override the paper. Answer each quantity the question asks for with the value a source states for that same quantity: do not substitute a related finding (a range where one effect is weak for the stated peak or best value, a total for a subset), and do not attach one study's sites, instruments or depths to another study. Do not invent live values or tool results. Evidence sources available to you: ${sourceListText}`;
 }
 
 // The map places a paper by the atlas sites its full text names most (the passage search returns them): they are
