@@ -62,7 +62,7 @@ def sensor_names(inv):
     return out
 
 
-def score(row, text, names):
+def score(row, text, names):   # noqa: C901
     """(facts found, facts asked, notes) for one answer; None when the key cannot be scored here."""
     g, kind, t = row.get("gold"), row.get("gold_kind"), row["type"]
     if kind == "facts":
@@ -76,7 +76,9 @@ def score(row, text, names):
             checks.append(("model " + g["model"], bool(words) and all(w in norm(text) for w in words)))
         if "depth_m" in g and g["depth_m"] is not None:
             checks.append((f"depth {g['depth_m']} m", number_near(plain(text), float(g["depth_m"]), max(2.0, 0.02 * float(g["depth_m"])))))
-        if "first_deployed" in g and g["first_deployed"]:
+        # A changes question asks how often and with which serials; it needs the first date only when it asks when.
+        asks_when = t != 12 or re.search(r"\b(?:when|since|first|start|date)\b", row["question"], re.I)
+        if "first_deployed" in g and g["first_deployed"] and asks_when:
             checks.append(("first " + g["first_deployed"], found(date_rx(g["first_deployed"]), text)))
         if "ongoing" in g:
             if g["ongoing"]:

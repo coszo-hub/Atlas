@@ -72,6 +72,7 @@ export function instrumentAsked({ types = [], codes = [] } = {}) {
 
 const ASKS_PAPERS =/\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?|research)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has|about|on)\b|^\s*(?:papers?|publications?|studies)\b|\bwho\s+(?:has|have)\b|\bresearch\s+(?:has|have)\s+been\b/i;
 const OVERVIEW_ASK = /\b(?:tell me (?:more )?about|what do we know about|describe|(?:an? )?overview of|introduc\w* to|summar\w*|what(?:'s| is) (?:at|known about|there at))\b|^\s*(?:what|where) is (?:the )?(?:southern hydrate ridge|hydrate ridge|axial(?: seamount)?|ashes|the international district|slope base|axial base)\s*\??\s*$/i;
+const PROFILE_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz]\w*|topics?|features?|processes|concepts?|stud(?:y|ies|ied)|investigat\w*|sensors?|instruments?|data from)\b/i;
 const USES_ASK = /\b(?:us(?:e|es|ed|ing)|mention(?:s|ed)?|data from|analy[sz](?:e|es|ed))\b/i;
 const METHOD_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz](?:e|es|ed|is|ing)|tools?)\b/i;
 
@@ -83,8 +84,11 @@ const METHOD_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz](?:e|es|e
 // An instrument's papers ("which papers used HYSB1") stay with papersFor; null when none of these.
 export function linkPlan(question, { instrument = false } = {}) {
   const q = String(question || "");
+  // A paper's own links answer what it applies or studies; a summary ("tell me about", "what is it about") is
+  // answered from its abstract and passages, which the links' outline crowded out (summary key points 88% to 70%).
   const paper = authorYear(q);
-  if (paper) return { kind: "profile", ...paper };
+  if (paper && PROFILE_ASK.test(q)) return { kind: "profile", ...paper };
+  if (paper) return null;
   const terms = linkTermsIn(q);
   const topics = terms.filter((term) => term.kind !== "site");
   const sites = terms.filter((term) => term.kind === "site");
