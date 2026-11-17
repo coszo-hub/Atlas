@@ -30,6 +30,8 @@ test("each kind of question gets its plan", () => {
   assert.equal(linkPlan("who has applied template matching to Regional Cabled Array data").kind, "topic");
   assert.equal(linkPlan("What research has been published on shallow slow slip?").terms[0].id, "CONCEPT-shallow-slow-slip");
   assert.equal(linkPlan("Which papers are about Axial Seamount?").kind, "site");
+  // Used or mentioned: an instrument, even one named by its site ("Central Caldera acoustic transponders").
+  assert.equal(linkPlan("Which papers used Central Caldera Acoustic Transponders, and which only mention it?").kind, "sensor_papers");
   assert.equal(linkPlan("tell me about southern hydrate ridge").kind, "site_overview");
   assert.equal(linkPlan("What is the depth at Southern Hydrate Ridge?"), null);
   assert.equal(linkPlan("what research has been done at slope base").terms[0].id, "SITE-oregon-slope-base");

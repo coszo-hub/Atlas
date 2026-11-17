@@ -68,6 +68,7 @@ export function instrumentAsked({ types = [], codes = [] } = {}) {
 
 const ASKS_PAPERS =/\b(?:which|what|list|any|find|show|name)\s+(?:[\w-]+\s+){0,2}(?:papers?|studies|publications?|articles?|research)\b|\b(?:papers?|studies|publications?|articles?)\s+(?:that|which|have|has|about|on)\b|^\s*(?:papers?|publications?|studies)\b|\bwho\s+(?:has|have)\b|\bresearch\s+(?:has|have)\s+been\b/i;
 const OVERVIEW_ASK = /\b(?:tell me (?:more )?about|what do we know about|describe|(?:an? )?overview of|introduc\w* to|summar\w*|what(?:'s| is) (?:at|known about|there at))\b|^\s*(?:what|where) is (?:the )?(?:southern hydrate ridge|hydrate ridge|axial(?: seamount)?|ashes|the international district|slope base|axial base)\s*\??\s*$/i;
+const USES_ASK = /\b(?:us(?:e|es|ed|ing)|mention(?:s|ed)?|data from|analy[sz](?:e|es|ed))\b/i;
 const METHOD_ASK = /\b(?:methods?|techniques?|approach(?:es)?|analy[sz](?:e|es|ed|is|ing)|tools?)\b/i;
 
 // What a question asks of the links:
@@ -91,6 +92,9 @@ export function linkPlan(question, { instrument = false } = {}) {
     return sites.length && !topics.length && OVERVIEW_ASK.test(q) ? { kind: "site_overview", terms: sites } : null;
   }
   if (topics.length) return { kind: "topic", terms: topics, sites, rca: asksRcaData(q) };
+  // "Which papers used the Central Caldera acoustic transponders": a question about using or mentioning something
+  // asks about an instrument, even one whose name the instrument types do not know; the instrument lookup finds it.
+  if (USES_ASK.test(q)) return { kind: "sensor_papers" };
   if (sites.length && !instrument) return { kind: "site", terms: sites };
   return null;
 }

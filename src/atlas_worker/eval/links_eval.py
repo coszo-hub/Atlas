@@ -52,9 +52,17 @@ def paper_matchers(ids, docs, works):
 
 
 def split_used(answer):
-    """The part of a type 2 answer listing papers that used the sensor, and the part listing mentions."""
-    m = re.search(r"^[^\n]*(?:papers?|studies|publications?)\s+(?:that\s+)?(?:only\s+)?mention", answer, re.I | re.M)
-    return (answer[:m.start()], answer[m.start():]) if m else (answer, "")
+    """The part of a type 2 answer listing papers that used the sensor, and the part listing mentions. The list the
+    Worker adds after the answer has its own two sections; the model's text before it is split at its own heading."""
+    def at_mention(text):
+        m = re.search(r"^[^\n]*(?:papers?|studies|publications?)\s+(?:that\s+)?(?:only\s+)?mention", text, re.I | re.M)
+        return (text[:m.start()], text[m.start():]) if m else (text, "")
+    listed = answer.find("**Papers the links say used its data")
+    if listed < 0:
+        return at_mention(answer)
+    used_text, mention_text = at_mention(answer[:listed])
+    used_list, mention_list = at_mention(answer[listed:])
+    return used_text + "\n" + used_list, mention_text + "\n" + mention_list
 
 
 def ask(question, model):
