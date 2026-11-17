@@ -123,7 +123,13 @@ def main() -> int:
     def add(question, source, *, gold=None, gold_kind=None, ref=None, qtype=None, date=None):
         q = re.sub(r"\s+", " ", str(question)).strip().rstrip("\\").strip()
         key = re.sub(r"[^a-z0-9]", "", q.lower())
-        if not q or key in seen:
+        if not q:
+            return
+        if key in seen:
+            # Asked before and also an eval case: the eval's gold joins the earlier row.
+            row = next(r for r in rows if re.sub(r"[^a-z0-9]", "", r["question"].lower()) == key)
+            if gold is not None and row["gold"] is None:
+                row.update(gold=gold, gold_kind=gold_kind, also_in=f"{source}:{ref or ''}")
             return
         seen.add(key)
         kind = None

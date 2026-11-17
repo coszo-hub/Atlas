@@ -5,7 +5,7 @@ tests) and with its gold answer where it has one.
 
 | # | Type | Question | Gold from |
 |---|------|----------|-----------|
-| 1 | literature | answered from papers, citing them | paper facts (literature evals) |
+| 1 | literature | answered from papers, citing them | paper facts: the literature evals, and authored/ (read from each paper) |
 | 2 | paper_sensor | which papers used / mention this sensor | reading the papers (to come) |
 | 3 | paper_method | methods a paper applies | method vocabulary + reading (to come) |
 | 4 | paper_concept | concepts or features a paper studies | concept vocabulary + reading (to come) |
@@ -14,7 +14,7 @@ tests) and with its gold answer where it has one.
 | 7 | sensor_info | make, model, serial, depth of a sensor | OOI asset management |
 | 8 | method_sensor | methods applied to a sensor's data | from 2 and 3 (to come) |
 | 9 | method_papers | papers that did a method at the RCA | from 3 (to come) |
-| 10 | paper_summary | about Author et al. (year) | paper metadata and abstract (to come) |
+| 10 | paper_summary | about Author et al. (year) | the paper's key points, authored/ (read from its abstract) |
 | 11 | data_availability | date range of a sensor's data, channels | asset-management deployments, StationXML epochs |
 | 12 | changes | swaps, deployments, serials over time | asset-management deployments |
 | 13 | errors | orientation issues | StationXML azimuths |
@@ -25,6 +25,10 @@ tests) and with its gold answer where it has one.
 
 - `question_bank.jsonl`: questions already asked (past sessions, commit messages) and the existing evals'
   (`build_question_bank.py`). All seen, so all **train**.
+- `literature_train.jsonl` and `blind/literature_blind.jsonl`: literature and paper-summary questions on 75 papers
+  across Axial, Hydrate Ridge, the Cascadia margin, acoustics and DAS, vent biology and the Oregon shelf, written from
+  each paper's abstract (`authored/literature_batch*.json`, built by `build_literature_questions.py`, which fails if
+  any fact's pattern is not in the paper's own abstract or full text). Every answer must cite the paper.
 - `generated_train.jsonl` and `blind/generated_blind.jsonl`: new questions with gold computed from the sources
   (`generate_source_questions.py`), as of the date in each row's `as_of`.
 
