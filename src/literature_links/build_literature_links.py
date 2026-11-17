@@ -88,6 +88,42 @@ KIND_WORDS = {
 }
 NEAR = 300   # characters between a site's name and the instrument's
 
+# Instruments papers name by their system rather than a code: (name, pattern, which sensors, context the passage needs).
+# One sensor: the name names it. Several: the one whose site is written near the name; with no site nearby, the
+# passage describes them all (the count is kept). A sensor without a site is chosen by its own words (DAS by year).
+def _model(*words):
+    return lambda d: any(w.lower() in f"{d.get('name') or ''} {d.get('model') or ''} {d['canonical_id']}".lower() for w in words)
+
+
+SYSTEMS = [   # (name, pattern, which sensors, context the passage needs, counts only in a paper naming the RCA/OOI)
+    ("COVIS", r"\bCOVIS\b|Cabled Observatory Vent Imaging Sonar", _model("COVIS"), r"ASHES|Axial", False),
+    ("CamHD", r"\bCam ?HD\b|HD (?:video )?camera", _model("CAMHD", "HD Video Camera"), r"Axial|ASHES|Mushroom", True),
+    ("A-0-A", r"\bA-?0-?A\b", _model("A-0-A", "AOABP"), r"Axial|pressure", False),
+    ("SCPR", r"\bSCPRs?\b|[Ss]elf[- ][Cc]alibrating [Pp]ressure [Rr]ecorders?", _model("SCPR", "Self-Calibrating Pressure Rec"), r"Axial|Oregon|Cascadia|COSZO", True),
+    ("BOTPT", r"\bBOTPTs?\b|[Bb]ottom [Pp]ressure (?:and |& )?[Tt]ilt|BPR/[Tt]ilt", _model("BPR/Tilt", "BOTPT"), None, False),
+    ("PREST", r"\bPRESTs?\b|[Tt]idal (?:[Ss]eafloor )?[Pp]ressure|SBE ?54", _model("PREST", "Tidal"), None, True),
+    ("HPIES", r"\bHPIES\b", _model("HPIES"), None, False),
+    ("OsmoSampler", r"[Oo]smo ?[Ss]amplers?|osmotic (?:fluid )?sampler", _model("OsmoSampler", "Osmotic"), None, True),
+    ("mass spectrometer", r"[Mm]ass [Ss]pectrometers?|\bMASSP\b", _model("Mass Spec"), None, True),
+    ("RAS", r"\bRAS\b|[Rr]emote [Aa]ccess (?:[Ff]luid )?[Ss]ampler", _model("Remote Access Fluid", "RASFL"), r"International District|Axial", True),
+    ("MARUM sonars", r"[Oo]verview [Ss]onar|\bSHROS\b|[Rr]otary [Ss]onar", _model("Overview Sonar", "Rotary Sonar"), r"Hydrate Ridge|\bSHR\b", True),
+    ("MARUM camera", r"MARUM (?:camera|video)|pan[- ]tilt camera", _model("MARUM Camera"), r"Hydrate Ridge|\bSHR\b", True),
+    ("echosounder", r"\bZPLSC\b|EK-?60|[Bb]io-?acoustic [Ss]onar", _model("ZPLSC", "EK-60"), r"Endurance|Oregon", True),
+    ("FETCH", r"\bFETCH\b|[Aa]coustic (?:ranging|extensometer|transponders?)", _model("FETCH", "Acoustic Transponders"), r"Axial|caldera", True),
+    ("strainmeter", r"(?:[Ss]eafloor|[Oo]ptical[- ]fib(?:er|re)) strainmeters?|[Oo]ptical[- ]fib(?:er|re) strain", _model("STRAINMETER"), r"Oregon|Cascadia|Slope Base|Hydrate Ridge", False),
+    ("benchmarks", r"\bO[1-6]\b", _model("COSZO-BPR-O"), r"benchmarks?|ASCPR", False),
+    # The profilers are platforms: a paper on "the Slope Base shallow profiler" describes the instruments it carries.
+    ("shallow profiler", r"[Ss]hallow[- ][Pp]rofil(?:er|ing)|[Pp]rofiling (?:mooring|platform)|\bSF0[13][AB]\b",
+     lambda d: d["canonical_id"][:8] in ("RS01SBPS", "RS03AXPS", "CE04OSPS"), None, True),
+    ("deep profiler", r"[Dd]eep[- ][Pp]rofil(?:er|ing)|McLane (?:moored )?profiler|\bDP0[13][AB]\b",
+     lambda d: d["canonical_id"][:8] in ("RS01SBPD", "RS03AXPD", "CE04OSPD"), None, True),
+    ("DAS", r"[Dd]istributed [Aa]coustic [Ss]ensing|\bDAS\b", lambda d: d.get("instrument_type") in ("das", "distributed_fiber_sensing"),
+     r"Ocean Observatories Initiative|\bOOI\b|Regional Cabled Array|\bRCA\b|Cabled Array", False),
+]
+# Which DAS deployment a passage means, by its words; else the 2021 community test, the dataset most papers use.
+DAS_BY = [(r"multi-?span|repeaters?|Nokia|2025", ("PI-DAS25",)), (r"OptoDAS|RAPID|2024", ("PI-DAS24",)),
+          (r"OptaSense(?!.*2021)", ("PI-DAS-OPTASENSE",)), (r"2021|community|QuantX|DTS|.", ("RCA-DAS-2021-COMMUNITY-TEST",))]
+
 # Features the sensors watch: (id, name, pattern, needs "Axial" in the passage).
 FEATURES = [
     ("FEATURE-axial-seamount", "Axial Seamount", r"Axial (?:[Ss]eamount|[Vv]olcano)", False),
@@ -193,6 +229,20 @@ def build(output: Path) -> dict:
         if RCA_SIGNAL.search(text):
             rca_paper.add(pid)
 
+    # Each system's sensors, and each sensor's site pattern (to choose among several).
+    systems = []
+    for name, pattern, select, needs, rca_only in SYSTEMS:
+        ids = [sid for sid, d in rec.items() if select(d)]
+        if ids:
+            systems.append((name, re.compile(pattern), ids, re.compile(needs) if needs else None, rca_only))
+    site_patterns = {k: re.compile(rf"{v[0]}|\b{k}\b") for k, v in SITE_NAMES.items()}
+    site_of = {}
+    for sid, d in rec.items():
+        r = next((REFDES.fullmatch(n) for n in [sid, *(d.get("aliases") or [])] if REFDES.fullmatch(n)), None)
+        site = (r.group(1) if r else None) or d.get("site") or LOCATION_SITE.get(d.get("location") or "")
+        if site in site_patterns:
+            site_of[sid] = site_patterns[site]
+
     links: dict[tuple, dict] = {}
 
     def add(pid, target, kind, layer, cid, page, text, span, share=None):
@@ -202,7 +252,7 @@ def build(output: Path) -> dict:
         link["kinds"].add(kind)
         link["layers"].add(layer)
         link["passages"].add(cid)
-        rank = {"named": 0, "range": 1, "designator": 0, "described": 3, "feature": 2}[kind] + (0 if layer == "fulltext" else 0.5)
+        rank = {"named": 0, "range": 1, "designator": 0, "system": 1, "described": 3, "feature": 2}[kind] + (0 if layer == "fulltext" else 0.5)
         if rank < link["evidence_rank"]:
             link.update(evidence=snippet(text, *span), evidence_rank=rank, evidence_chunk=cid, evidence_layer=layer, evidence_page=page)
         if share:
@@ -225,6 +275,30 @@ def build(output: Path) -> dict:
             for key in (m.group(0), f"{m.group(1)}-{m.group(2)}-{m.group(4)}", f"{m.group(1)}-{m.group(4)}"):
                 for sid in by_refdes.get(key, ()):
                     add(pid, sid, "designator", layer, cid, page, text, m.span())
+        for name, rx, ids, needs, rca_only in systems:
+            m = rx.search(text)
+            if not m or (needs and not needs.search(text)) or (rca_only and pid not in rca_paper):
+                continue
+            if name == "DAS":
+                for words, chosen in DAS_BY:
+                    if re.search(words, text):
+                        ids = [i for i in chosen if i in rec]
+                        break
+            kind = "described" if name.endswith("profiler") else "system"
+            if len(ids) == 1:
+                add(pid, ids[0], kind, layer, cid, page, text, m.span())
+                continue
+            window = text[max(0, m.start() - 2 * NEAR): m.end() + 2 * NEAR]
+            near = [i for i in ids if site_of.get(i) and site_of[i].search(window)]
+            if kind == "described":
+                # A profiler's instruments are those of the kinds written near it ("its CTD and oxygen optode").
+                near = [i for i in near if (k := rec[i].get("instrument_type")) in kind_rx and kind_rx[k].search(window)]
+            if near:
+                for i in near:
+                    add(pid, i, kind, layer, cid, page, text, m.span(), share=len(near) if len(near) > 1 else None)
+            elif pid in rca_paper and kind == "system":
+                for i in ids:
+                    add(pid, i, "described", layer, cid, page, text, m.span(), share=len(ids))
         year = papers[pid].get("publication_year") or 0
         if pid in rca_paper and year >= 2009:
             for site, (rx, needs_axial) in site_rx.items():
@@ -269,7 +343,7 @@ def build(output: Path) -> dict:
     for (pid, target), l in sorted(links.items()):
         is_sensor = target in rec
         how = sorted(l["kinds"])
-        predicate = ("NAMES_SENSOR" if set(how) & {"named", "range", "designator"} else "DESCRIBES_SENSOR") if is_sensor else "NAMES_FEATURE"
+        predicate = ("NAMES_SENSOR" if set(how) & {"named", "range", "designator", "system"} else "DESCRIBES_SENSOR") if is_sensor else "NAMES_FEATURE"
         target_name = rec[target].get("name") if is_sensor else feature_names[target]
         paper = papers[pid]
         chunk_id = stable("LINK-", f"{pid}|{target}")
