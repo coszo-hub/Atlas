@@ -33,7 +33,6 @@ function Help() {
 export default function HudDock({ scene, deep = false, onDeep, credit, auv = false, subsurface = null, quakeColor = "time", onQuakeColor, bundle = null, onSensor }) {
   const [open, setOpen] = useState(() => new Set());
   const watch = useWatch();
-  const [whaleDay, setWhaleDay] = useState(null);   // the fin whale day on the map (Controls picks it; Legend shows its key)
   const toggle = key => setOpen(o => { const n = new Set(o); if (!n.delete(key)) n.add(key); return n; });
   const pop = key => `hud-pop-${key}`;
   return (
@@ -54,11 +53,10 @@ export default function HudDock({ scene, deep = false, onDeep, credit, auv = fal
       <div className="dock-pops">
         {watch.on && <div className="dock-pop" role="group" aria-label="Watcher"><WatchKey bundle={bundle} onSensor={onSensor} /></div>}
         <div id={pop("terrain")} className="dock-pop" role="group" aria-label="Terrain controls" hidden={!open.has("terrain")}>
-          <Controls scene={scene} deep={deep} onDeep={onDeep} whaleDay={whaleDay} onWhaleDay={setWhaleDay} quakeColor={quakeColor} onQuakeColor={onQuakeColor} />
+          <Controls scene={scene} deep={deep} onDeep={onDeep} quakeColor={quakeColor} onQuakeColor={onQuakeColor} />
         </div>
         {open.has("legend") && <div id={pop("legend")} className="dock-pop" role="group" aria-label="Legend">
           <Legend credit={credit} auv={auv} subsurface={subsurface} realtime={!!scene?.subsurface?.unrest}
-            whales={whaleDay ? { day: whaleDay, ...scene.whales.data.days[whaleDay], credit: scene.whales.credit } : null}
             byFault={!!subsurface && quakeColor === "fault"} /></div>}
         {open.has("help") && <div id={pop("help")} className="dock-pop" role="group" aria-label="Help"><Help /></div>}
       </div>

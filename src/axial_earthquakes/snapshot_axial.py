@@ -19,7 +19,6 @@ FILES={
  "index.html":"/", "hypo71.dat":"/hypo71.dat", "hypo71-index.html":"/hypo71.html", "ph2dt-index.html":"/ph2dt.html",
  "axial_focal_mechanisms.csv":"/FocalMechanisms/catalog/axial_focal_mechanisms.csv",
  "FM_ML_2022_2025.txt":"/FocalMechanisms/catalog/FM_ML_2022_2025.txt", "FM_XC_2015_2021.txt":"/FocalMechanisms/catalog/FM_XC_2015_2021.txt",
- "whale-counts.json":"/WhaleTracking/counts.json", "whale-tracking.html":"/WhaleTracking.html",
  "focal-mechanisms.html":"/FocalMechanisms.html", "rsam.html":"/rsam.html", "map1-index.html":"/map1.html", "map2-index.html":"/map2.html",
 }
 

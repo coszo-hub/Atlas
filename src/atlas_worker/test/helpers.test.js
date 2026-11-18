@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { paperKey, assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
+import { paperKey, assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, isWhaleDataQuestion, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -958,7 +958,12 @@ test("a request for code for a task gets that task's recipe: its task and instru
   const wave = ["task_earthquake_waveform"];
   assert.deepEqual(taskRecipeIds("Give me Python code to download Oregon Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) "
     + "(RS01SLBS-MJ01A-06-PRESTA101) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC", TASKS), []);   // its name, not a task
-  assert.deepEqual(taskRecipeIds("Write code to remove the tides from the Slope Base tidal pressure gauge", TASKS), ["task_botpt_detide"]);
+  const gauge = ["task_prest_detide"];   // a tidal pressure gauge is not a BOTPT
+  assert.deepEqual(taskRecipeIds("Write code to remove the tides from the Slope Base tidal pressure gauge", TASKS), gauge);
+  assert.deepEqual(taskRecipeIds("Write code to remove the tides from the Axial Base tidal pressure gauge", TASKS), gauge);
+  assert.deepEqual(taskRecipeIds("python script to detide the PRESTB102 pressure at Southern Hydrate Ridge", TASKS), gauge);
+  assert.deepEqual(taskRecipeIds("How do I remove the tides from the HYSB1 seafloor pressure?", TASKS), gauge);
+  assert.deepEqual(taskRecipeIds("Write code to remove the tides from the eastern caldera BOTPT pressure for August 2026", TASKS), ["task_botpt_detide"]);
   for (const name of ["Oregon Shelf Benthic Package 3D Current Meter (CE02SHBP-LJ01D-07-VEL3DC108)",
     "Axial Seamount Base Spectrophotometer (AC-S) (RS03AXBS-LJ03A-11-OPTAAC303)",
     "Oregon Offshore Benthic Package Broadband Hydrophone (CE04OSBP-LJ01C-11-HYDBBA105)",
@@ -1254,4 +1259,16 @@ test("every instrument at a place or on a node, from the designators", async () 
   assert.equal(placeDesignators("what sensors are deployed at axial", ids).length, 3);
   assert.deepEqual(placeDesignators("Which instruments are connected to PC01B?", ids), ["CE04OSPS-PC01B-05-ZPLSCB102"]);
   assert.deepEqual(placeDesignators("What is the depth of the CTD at Axial Base?", ids), []);
+});
+
+test("whale counts and tracks are not answered; the research on whale calls is", () => {
+  for (const q of ["how many whales at axial today", "How many whales are at Axial today?", "how many fin whale calls at axial in december 2024?", "How many fin whale calls at Axial in December 2024?",
+    "Where are the fin whales now?", "show me the whale tracks over the caldera", "whale call counts at Axial this week",
+    "are there whales at Axial right now?", "number of blue whales near the Oregon Offshore site"]) assert.ok(isWhaleDataQuestion(q), q);
+  for (const q of ["How does DAS detect whales?", "papers on fin whale calls recorded by the OOI seismometers",
+    "Which whale calls and other sounds were recorded in the November 2021 DAS experiment on the RCA cables offshore central Oregon?",
+    "How are fin whales tracked with ocean bottom seismometers?", "Summarize Wilcock et al. 2023 on fin whale calls",
+    "How many earthquakes at Axial today?", "fin whale calls on the AXEC2 hydrophone",
+    "How many fin whale calls did Wilcock 2014 detect?", "How many fin whale tracks did Soule and Wilcock (2013) locate?",
+    "How many hours of Southern Resident killer whale audio did Nestor et al. (2026) curate from public hydrophone data?"]) assert.ok(!isWhaleDataQuestion(q), q);
 });

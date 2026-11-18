@@ -431,6 +431,23 @@ export function isInstrumentInventoryQuestion(question) {
   return INSTRUMENT_WORDS.test(q) && PLACE_WORDS.test(q);
 }
 
+// Whale counts, calls and tracks are not in the atlas: the Axial Seamount site's fin whale counts and tracks are not
+// accurate (17 November 2026), so they were removed, and a question for them ("how many whales at Axial today?",
+// "where are the fin whales now?") gets WHALE_DATA_ANSWER instead of an answer pieced from papers or the earthquake
+// count. Questions about the research (papers, how DAS or the seismometers record whale calls) are answered as before.
+const WHALES = /\b(?:whales?|cetaceans?|marine mammals?)\b/i;
+const WHALE_DATA = /\b(?:how many|count(?:s|ed)?|number of|tally|totals?|today|tonight|yesterday|right now|now|currently|at the moment|this (?:morning|week|month|year)|last (?:night|week|month)|latest|live|tracks|whale track|where (?:are|were|is) (?:the )?(?:\w+ )?whales?|locations? of (?:the )?(?:\w+ )?whales?)\b/i;
+const WHALE_RESEARCH = /\b(?:papers?|stud(?:y|ies)|literature|publications?|published|articles?|authors?|cite[sd]?|citations?|et al|how (?:do|does|did|can|could|are|is|were|was)\b)/i;
+export const WHALE_DATA_ANSWER = "RCA Atlas does not provide whale counts, call counts or whale tracks. For the research on whale "
+  + "calls recorded by the cabled seismometers, hydrophones and DAS, ask for the papers (for example, \"papers on fin whale "
+  + "calls recorded by the OOI seismometers\").";
+// A paper named by its author and year ("Wilcock 2014", "Soule and Wilcock (2013)"), not a month ("December 2024").
+const AUTHOR_YEAR = /\b(?!(?:January|February|March|April|May|June|July|August|September|October|November|December)\b)[A-Z][a-z]+(?:'s)?(?: (?:and|&) [A-Z][a-z]+)? \(?(?:19|20)\d\d\)?/;
+export function isWhaleDataQuestion(question) {
+  const q = String(question || "");
+  return WHALES.test(q) && WHALE_DATA.test(q) && !WHALE_RESEARCH.test(q) && !AUTHOR_YEAR.test(q);
+}
+
 // "Is the pressure gauge at Slope Base operational?": a question about an instrument's current state, which the
 // live monitor answers (the map card's own check) and no corpus record can.
 export function isStatusQuestion(question) {

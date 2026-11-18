@@ -4,9 +4,8 @@ import "./ui.css";
 
 // The legend popover in the HUD dock, mounted while it is open. The map credits stay visible either way (Credit.jsx).
 // subsurface: its credit while Axial's subsurface is shown, else null; realtime: whether the real-time catalog after 2021 is in.
-// whales: the fin whale day on the map ({ day, tracks, detected, tracked, credit }) or null.
 // byFault: whether the earthquakes are coloured by their focal mechanisms' faulting type.
-export default function Legend({ credit, auv = false, subsurface = null, realtime = false, whales = null, byFault = false }) {
+export default function Legend({ credit, auv = false, subsurface = null, realtime = false, byFault = false }) {
   const ref = useRef(null);
   // The legend is taller than a short window: measured from its top under the dock, it ends 16 px above the bottom
   // edge, or 8 px above the family strip when the strip reaches under it, and scrolls. The strip changes width with
@@ -67,11 +66,7 @@ export default function Legend({ credit, auv = false, subsurface = null, realtim
           <div className="row" key={k}><svg className="glyph"><circle cx="6" cy="6" r="2.6" fill={FAULT_COLORS[k]} /></svg>{name}</div>))}
         <div className="row"><svg className="glyph"><circle cx="6" cy="6" r="2.2" fill="#80807a" opacity="0.4" /></svg>No focal mechanism</div>
         <div className="row">Each earthquake's own focal mechanism, quality A and B: 2015–2021 from cross-correlated polarities, 2022 to March 2025 from machine-learned ones. The 2026 real-time mechanisms are left out: they are copies of 27 earlier ones.</div></div>}
-      {whales && <div><div className="eyebrow">Fin whales, {whales.day}</div>
-        <div className="row"><svg className="glyph"><path d="M0 6h12" stroke="#7fb2ff" strokeWidth="2" /><circle cx="6" cy="6" r="2" fill="#7fb2ff" /></svg>A whale's track, one colour each ({whales.tracks.length})</div>
-        <div className="row"><svg className="glyph"><circle cx="6" cy="6" r="2" fill="#9a988f" /></svg>Call in no track</div>
-        <div className="row">{whales.tracked.toLocaleString("en-US")} of {whales.detected.toLocaleString("en-US")} calls detected that day were located in a track. Calls are located 20 m below the sea surface, where the whales were; the faint dashed lines are the tracks' shadows on the seafloor.</div></div>}
-      <div className="attribution">Bathymetry: {credit}.{auv && " Axial summit: MBARI AUV survey (cruise V2506), 1 m."} Cable: NOAA/BOEM Marine Cadastre, OOI mariner notices; west of the US EEZ and at Axial, ooi_cables.csv (M. Kidiwela). Faults: USGS Quaternary Fault and Fold Database. Status: Nereus.{subsurface && ` ${subsurface}.`}{whales && ` ${whales.credit}.`}</div>
+      <div className="attribution">Bathymetry: {credit}.{auv && " Axial summit: MBARI AUV survey (cruise V2506), 1 m."} Cable: NOAA/BOEM Marine Cadastre, OOI mariner notices; west of the US EEZ and at Axial, ooi_cables.csv (M. Kidiwela). Faults: USGS Quaternary Fault and Fold Database. Status: Nereus.{subsurface && ` ${subsurface}.`}</div>
     </div>
   );
 }

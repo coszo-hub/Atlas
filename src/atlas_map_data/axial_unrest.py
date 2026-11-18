@@ -1,13 +1,11 @@
 """Axial Seamount's unrest since 2015 → atlas bundle: the real-time earthquake catalog after the relocated one ends,
-monthly earthquake counts, the caldera's uplift since the April 2015 eruption, and the fin whale calls the same
-seismometers record, with whale tracks over the caldera (needs numpy).
+monthly earthquake counts and the caldera's uplift since the April 2015 eruption (needs numpy).
 
   PYTHONPATH=src .venv/bin/python -m atlas_map_data.axial_unrest [--refresh]
 
---refresh downloads the University of Washington's catalog (hypo71.dat, about 40 MB), its fin whale counts and tracks,
-and OOI's daily depths from the Gold Copy into source_material/AxialEarthquakes/latest first; without it the build reads
-what is there. The site keeps whale tracks only for the three days of the last 90 with the most calls, so each refresh
-adds the days it has to source_material/AxialEarthquakes/whale_tracks, which keeps every day it has seen.
+--refresh downloads the University of Washington's catalog (hypo71.dat, about 40 MB) and OOI's daily depths from the
+Gold Copy into source_material/AxialEarthquakes/latest first; without it the build reads what is there. The site's fin
+whale counts and tracks are left out: they are not accurate (only its earthquakes and focal mechanisms are used).
 
 The relocated catalog in subsurface.json (2015-2021) stays as it is: its locations are better. Real-time events
 after it are added when their horizontal and vertical errors are both within MAX_ERR_KM, each placed at random within
@@ -36,7 +34,6 @@ from . import paths
 
 SITE = "http://axial.ocean.washington.edu"
 CATALOG_URL = f"{SITE}/hypo71.dat"
-TRACKS = paths.REPO / "source_material" / "AxialEarthquakes" / "whale_tracks"
 KM_LAT = 111.19
 THREDDS = "https://thredds.dataexplorer.oceanobservatories.org/thredds"
 BOTPTS = {"MJ03F": "RS03CCAL-MJ03F-05-BOTPTA301", "MJ03E": "RS03ECAL-MJ03E-06-BOTPTA302"}
@@ -46,8 +43,6 @@ CELL_DEG = 0.01 / 60                       # the catalog gives positions to 0.01
 DATUM_M = 1500.0
 DAY0 = datetime(2015, 1, 22)               # the relocated catalog's first day: one timeline for both
 REFERENCE_DAY = "2015-04-23"               # the last day before the eruption began on 24 April 2015
-WHALE_CREDIT = ("Fin whale calls and tracks: University of Washington Axial earthquake pipeline (W. Wilcock); located 20 m "
-                "below the sea surface, reliable within about 5 km of the caldera stations")
 FOCAL = paths.REPO / "runtime_data" / "AxialEarthquakes" / "graphrag" / "focal_mechanisms.jsonl.gz"   # axial_earthquakes
 TYPES = "NRSU"   # normal, reverse, strike-slip, unclassified: codes 1-4 (0, none)
 CREDIT = ("Earthquakes after 2021: University of Washington Axial Seamount real-time catalog (W. Wilcock, M. Zhang); "
@@ -63,11 +58,6 @@ def get(url: str, timeout=300) -> bytes:
 def refresh(out: Path = SOURCE) -> None:
     out.mkdir(parents=True, exist_ok=True)
     (out / "hypo71.dat").write_bytes(get(CATALOG_URL))
-    (out / "whale-counts.json").write_bytes(get(f"{SITE}/WhaleTracking/counts.json"))
-    TRACKS.mkdir(parents=True, exist_ok=True)
-    for day in json.loads(get(f"{SITE}/WhaleTracking/tracks/index.json")):
-        if isinstance(day, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):   # a date, never a path from the server
-            (TRACKS / f"{day}.json").write_bytes(get(f"{SITE}/WhaleTracking/tracks/{day}.json"))
     for node, refdes in BOTPTS.items():
         folder = f"ooigoldcopy/public/{refdes}-streamed-botpt_nano_sample_24hour"
         listing = get(f"{THREDDS}/catalog/{folder}/catalog.xml").decode()
@@ -112,31 +102,6 @@ def months_between(first: datetime, last: datetime) -> list[str]:
     while (y, m) <= (last.year, last.month):
         out.append(f"{y:04d}-{m:02d}")
         y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-    return out
-
-
-def whale_frame(counts: dict, sensors: list[dict]) -> dict:
-    """The whale locator's local km frame (x east, y north) is centred on the caldera stations; its origin is recovered
-    from their positions in both frames, as the site's 3D explorer does."""
-    where = {s["id"].split("-")[-1]: s for s in sensors if s["id"].startswith("EARTHSCOPE-OO-AX")}
-    pairs = [(where["AX" + n], x, y) for n, x, y in counts["stations"] if "AX" + n in where and n != "BA1"]
-    lat0 = sum(s["lat"] - y / KM_LAT for s, _, y in pairs) / len(pairs)
-    km_lon = KM_LAT * np.cos(np.radians(lat0))
-    lon0 = sum(s["lon"] - x / km_lon for s, x, _ in pairs) / len(pairs)
-    return {"lat0": lat0, "lon0": lon0, "kmLon": km_lon}
-
-
-def whale_days(frame: dict, tracks: Path = TRACKS) -> dict:
-    """Every archived track day: calls as [lon, lat, track (0: none), seconds into the day] and the tracks' summaries."""
-    ll = lambda x, y: (round(frame["lon0"] + x / frame["kmLon"], 5), round(frame["lat0"] + y / KM_LAT, 5))
-    out = {}
-    for path in sorted(tracks.glob("*.json")) if tracks.exists() else []:
-        d = json.loads(path.read_text())
-        sec = lambda t: sum(int(v) * m for v, m in zip(t.split(":"), (3600, 60, 1)))
-        out[path.stem] = {"detected": d["detected"], "tracked": d["tracked"],
-                          "calls": [[*ll(x, y), k, sec(t)] for x, y, k, t in d["calls"]],
-                          "tracks": [{**{k: t[k] for k in ("id", "n", "start", "end", "dur", "dist", "heading", "speed")},
-                                      "from": ll(*t["fit"][:2]), "to": ll(*t["fit"][2:])} for t in d["tracks"]]}
     return out
 
 
@@ -214,20 +179,6 @@ def build(source: Path = SOURCE, out: Path = paths.BUNDLE) -> dict:
         uplift[node] = [round((depth[d] - ref) * 100, 1) if (d := (first + timedelta(days=i)).date().isoformat()) in depth
                         else None for i in range(days)]
 
-    # Fin whale calls a month (the same seismometers, so a month with little seismic data has few of both).
-    whales = {"calls": [0] * len(labels), "days": [0] * len(labels)}
-    counts_path = source / "whale-counts.json"
-    if counts_path.exists():
-        wc = json.loads(counts_path.read_text())
-        for i, n in enumerate(wc["fin"]):
-            k = (datetime.fromisoformat(wc["start"]) + timedelta(days=i)).strftime("%Y-%m")
-            if n is not None and k in index:
-                whales["calls"][index[k]] += n; whales["days"][index[k]] += 1
-        sensors = json.loads((out / "sensors.json").read_text())
-        days = whale_days(whale_frame(wc, sensors["sensors"] if isinstance(sensors, dict) else sensors))
-        (out / "whales.json").write_text(json.dumps({"credit": WHALE_CREDIT, "source": f"{SITE}/WhaleTracking.html",
-                                                       "days": days}, separators=(",", ":")))
-
     bundle = {
         "credit": CREDIT, "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "day0": DAY0.date().isoformat(),
@@ -239,7 +190,7 @@ def build(source: Path = SOURCE, out: Path = paths.BUNDLE) -> dict:
                      "last": stamp(q[-1, 0]).isoformat(timespec="seconds") if len(q) else None,
                      "dropped": int(((cat[:, 0] > relocated_end) & ~keep).sum()),
                      "typed": int((packed[:, 5] > 0).sum())},
-        "monthly": {"start": labels[0], "counts": counts, "source": CATALOG_URL, "whaleCalls": whales["calls"], "whaleDays": whales["days"]},
+        "monthly": {"start": labels[0], "counts": counts, "source": CATALOG_URL},
         "uplift": {"start": first.date().isoformat(), "reference": REFERENCE_DAY, "units": "cm", "sites": uplift,
                    "names": {"MJ03F": "Caldera centre (MJ03F)", "MJ03E": "Eastern rim (MJ03E)"}},
         "eruptions": [{"start": "2015-04-24", "label": "2015 eruption"}],
@@ -261,7 +212,6 @@ def main(argv: list[str] | None = None) -> int:
     print(f"real-time earthquakes {r['count']} ({r['first']} to {r['last']}; {r['dropped']} with errors over {MAX_ERR_KM} km left out)")
     print(f"monthly counts {m['start']} +{len(m['counts'])} months, busiest {max(m['counts'])}")
     rt = b["realtime"]; print(f"focal mechanisms: {sum(c != '-' for c in (b['relocatedTypes'] or ''))} relocated events, {rt['typed']} real-time")
-    print(f"fin whale calls {sum(m['whaleCalls']):,}; whale track days: {', '.join(json.loads((args.out / 'whales.json').read_text())['days']) if (args.out / 'whales.json').exists() else 'none'}")
     for node, v in u.items():
         last = next(x for x in reversed(v) if x is not None)
         print(f"uplift {node}: {sum(x is not None for x in v)} days, latest {last:+.1f} cm against {REFERENCE_DAY}")
