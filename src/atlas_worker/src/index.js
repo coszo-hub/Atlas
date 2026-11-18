@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, placeDesignators, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, stationDesignators, withStationName, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, placeDesignators, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -395,7 +395,8 @@ async function assetRecords(question, env) {
     const ids = assetChunkIds(question, ASSET_DIRECTORY, INSTRUMENT_IDS);
     if (!ids.length) return [];
     const found = await postJson(`${api}/v1/chunks`, { collection_id: "ooi_asset_management", chunk_ids: ids }, headers);
-    return (found.hits || []).slice(0, ids.length).map(withRouteCitations);
+    const stations = stationDesignators(question, INSTRUMENT_IDS);
+    return (found.hits || []).slice(0, ids.length).map((hit) => withStationName(hit, stations)).map(withRouteCitations);
   } catch (error) {
     console.error("asset search failed", error instanceof Error ? error.message : "unknown");
     return [];

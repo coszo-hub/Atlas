@@ -1262,3 +1262,18 @@ test("every instrument at a place or on a node, from the designators", async () 
   assert.deepEqual(placeDesignators("Which instruments are connected to PC01B?", ids), ["CE04OSPS-PC01B-05-ZPLSCB102"]);
   assert.deepEqual(placeDesignators("What is the depth of the CTD at Axial Base?", ids), []);
 });
+
+test("an asset record asked for by its station code says which station it is", async () => {
+  const { stationDesignators, withStationName } = await import("../src/helpers.js");
+  const ids = JSON.parse(await readFile(new URL("../src/instrument_ids.json", import.meta.url), "utf8"));
+  for (const [station, refdes] of [["AXAS1", "RS03ASHS-MJ03B-06-OBSSPA301"], ["HYS12", "RS01SUM1-LJ01B-07-OBSSPA102"]]) {
+    const named = stationDesignators(`What is the serial number of ${station.toLowerCase()}?`, ids);
+    assert.equal(named.get(refdes), station, station);
+    const hit = withStationName({ chunk_id: `ooi_assets_${refdes}`, text: `${refdes} is the seismometer.` }, named);
+    assert.match(hit.text, new RegExp(`^\\(This is the record of station ${station}, OO\\.${station} on EarthScope: ${refdes}\\.\\)\\n${refdes} is`));
+    assert.equal(withStationName({ chunk_id: `ooi_assets_calibration_${refdes}`, text: "c" }, named).text.split("\n")[1], "c");
+  }
+  const other = { chunk_id: "ooi_assets_RS03CCAL-MJ03F-05-BOTPTA301", text: "t" };
+  assert.equal(withStationName(other, stationDesignators("serial of AXAS1", ids)), other);   // not the station's record
+  assert.equal(stationDesignators("serial of the BOTPT at Central Caldera", ids).size, 0);
+});

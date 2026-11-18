@@ -820,6 +820,27 @@ export function dataAccessInstruments(question, directory) {
   return typed ? instruments.map((i) => i.refdes).slice(0, 4) : [];
 }
 
+// The designators of the station codes a question names (AXBA1, "axba1"), each to its station: a station and its
+// seismometer's designator share a record.
+export function stationDesignators(question, instrumentIds = {}) {
+  const out = new Map(), refdes = new RegExp(`^${REFDES_SOURCE.replace(/\\b/g, "")}$`);
+  for (const m of String(question || "").matchAll(new RegExp(STATION_SOURCE, "gi"))) {
+    const station = m[0].toUpperCase(), record = instrumentIds[`EARTHSCOPE-OO-${station}`];
+    for (const [key, chunk] of Object.entries(instrumentIds)) {
+      if (record && chunk === record && refdes.test(key)) out.set(key, station);
+    }
+  }
+  return out;
+}
+
+// An asset record asked for by its station code, headed with that code: the records name only the designator, and
+// asked for AXAS1's serial number with RS03ASHS-MJ03B-06-OBSSPA301's record before it, Gemma said it had none.
+export function withStationName(hit, stations) {
+  const refdes = String(hit?.chunk_id || "").match(new RegExp(REFDES_SOURCE.replace(/\\b/g, "")))?.[0];   // after "ooi_assets_"
+  const station = refdes && stations.get(refdes);
+  return station ? { ...hit, text: `(This is the record of station ${station}, OO.${station} on EarthScope: ${refdes}.)\n${hit.text || ""}` } : hit;
+}
+
 export function assetChunkIds(question, directory, instrumentIds = {}) {
   const q = String(question || "");
   if (!directory || !isAssetQuestion(q)) return [];
@@ -844,14 +865,7 @@ export function assetChunkIds(question, directory, instrumentIds = {}) {
     const kept = types.filter((type) => byCode.some((name) => type.test(name)));
     if (kept.length) types.splice(0, types.length, ...kept);
   }
-  const named = new Set(q.match(new RegExp(REFDES_SOURCE, "g")) || []);
-  // A station code (AXBA1, "axba1") is its seismometer's designator: the station and the designator share a record.
-  for (const m of q.matchAll(new RegExp(STATION_SOURCE, "gi"))) {
-    const record = instrumentIds[`EARTHSCOPE-OO-${m[0].toUpperCase()}`];
-    for (const [key, chunk] of Object.entries(instrumentIds)) {
-      if (record && chunk === record && new RegExp(`^${REFDES_SOURCE.replace(/\\b/g, "")}$`).test(key)) named.add(key);
-    }
-  }
+  const named = new Set([...(q.match(new RegExp(REFDES_SOURCE, "g")) || []), ...stationDesignators(q, instrumentIds).keys()]);
   // Codes as written, plural too ("VEL3Ds", "CTDs").
   const codes = new Set([...q.matchAll(/\b([A-Z][A-Z0-9]{3,4})s?\b/g)].map((m) => m[1]));
   const ofType = (i) => types.some((type) => type.test(i.instrument)) || i.codes.some((code) => codes.has(code));
