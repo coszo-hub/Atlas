@@ -498,7 +498,7 @@
    }
   ],
   "match": {
-   "task": "\\b(?:record sections?|packages?|bundles?|sac(?: files?)?|catalog(?:ue)?s?|teleseism\\w*|distant (?:earthquakes?|events?)|radial|transverse|zrt|stress drops?|receiver functions?|moment tensors?|event windows?|(?:each|every|several|multiple|many|all|these|list of) (?:the )?(?:earthquakes?|events?|quakes?))\\b",
+   "task": "\\b(?:record sections?|packages?|bundles?|sac(?: files?)?|catalog(?:ue)?s?|teleseism\\w*|distant (?:earthquakes?|events?)|radial|transverse|zrt|stress drops?|receiver functions?|moment tensors?|event windows?|(?:each|every|several|multiple|many|all|these|list of) (?:the )?(?:earthquakes?|events?|quakes?)|(?:M|magnitude) ?\\d(?:\\.\\d)?\\+? (?:or|and) (?:larger|greater|bigger|above|more)|within \\d+ ?km|waveforms? (?:of|for) (?:the )?(?:\\w+ )?(?:earthquakes|events|quakes))\\b",
    "about": "\\b(?:earthquakes?|quakes?|events?|seism\\w*|teleseism\\w*|broadbands?|short-period|M ?\\d(?:\\.\\d)?|OBS|AX(?:AS|BA|CC|EC|ID)\\d|HYS\\w*)\\b"
   }
  },
@@ -557,9 +557,9 @@
   "title": "Remove the tides from a tidal seafloor pressure gauge (PREST) and get the de-tided depth, hour by hour",
   "script": "recipes/prest_detide.py",
   "instruments": null,
-  "summary": "Reads a tidal seafloor pressure gauge (PREST at Axial Base, Oregon Slope Base or the Southern Hydrate Ridge summit) from EarthScope, where each is recorded at a seismic station (network OO, location 10, pascals of absolute pressure), ten days a request cut to one-minute means, converts it to depth with TEOS-10, fits the tides to a year of hourly depths with UTide and takes the daily and faster ones away, also low-passes with a Godin filter, reports gaps with the level across them (a jump is most likely a redeployment), the tide left, the largest tides and the trend, and writes hourly CSV, the tidal constituents and a plot.",
+  "summary": "Reads a tidal seafloor pressure gauge (PREST at Axial Base, Oregon Slope Base or the Southern Hydrate Ridge summit) from EarthScope, where each is recorded at a seismic station (network OO, location 10, pascals of absolute pressure), thirty days a request, four at a time, cut to one-minute means, converts it to depth with TEOS-10, fits the tides to a year of hourly depths with UTide and takes the daily and faster ones away, also low-passes with a Godin filter, reports gaps with the level across them (a jump is most likely a redeployment), the tide left, the largest tides and the trend, and writes hourly CSV, the tidal constituents and a plot.",
   "steps": [
-   "Find the station's pressure channels for the year before END (or the span asked for, if longer) from its metadata: UDO every 15 s, LDO at 1 Hz (Slope Base from 26 June 2018, Hydrate Ridge from 11 August 2017; Axial Base is UDO throughout), and download each over its own part, ten days a request, keeping one-minute means.",
+   "Find the station's pressure channels for the year before END (or the span asked for, if longer) from its metadata: UDO every 15 s, LDO at 1 Hz (Slope Base from 26 June 2018, Hydrate Ridge from 11 August 2017; Axial Base is UDO throughout), and download each over its own part, thirty days a request, four at a time, keeping one-minute means.",
    "The values are already pascals: do not remove the response, whose stated pascals-to-psia sensitivity the data do not follow.",
    "Convert to sea pressure (absolute less one standard atmosphere, Pa to dbar) and to depth with TEOS-10 (gsw.z_from_p) at the station's latitude; average hourly, keeping hours with at least half their minutes.",
    "Fit the tides with UTide (ordinary least squares, with a linear trend) to FIT_DAYS of hourly depths ending at END, predict the daily and faster constituents over the span asked for and subtract them; the fortnightly and longer ones stay in the residual.",
@@ -571,7 +571,7 @@
    "A redeployment sets the gauge down at another depth: at Southern Hydrate Ridge the de-tided depth jumped 25.7 cm across the gap of 11 August 2017, when the record changed from UDO to LDO, and a June-September 2017 trend across it came out as 109 cm/yr. Take a trend within one deployment, or remove each jump the script reports first.",
    "A quartz gauge drifts, fastest in the months after it is deployed, so a single gauge's trend is part drift; at Slope Base, January-March 2025 gave 0.6 cm/yr and the fit's span from August 2024 1.6 cm/yr. Short gaps can also carry jumps of a few centimetres (Axial Base, April 2024: -6.5 and +7.7 cm across gaps of two days and 14 hours).",
    "The tides are the open ocean's here, about the same at all three: M2 78.0 cm at Axial Base, 81.1 cm at Slope Base and 82.2 cm at Hydrate Ridge; K1 40-43 cm. With a year's fit the hourly de-tided depth kept 1.44 cm rms of tide at Slope Base (2025) and 1.73 cm at Hydrate Ridge (2017).",
-   "A year at 1 Hz is about 37 requests of 10 days (each about 5 s; the script took 2.5-3.5 minutes); shorten FIT_DAYS to go faster, at the cost of tide left behind (K1 and P1 need about six months to a year to separate).",
+   "An EarthScope request took from 5 to 40 s whatever its length (17 November 2026), so the script asks for 30 days at a time, four at once: a year at 1 Hz took under two minutes when one request took 35 s, where ten-day requests one after another ran past 15 minutes. Shorten FIT_DAYS to go faster, at the cost of tide left behind (K1 and P1 need about six months to a year to separate).",
    "The BOTPTs inside Axial's caldera are another instrument with their own task recipe (de-tiding the BOTPT's bottom pressure); this gauge at Axial Base is outside the caldera."
   ],
   "sources": [

@@ -73,7 +73,7 @@
   "chunk_id": "task_event_waveform_package",
   "title": "Save the waveforms of a list of earthquakes at several OOI seismometers, response removed and rotated to radial and transverse, with a record section",
   "instruments": "seismometers",
-  "task": "\\b(?:record sections?|packages?|bundles?|sac(?: files?)?|catalog(?:ue)?s?|teleseism\\w*|distant (?:earthquakes?|events?)|radial|transverse|zrt|stress drops?|receiver functions?|moment tensors?|event windows?|(?:each|every|several|multiple|many|all|these|list of) (?:the )?(?:earthquakes?|events?|quakes?))\\b",
+  "task": "\\b(?:record sections?|packages?|bundles?|sac(?: files?)?|catalog(?:ue)?s?|teleseism\\w*|distant (?:earthquakes?|events?)|radial|transverse|zrt|stress drops?|receiver functions?|moment tensors?|event windows?|(?:each|every|several|multiple|many|all|these|list of) (?:the )?(?:earthquakes?|events?|quakes?)|(?:M|magnitude) ?\\d(?:\\.\\d)?\\+? (?:or|and) (?:larger|greater|bigger|above|more)|within \\d+ ?km|waveforms? (?:of|for) (?:the )?(?:\\w+ )?(?:earthquakes|events|quakes))\\b",
   "about": "\\b(?:earthquakes?|quakes?|events?|seism\\w*|teleseism\\w*|broadbands?|short-period|M ?\\d(?:\\.\\d)?|OBS|AX(?:AS|BA|CC|EC|ID)\\d|HYS\\w*)\\b"
  },
  {

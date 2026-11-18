@@ -1026,6 +1026,8 @@ test("a request for code for a task gets that task's recipe: its task and instru
   assert.deepEqual(taskRecipeIds("Write code for a record section of the Kamchatka M8.8 at the OO broadbands", TASKS), pack);
   assert.deepEqual(taskRecipeIds("python script to save SAC files of every M2+ Axial earthquake last week at AXCC1 and AXEC2", TASKS), pack);
   assert.deepEqual(taskRecipeIds("How do I cut teleseismic P windows rotated to radial and transverse at HYSB1?", TASKS), pack);
+  assert.deepEqual(taskRecipeIds("Write code to save the waveforms of M4.5 or larger earthquakes within 500 km of Axial in September 2026 at AXCC1 and AXAS1, response removed, as MiniSEED", TASKS), pack);   // not one waveform's
+  assert.deepEqual(taskRecipeIds("Write code to plot the waveform at AXCC1 from 2026-10-20 03:10 to 03:14 UTC with the instrument response removed and a 4-30 Hz bandpass", TASKS), wave);
   assert.deepEqual(taskRecipeIds("Write a script to detect Axial earthquakes with STA/LTA and compare with the catalog", TASKS), sta);   // detection's
   assert.deepEqual(taskRecipeIds("Plot the waveform of the 2015 eruption's largest earthquake at AXCC1", TASKS), wave);   // one event: the waveform's
   const das = ["task_das_strain"];

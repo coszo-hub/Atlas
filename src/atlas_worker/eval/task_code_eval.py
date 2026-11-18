@@ -1,9 +1,9 @@
-"""Can Ask Atlas write working code for the analysis tasks (src/task_recipes)? One live question per task, in a
+"""Can Ask Atlas write working code for the analysis tasks (src/task_recipes)? One live question per task (17), in a
 person's words, with a station, place or time different from the recipe's own example, asked of the deployed Worker
 (Gemma). The script in the answer runs unchanged in the recipe sandbox (src/data_recipes/test_recipes.py: no host
 folder, capped memory, CPU and work folder) and passes when it exits cleanly having written a file (a figure or data)
-that is not empty. Also checked: that the answer has a script, and that it carries what the question set (the
-station, the dates). The DAS task is left out: its files are 1-2 GB, over the sandbox's cap.
+that is not empty, and its settings carry what the question set (the station, the dates): a script that runs for
+another station, the example's dates or another task does not pass. The DAS task is left out: its files are 1-2 GB, over the sandbox's cap.
 Usage: python3 task_code_eval.py [--model ooi-gemma-4-26b] [--jobs 3] [--out results.json] [task ids...]"""
 import argparse, json, re, sys, time, urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -30,6 +30,7 @@ CASES = [
     ("event_waveform_package", "Write code to save the waveforms of M4.5 or larger earthquakes within 500 km of Axial in September 2026 at AXCC1 and AXAS1, response removed, as MiniSEED", [r"2026-09", r"AXCC1"]),
     ("botpt_detide", "Write code to remove the tides from the eastern caldera BOTPT pressure for August 2026, hour by hour", [r"BOTPTA302", r"2026-08"]),
     ("station_response", "Write code to list HYSB1's channels, epochs, orientations and instrument responses", [r"HYSB1"]),
+    ("prest_detide", "Write code to remove the tides from the Slope Base tidal pressure gauge for January to March 2025", [r"PRESTA101|HYSB1", r"2025-01|2025, 1\b"]),
     ("botpt_tilt", "Write code for the tilt at the International District BOTPT for September 2026, with relevels removed", [r"BOTPTA303", r"2026-09"]),
     ("vel3d_currents", "Write a script for cleaned currents and tides from the Slope Base VEL3D current meter, 1 to 15 August 2026", [r"RS01SLBS-MJ01A-12-VEL3DB101", r"2026-08"]),
     ("tmpsf_vent_temperature", "Write code to find which ASHES vent thermistors were warm in October 2026 and how they follow the tide", [r"2026-10"]),
@@ -59,8 +60,10 @@ def grade(case, answer, img):
         return {**row, "has_code": False, "passed": False, "answer": text[:600]}
     code = max(blocks, key=len)
     run = test_recipes.run({"id": f"task-{task}", "kind": "gemma", "code": code}, img)
-    return {**row, "has_code": True, "carries": [bool(re.search(c, code, re.I)) for c in carries],
-            "passed": run["passed"], "wrote": run.get("wrote"), "run_error": run.get("error"), "code": code}
+    carried = [bool(re.search(c, code, re.I)) for c in carries]
+    return {**row, "has_code": True, "carries": carried,
+            # a script that runs but not for what was asked (another task's recipe, the example's dates) does not pass
+            "passed": run["passed"] and all(carried), "ran": run["passed"], "wrote": run.get("wrote"), "run_error": run.get("error"), "code": code}
 
 
 def main():

@@ -1,5 +1,6 @@
 # pip install obspy pandas numpy gsw utide matplotlib
 import copy
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import pandas as pd
 import gsw
@@ -30,34 +31,44 @@ if len(match) != 1:
     raise SystemExit(f"{REFDES} is not one of the tidal pressure gauges: {', '.join(GAUGES)}")
 REFDES, sta = match[0], GAUGES[match[0]]
 
-# 1. Each pressure channel's part of the fit's span (the year before END, or the span asked for if longer), ten days a
-#    request, cut to one-minute means as it comes. The values are already pascals: the metadata's response says pascals
-#    to psia, which the data do not follow, so the response is not removed.
+# 1. Each pressure channel's part of the fit's span (the year before END, or the span asked for if longer), thirty days
+#    a request, cut to one-minute means as it comes. The values are already pascals: the metadata's response says
+#    pascals to psia, which the data do not follow, so the response is not removed.
 client = Client("https://service.earthscope.org")
 start, end = pd.Timestamp(START), pd.Timestamp(END)
 fit_start = min(start, end - pd.Timedelta(days=FIT_DAYS))
 inv = client.get_stations(network="OO", station=sta, location="10", channel="UDO,LDO", starttime=UTCDateTime(fit_start),
                           endtime=UTCDateTime(end), level="channel")
 lat = inv[0][0].latitude
-minutes, empty = [], []
+def fetch(code, a, b):
+    """One request's one-minute means; an empty list when EarthScope has no data then."""
+    try:
+        st = Client("https://service.earthscope.org").get_waveforms("OO", sta, "10", code, UTCDateTime(a), UTCDateTime(b))
+    except FDSNNoDataException:
+        return a, []
+    out = []
+    for tr in st:
+        x = pd.Series(tr.data.astype(float), index=pd.to_datetime(tr.times("timestamp"), unit="s"))
+        out.append(x[x > 0].resample("1min").mean().dropna())
+    return a, out
+
+
+# A request costs from 5 to 40 s whatever its length (November 2026), so 30 days each, four at a time.
+jobs = []
 for cha in inv[0][0]:
     a0 = max(fit_start, pd.Timestamp(cha.start_date.datetime))
     b0 = min(end, pd.Timestamp(cha.end_date.datetime)) if cha.end_date else end
-    edges = list(pd.date_range(a0, b0, freq="10D")) + [b0]
-    for a, b in zip(edges[:-1], edges[1:]):
-        if a >= b:
-            continue
-        try:
-            st = client.get_waveforms("OO", sta, "10", cha.code, UTCDateTime(a), UTCDateTime(b))
-        except FDSNNoDataException:
+    edges = list(pd.date_range(a0, b0, freq="30D")) + [b0]
+    jobs += [(cha.code, a, b) for a, b in zip(edges[:-1], edges[1:]) if a < b]
+    print(f"{cha.code} ({cha.sample_rate:g} Hz): {a0:%Y-%m-%d} to {b0:%Y-%m-%d}", flush=True)
+minutes, empty = [], []
+with ThreadPoolExecutor(4) as pool:
+    for a, got in pool.map(lambda job: fetch(*job), jobs):
+        minutes += got
+        if not got:
             empty.append(f"{a:%Y-%m-%d}")
-            continue
-        for tr in st:
-            x = pd.Series(tr.data.astype(float), index=pd.to_datetime(tr.times("timestamp"), unit="s"))
-            minutes.append(x[x > 0].resample("1min").mean().dropna())
-    print(f"{cha.code} ({cha.sample_rate:g} Hz): {a0:%Y-%m-%d} to {b0:%Y-%m-%d}")
 if empty:
-    print("ten-day requests with no data, starting:", ", ".join(empty))
+    print("30-day requests with no data, starting:", ", ".join(empty))
 if not minutes:
     raise SystemExit(f"no pressure from OO.{sta}.10 between {fit_start:%Y-%m-%d} and {END}")
 p = pd.concat(minutes).groupby(level=0).mean().sort_index()
