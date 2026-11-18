@@ -81,7 +81,14 @@
   "title": "Remove the tides from an Axial BOTPT's bottom pressure and get the seafloor's depth change, hour by hour",
   "instruments": null,
   "task": "\\b(?:detid\\w*|de-tid\\w*|tides?|tidal|harmonic|utide|t_tide|godin|constituents?|m2|(?:remove|take out|subtract)\\w* (?:the )?tides?|hourly|15-?s(?:ec\\w*)?|high-rate|raw pressure)\\b",
-  "about": "\\b(?:axial|botpt\\w*|bottom pressure|pressure|bprs?|nano|MJ03[BDEF]|caldera|seafloor depth|ashes|international district)\\b"
+  "about": "\\b(?:axial(?! base)|botpt\\w*|bottom pressure|(?<!tidal )(?<!tidal seafloor )pressure|bprs?|nano|MJ03[BDEF]|caldera|seafloor depth|ashes|international district)\\b"
+ },
+ {
+  "chunk_id": "task_prest_detide",
+  "title": "Remove the tides from a tidal seafloor pressure gauge (PREST) and get the de-tided depth, hour by hour",
+  "instruments": null,
+  "task": "\\b(?:detid\\w*|de-tid\\w*|tides?|tidal|harmonic|utide|t_tide|godin|constituents?|m2|(?:remove|take out|subtract)\\w* (?:the )?tides?|hourly|15-?s(?:ec\\w*)?|high-rate|raw pressure)\\b",
+  "about": "\\b(?:tidal|tsunameters?|prest\\w*|paroscientific|quartz|(?:seafloor |bottom )?pressure|axial base|axba1|slope base|hysb1|hydrate ridge|hys14|MJ03A|MJ01A|LJ01B)\\b"
  },
  {
   "chunk_id": "task_station_response",

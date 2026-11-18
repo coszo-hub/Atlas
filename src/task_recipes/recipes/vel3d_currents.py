@@ -1,4 +1,4 @@
-# pip install xarray netCDF4 pandas numpy utide matplotlib requests
+# pip install xarray netCDF4 pandas numpy utide matplotlib requests obspy
 import re
 import numpy as np
 import pandas as pd
@@ -9,11 +9,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# The RCA's seafloor point current meters (VEL3D), from the Gold Copy:
-#   MAVS-4 (VEL3D-B, about 1 Hz): RS03INT2-MJ03D-12-VEL3DB304 International District, RS03AXBS-MJ03A-12-VEL3DB301 Axial Base,
-#     RS01SUM1-LJ01B-12-VEL3DB104 Southern Hydrate Ridge summit, RS01SLBS-MJ01A-12-VEL3DB101 Slope Base
-#   Nortek Vector (VEL3D-C, 8 Hz): CE02SHBP-LJ01D-07-VEL3DC108 Oregon Shelf (80 m), CE04OSBP-LJ01C-07-VEL3DC107 Oregon Offshore (580 m)
+# The RCA's seafloor point current meters (VEL3D), with their EarthScope station (network OO) where it has one:
+#   MAVS-4 (VEL3D-B, about 1 Hz): RS03INT2-MJ03D-12-VEL3DB304 International District (Gold Copy only), RS03AXBS-MJ03A-12-VEL3DB301
+#     Axial Base (AXBA1), RS01SUM1-LJ01B-12-VEL3DB104 Southern Hydrate Ridge summit (HYS14), RS01SLBS-MJ01A-12-VEL3DB101 Slope Base (HYSB1)
+#   Nortek Vector (VEL3D-C, 8 Hz): CE02SHBP-LJ01D-07-VEL3DC108 Oregon Shelf, 80 m (CZSHF), CE04OSBP-LJ01C-07-VEL3DC107 Oregon
+#     Offshore, 580 m (CZOFF)
 REFDES = "RS03INT2-MJ03D-12-VEL3DB304"
+SOURCE = "goldcopy"      # "goldcopy": OOI's Gold Copy, with QARTOD results, beam values and (MAVS) pitch and roll for the
+                         # cleaning; "earthscope": every sample from EarthScope, the same rotated velocities and quicker, but
+                         # cleaned from the velocities alone (see the pitfalls: a failing MAVS gets through)
 START, END = "2025-01-01", "2025-03-01"   # UTC; END is not included
 SAMPLE_SECONDS = 10      # one sample is read every this many seconds (the files hold 1 or 8 a second)
 AVERAGE = "1h"           # the averaging period
@@ -23,6 +27,11 @@ MIN_CORRELATION = 70     # Vector only: a sample whose lowest beam correlation (
 MAX_TILT_CHANGE = 5      # MAVS only: degrees; a sample whose pitch or roll is this far from the median is a garbled record
 MIN_SHARE = 0.5          # an average needs this share of its samples, else it is blank
 THREDDS = "https://thredds.dataexplorer.oceanobservatories.org/thredds"
+EARTHSCOPE = {"RS03AXBS-MJ03A-12-VEL3DB301": ("AXBA1", "20"), "RS01SUM1-LJ01B-12-VEL3DB104": ("HYS14", "20"),
+              "RS01SLBS-MJ01A-12-VEL3DB101": ("HYSB1", "20"), "CE02SHBP-LJ01D-07-VEL3DC108": ("CZSHF", "20"),
+              "CE04OSBP-LJ01C-07-VEL3DC107": ("CZOFF", "21")}   # station, location
+SPIKE_K, SPIKE_FLOOR = 6, 0.05   # EarthScope only: a sample this many robust SDs (and at least this many m/s) off its hour's median is a spike
+MAX_HOUR_SPIKES = 0.1            # EarthScope only: an hour with more than this share of spikes is a failing instrument: all of it dropped
 
 vector = "VEL3DC" in REFDES
 stream = "vel3d_cd_velocity_data" if vector else "vel3d_b_sample"
@@ -31,40 +40,72 @@ comps = [f"{prefix}{c}_turbulent_velocity" for c in ("eastward", "northward", "u
 beams = [f"correlation_beam_{i}" for i in (1, 2, 3)] if vector else [f"velocity_beam_{b}" for b in "abcd"]
 extra = beams + ([] if vector else ["pitch", "roll"])
 
-# 1. The Gold Copy's files overlapping the span (a Vector's folder also holds its system_data files), read over
-#    OPeNDAP one sample in every SAMPLE_SECONDS, with each velocity's QARTOD result.
-folder = f"ooigoldcopy/public/{REFDES}-streamed-{stream}"
-listing = requests.get(f"{THREDDS}/catalog/{folder}/catalog.xml", timeout=120).text
-if "urlPath" not in listing:   # no such folder: a designator written short (CE04OSBP-LJ01C-VEL3DC107) is matched in full
-    top = requests.get(f"{THREDDS}/catalog/ooigoldcopy/public/catalog.xml", timeout=120).text
-    full = [t.split("-streamed-")[0] for t in re.findall(rf'title="([^"]+-streamed-{stream})"', top)
-            if set(REFDES.upper().split("-")) <= set(t.split("-"))]
-    if len(full) != 1:
-        raise SystemExit(f"no Gold Copy {stream} folder for {REFDES}; name it in full ({', '.join(full) or 'none match'})")
-    print(f"{REFDES} is {full[0]}")
-    REFDES = full[0]
-    folder = f"ooigoldcopy/public/{REFDES}-streamed-{stream}"
-    listing = requests.get(f"{THREDDS}/catalog/{folder}/catalog.xml", timeout=120).text
+# 1. The data, one sample in every SAMPLE_SECONDS. EarthScope: a day at a time (an 8 Hz month is 60 million values).
+#    Gold Copy: the files overlapping the span (a Vector's folder also holds its system_data files), read over OPeNDAP,
+#    with each velocity's QARTOD result.
 start, end = pd.Timestamp(START), pd.Timestamp(END)
 parts, broken, lat = [], [], None
-for path in sorted(set(re.findall(rf'urlPath="([^"]+{stream}_[^"]+\.nc)"', listing))):
-    a, b = (pd.Timestamp(x[:15]) for x in re.search(r"_(\d{8}T\d{6})[\d.]*-(\d{8}T\d{6})[\d.]*\.nc$", path).groups())
-    if b < start or a >= end:
-        continue
-    try:
-        ds = xr.open_dataset(f"{THREDDS}/dodsC/{path}")
-        rate = ds.sizes["obs"] / max((b - a).total_seconds(), 1)
-        names = comps + [f"{c}_qartod_results" for c in comps if f"{c}_qartod_results" in ds] + [v for v in extra if v in ds]
-        sub = ds[names].isel(obs=slice(None, None, max(1, round(SAMPLE_SECONDS * rate))))
-        parts.append(sub.swap_dims({"obs": "time"}).sel(time=slice(start, end)).to_dataframe()[names])
-        if lat is None and "lat" in ds:
-            lat = float(ds["lat"].values.ravel()[0])
-    except OSError:   # a few Gold Copy files fail on the server (DAP error 500)
-        broken.append(f"{a:%Y-%m-%d}-{b:%Y-%m-%d}")
-if broken:
-    print("unreadable Gold Copy files (a gap in what follows):", ", ".join(broken))
+if SOURCE == "earthscope":
+    from obspy import UTCDateTime
+    from obspy.clients.fdsn import Client
+    from obspy.clients.fdsn.header import FDSNNoDataException
+    match = [r for r in EARTHSCOPE if set(REFDES.upper().split("-")) <= set(r.split("-"))]
+    if len(match) != 1:
+        raise SystemExit(f"EarthScope has no station for {REFDES} (International District's MAVS is only in the Gold Copy): "
+                         'set SOURCE = "goldcopy"')
+    REFDES = match[0]
+    sta, loc = EARTHSCOPE[REFDES]
+    channels = ["MOU", "MOV", "MOW"] if vector else ["LOE", "LON", "LOZ"]   # east, north, up in m/s (gain 1)
+    client = Client("https://service.earthscope.org")
+    lat = client.get_stations(network="OO", station=sta, level="station")[0][0].latitude
+    cols = {c: [] for c in channels}
+    for day in pd.date_range(start.normalize(), end, freq="D", inclusive="left"):
+        a, b = max(start, day), min(end, day + pd.Timedelta(days=1))
+        try:
+            st = client.get_waveforms("OO", sta, loc, ",".join(channels), UTCDateTime(a), UTCDateTime(b))
+        except FDSNNoDataException:
+            broken.append(f"{day:%Y-%m-%d}")
+            continue
+        st.merge(method=1, fill_value=None)
+        for tr in st:
+            x = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan),
+                          index=pd.to_datetime(tr.times("timestamp"), unit="s"))
+            cols[tr.stats.channel].append(x.resample(f"{SAMPLE_SECONDS}s").first())
+    if broken:
+        print(f"no EarthScope data from OO.{sta}.{loc} on:", ", ".join(broken))
+    if all(cols.values()):
+        parts.append(pd.DataFrame({c: pd.concat(cols[ch]) for c, ch in zip(comps, channels)}).dropna(how="all"))
+else:
+    folder = f"ooigoldcopy/public/{REFDES}-streamed-{stream}"
+    listing = requests.get(f"{THREDDS}/catalog/{folder}/catalog.xml", timeout=120).text
+    if "urlPath" not in listing:   # no such folder: a designator written short (CE04OSBP-LJ01C-VEL3DC107) is matched in full
+        top = requests.get(f"{THREDDS}/catalog/ooigoldcopy/public/catalog.xml", timeout=120).text
+        full = [t.split("-streamed-")[0] for t in re.findall(rf'title="([^"]+-streamed-{stream})"', top)
+                if set(REFDES.upper().split("-")) <= set(t.split("-"))]
+        if len(full) != 1:
+            raise SystemExit(f"no Gold Copy {stream} folder for {REFDES}; name it in full ({', '.join(full) or 'none match'})")
+        print(f"{REFDES} is {full[0]}")
+        REFDES = full[0]
+        folder = f"ooigoldcopy/public/{REFDES}-streamed-{stream}"
+        listing = requests.get(f"{THREDDS}/catalog/{folder}/catalog.xml", timeout=120).text
+    for path in sorted(set(re.findall(rf'urlPath="([^"]+{stream}_[^"]+\.nc)"', listing))):
+        a, b = (pd.Timestamp(x[:15]) for x in re.search(r"_(\d{8}T\d{6})[\d.]*-(\d{8}T\d{6})[\d.]*\.nc$", path).groups())
+        if b < start or a >= end:
+            continue
+        try:
+            ds = xr.open_dataset(f"{THREDDS}/dodsC/{path}")
+            rate = ds.sizes["obs"] / max((b - a).total_seconds(), 1)
+            names = comps + [f"{c}_qartod_results" for c in comps if f"{c}_qartod_results" in ds] + [v for v in extra if v in ds]
+            sub = ds[names].isel(obs=slice(None, None, max(1, round(SAMPLE_SECONDS * rate))))
+            parts.append(sub.swap_dims({"obs": "time"}).sel(time=slice(start, end)).to_dataframe()[names])
+            if lat is None and "lat" in ds:
+                lat = float(ds["lat"].values.ravel()[0])
+        except OSError:   # a few Gold Copy files fail on the server (DAP error 500)
+            broken.append(f"{a:%Y-%m-%d}-{b:%Y-%m-%d}")
+    if broken:
+        print("unreadable Gold Copy files (a gap in what follows):", ", ".join(broken))
 if not parts:
-    raise SystemExit(f"no Gold Copy {stream} for {REFDES} from {START} to {END}")
+    raise SystemExit(f"no {stream} in the {SOURCE} for {REFDES} from {START} to {END}")
 df = pd.concat(parts).sort_index()
 df = df[~df.index.duplicated() & (df.index >= start) & (df.index < end)]
 step = df.index.to_series().diff().median().total_seconds()
@@ -78,9 +119,22 @@ for c in comps:
         print(f"  {c} QARTOD: {df[q].value_counts().sort_index().to_dict()}")
         bad |= df[q].isin(DROP)
 gross = (df[comps].abs() > MAX_SPEED).any(axis=1)
-print(f"  dropped: {bad.sum()} by QARTOD {DROP}, {gross.sum()} beyond {MAX_SPEED} m/s", end="")
+print(f"  dropped: {f'{bad.sum()} by QARTOD {DROP}, ' if SOURCE == 'goldcopy' else ''}{gross.sum()} beyond {MAX_SPEED} m/s", end="")
 bad |= gross
-if vector:
+if SOURCE == "earthscope":   # no beam values or pitch and roll: spikes against the hour's running median, and whole hours
+    # where the spikes are many (a failing MAVS's garbled samples come in runs)
+    x = df[comps].where(~bad, axis=0)
+    n = max(4, round(3600 / step))
+    med = x.rolling(n, center=True, min_periods=n // 4).median()
+    mad = (x - med).abs().rolling(n, center=True, min_periods=n // 4).median() * 1.4826
+    spike = ((x - med).abs() > (SPIKE_K * mad).clip(lower=SPIKE_FLOOR)).any(axis=1)
+    failing = spike.groupby(df.index.floor("1h")).transform("mean") > MAX_HOUR_SPIKES
+    print(f", {spike.sum()} spikes, {(failing & ~spike & ~bad).sum()} more in hours with over {MAX_HOUR_SPIKES:.0%} spikes", end="")
+    bad |= spike | failing
+    if failing.groupby(df.index.floor("1h")).first().mean() > 0.05 or (gross.mean() > 0.01):
+        print("\nWARNING: many spiky hours or impossible speeds: the instrument may be failing, which EarthScope's velocities "
+              "alone do not show (a railed MAVS beam gives smooth, wrong currents): rerun with SOURCE = \"goldcopy\"", end="")
+elif vector:
     weak = df[beams].min(axis=1) < MIN_CORRELATION
     print(f", {weak.sum()} with a beam correlation under {MIN_CORRELATION} %", end="")
     bad |= weak
@@ -93,7 +147,7 @@ else:   # QARTOD passes these: a beam railed at the counter's limit (about -3231
     bad |= railed | garbled
 print(f"; {100 * (1 - bad.mean()):.1f} % kept")
 v = df.loc[~bad, comps].set_axis(["u", "v", "w"], axis=1)
-if not vector:
+if SOURCE == "goldcopy" and not vector:
     print(f"  pitch {df['pitch'].median():.1f}, roll {df['roll'].median():.1f} degrees (median): a tilted head mixes "
           "some horizontal flow into w")
 
@@ -150,7 +204,8 @@ s.plot(mean.index, mean["speed"] * 100, "k", lw=0.6, label=f"speed ({AVERAGE})")
 s.plot(hourly.index, np.hypot(hourly["u_subtidal"], hourly["v_subtidal"]) * 100, "r", lw=1, label="subtidal")
 s.set_ylabel("cm/s")
 s.legend(loc="upper left", fontsize=8)
-s.set_title(f"{REFDES} (Gold Copy), QARTOD {DROP} and beyond {MAX_SPEED} m/s dropped", fontsize=10)
+s.set_title(f"{REFDES} ({'Gold Copy, QARTOD ' + str(DROP) if SOURCE == 'goldcopy' else 'EarthScope, spikes'} "
+            f"and beyond {MAX_SPEED} m/s dropped)", fontsize=10)
 for col, color in (("u", "tab:blue"), ("v", "tab:orange")):
     c.plot(mean.index, mean[col] * 100, color=color, lw=0.5, label=f"{'east' if col == 'u' else 'north'}")
     c.plot(hourly.index, hourly[f"{col}_subtidal"] * 100, color=color, lw=1.4)

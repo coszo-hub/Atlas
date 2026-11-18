@@ -549,7 +549,56 @@
   ],
   "match": {
    "task": "\\b(?:detid\\w*|de-tid\\w*|tides?|tidal|harmonic|utide|t_tide|godin|constituents?|m2|(?:remove|take out|subtract)\\w* (?:the )?tides?|hourly|15-?s(?:ec\\w*)?|high-rate|raw pressure)\\b",
-   "about": "\\b(?:axial|botpt\\w*|bottom pressure|pressure|bprs?|nano|MJ03[BDEF]|caldera|seafloor depth|ashes|international district)\\b"
+   "about": "\\b(?:axial(?! base)|botpt\\w*|bottom pressure|(?<!tidal )(?<!tidal seafloor )pressure|bprs?|nano|MJ03[BDEF]|caldera|seafloor depth|ashes|international district)\\b"
+  }
+ },
+ {
+  "id": "prest_detide",
+  "title": "Remove the tides from a tidal seafloor pressure gauge (PREST) and get the de-tided depth, hour by hour",
+  "script": "recipes/prest_detide.py",
+  "instruments": null,
+  "summary": "Reads a tidal seafloor pressure gauge (PREST at Axial Base, Oregon Slope Base or the Southern Hydrate Ridge summit) from EarthScope, where each is recorded at a seismic station (network OO, location 10, pascals of absolute pressure), ten days a request cut to one-minute means, converts it to depth with TEOS-10, fits the tides to a year of hourly depths with UTide and takes the daily and faster ones away, also low-passes with a Godin filter, reports gaps with the level across them (a jump is most likely a redeployment), the tide left, the largest tides and the trend, and writes hourly CSV, the tidal constituents and a plot.",
+  "steps": [
+   "Find the station's pressure channels for the year before END (or the span asked for, if longer) from its metadata: UDO every 15 s, LDO at 1 Hz (Slope Base from 26 June 2018, Hydrate Ridge from 11 August 2017; Axial Base is UDO throughout), and download each over its own part, ten days a request, keeping one-minute means.",
+   "The values are already pascals: do not remove the response, whose stated pascals-to-psia sensitivity the data do not follow.",
+   "Convert to sea pressure (absolute less one standard atmosphere, Pa to dbar) and to depth with TEOS-10 (gsw.z_from_p) at the station's latitude; average hourly, keeping hours with at least half their minutes.",
+   "Fit the tides with UTide (ordinary least squares, with a linear trend) to FIT_DAYS of hourly depths ending at END, predict the daily and faster constituents over the span asked for and subtract them; the fortnightly and longer ones stay in the residual.",
+   "List gaps of GAP_HOURS or more with the de-tided level a day either side; low-pass with a Godin filter as a check that needs no tide model; report the tide left (rms about a 2-day running mean), the largest tides and the trend; write the hourly series, the constituents and the plot."
+  ],
+  "change": "REFDES (RS03AXBS-MJ03A-06-PRESTA301 Axial Base, RS01SLBS-MJ01A-06-PRESTA101 Oregon Slope Base, RS01SUM1-LJ01B-09-PRESTB102 Southern Hydrate Ridge summit; a short form such as PRESTB102 is matched), START and END (UTC, END not included), FIT_DAYS for the tide's fit (keep a year), GODIN, GAP_HOURS.",
+  "pitfalls": [
+   "EarthScope's copy has long holes (checked on the 1st of each month, 2015 to November 2026): Slope Base has none from February to July 2024 and January to August 2021; Southern Hydrate Ridge has none for most of mid-2020 to mid-2022 and much of 2023 and 2024; Axial Base misses only a few months (March-September 2020). A fit's year that falls in a hole uses what there is (Slope Base for January-March 2025 was fitted to August 2024-March 2025). OOI's Gold Copy and ERDDAP (ooi-rs01slbs-mj01a-06-presta101 and the like) are the other routes for those spans.",
+   "A redeployment sets the gauge down at another depth: at Southern Hydrate Ridge the de-tided depth jumped 25.7 cm across the gap of 11 August 2017, when the record changed from UDO to LDO, and a June-September 2017 trend across it came out as 109 cm/yr. Take a trend within one deployment, or remove each jump the script reports first.",
+   "A quartz gauge drifts, fastest in the months after it is deployed, so a single gauge's trend is part drift; at Slope Base, January-March 2025 gave 0.6 cm/yr and the fit's span from August 2024 1.6 cm/yr. Short gaps can also carry jumps of a few centimetres (Axial Base, April 2024: -6.5 and +7.7 cm across gaps of two days and 14 hours).",
+   "The tides are the open ocean's here, about the same at all three: M2 78.0 cm at Axial Base, 81.1 cm at Slope Base and 82.2 cm at Hydrate Ridge; K1 40-43 cm. With a year's fit the hourly de-tided depth kept 1.44 cm rms of tide at Slope Base (2025) and 1.73 cm at Hydrate Ridge (2017).",
+   "A year at 1 Hz is about 37 requests of 10 days (each about 5 s; the script took 2.5-3.5 minutes); shorten FIT_DAYS to go faster, at the cost of tide left behind (K1 and P1 need about six months to a year to separate).",
+   "The BOTPTs inside Axial's caldera are another instrument with their own task recipe (de-tiding the BOTPT's bottom pressure); this gauge at Axial Base is outside the caldera."
+  ],
+  "sources": [
+   {
+    "title": "Absolute seafloor pressure at the RCA, COSZO",
+    "url": "https://coszo.org/absolute-seafloor-pressure.html"
+   },
+   {
+    "title": "EarthScope FDSN dataselect web service",
+    "url": "https://service.earthscope.org/fdsnws/dataselect/1/"
+   },
+   {
+    "title": "UTide for Python",
+    "url": "https://github.com/wesleybowman/UTide"
+   },
+   {
+    "title": "Codiga 2011, Unified Tidal Analysis and Prediction Using the UTide Matlab Functions",
+    "url": "https://www.po.gso.uri.edu/~codiga/utide/2011Codiga-UTide-Report.pdf"
+   },
+   {
+    "title": "TEOS-10 GSW z_from_p",
+    "url": "https://teos-10.github.io/GSW-Python/conversions.html"
+   }
+  ],
+  "match": {
+   "task": "\\b(?:detid\\w*|de-tid\\w*|tides?|tidal|harmonic|utide|t_tide|godin|constituents?|m2|(?:remove|take out|subtract)\\w* (?:the )?tides?|hourly|15-?s(?:ec\\w*)?|high-rate|raw pressure)\\b",
+   "about": "\\b(?:tidal|tsunameters?|prest\\w*|paroscientific|quartz|(?:seafloor |bottom )?pressure|axial base|axba1|slope base|hysb1|hydrate ridge|hys14|MJ03A|MJ01A|LJ01B)\\b"
   }
  },
  {
@@ -723,14 +772,15 @@
   "title": "Get a seafloor point current meter's (VEL3D: MAVS or Vector) currents, cleaned, with tides and subtidal flow",
   "script": "recipes/vel3d_currents.py",
   "instruments": null,
-  "summary": "Reads an RCA seafloor point current meter (MAVS-4 at Axial and Hydrate Ridge, Nortek Vector at the Oregon Shelf and Offshore benthic packages) from its Gold Copy files over OPeNDAP, one sample every few seconds, drops QARTOD-failed samples, impossible speeds, low-correlation Vector samples and garbled MAVS records, averages hourly with a coverage rule, and reports the mean flow, speed, principal axis, tidal constituents (UTide) and subtidal flow, with a plot of speed, components, the velocity cloud and a progressive vector diagram.",
+  "summary": "Reads an RCA seafloor point current meter (MAVS-4 at Axial and Hydrate Ridge, Nortek Vector at the Oregon Shelf and Offshore benthic packages) one sample every few seconds, from its Gold Copy files over OPeNDAP (SOURCE = \"goldcopy\", the default, for all six) or from EarthScope (SOURCE = \"earthscope\", for the five with a seismic station), drops QARTOD-failed samples, impossible speeds, low-correlation Vector samples and garbled MAVS records (EarthScope: impossible speeds, spikes and spiky hours), averages hourly with a coverage rule, and reports the mean flow, speed, principal axis, tidal constituents (UTide) and subtidal flow, with a plot of speed, components, the velocity cloud and a progressive vector diagram.",
   "steps": [
-   "List the Gold Copy files of the instrument's stream overlapping the span (vel3d_b_sample for a MAVS, vel3d_cd_velocity_data for a Vector, whose folder also holds system_data files) and read east, north and up velocity with their QARTOD results, plus beam values (and MAVS pitch and roll), one sample every SAMPLE_SECONDS.",
+   "Gold Copy: list the files of the instrument's stream overlapping the span (vel3d_b_sample for a MAVS, vel3d_cd_velocity_data for a Vector, whose folder also holds system_data files) and read east, north and up velocity with their QARTOD results, plus beam values (and MAVS pitch and roll), one sample every SAMPLE_SECONDS. EarthScope: the station's location 20 or 21 channels (LOE, LON, LOZ for a MAVS, MOU, MOV, MOW for a Vector, m/s with gain 1), a day a request, one sample every SAMPLE_SECONDS.",
    "Drop a sample if any velocity has a QARTOD flag in DROP or exceeds MAX_SPEED, if a Vector beam correlation is below MIN_CORRELATION, or if a MAVS beam is railed or its pitch or roll is more than MAX_TILT_CHANGE from the median.",
+   "EarthScope has no flags, beams or pitch and roll: drop a sample beyond MAX_SPEED or SPIKE_K robust SDs (and SPIKE_FLOOR m/s) from its hour's running median, and every sample of an hour with over MAX_HOUR_SPIKES spikes; warn when many hours are spiky, a sign of a failing instrument.",
    "Average over AVERAGE, blanking periods with under MIN_SHARE of their samples; speed and the direction the water flows toward.",
    "Principal axis from the hourly velocity covariance; UTide fitted to hourly u and v (15 days or more) for the tidal ellipses and the share of variance that is tidal; subtidal flow from a Godin 24-24-25 h low-pass, bridging gaps of up to 6 hours."
   ],
-  "change": "REFDES (RS03INT2-MJ03D-12-VEL3DB304, RS03AXBS-MJ03A-12-VEL3DB301, RS01SUM1-LJ01B-12-VEL3DB104, RS01SLBS-MJ01A-12-VEL3DB101, CE02SHBP-LJ01D-07-VEL3DC108, CE04OSBP-LJ01C-07-VEL3DC107), START and END (UTC, END not included), SAMPLE_SECONDS, AVERAGE, DROP, MAX_SPEED, MIN_CORRELATION, MAX_TILT_CHANGE, MIN_SHARE.",
+  "change": "REFDES (RS03INT2-MJ03D-12-VEL3DB304, RS03AXBS-MJ03A-12-VEL3DB301, RS01SUM1-LJ01B-12-VEL3DB104, RS01SLBS-MJ01A-12-VEL3DB101, CE02SHBP-LJ01D-07-VEL3DC108, CE04OSBP-LJ01C-07-VEL3DC107), SOURCE (\"goldcopy\" or \"earthscope\"), START and END (UTC, END not included), SAMPLE_SECONDS, AVERAGE, DROP, MAX_SPEED, MIN_CORRELATION, MAX_TILT_CHANGE, MIN_SHARE, SPIKE_K, SPIKE_FLOOR, MAX_HOUR_SPIKES.",
   "pitfalls": [
    "ERDDAP's Vector velocities (the Oregon Shelf and Offshore VEL3D-C) are 10 times too large through 26 November 2023: OOI's code divides by 10 when bit 1 of the Vector's status code says its units are 0.1 mm/s, and ERDDAP's values are exactly 10 times the Gold Copy's on 1 March 2016 and 31 December 2022 (Offshore) and 1 March 2018 (Shelf). From 19 December 2023 the two agree (1 March 2025). Read the Gold Copy, as this script does.",
    "ERDDAP's MAVS (VEL3D-B) northward velocity is the raw magnetic-frame north while its eastward velocity is corrected for declination: on 10 October 2023 at Southern Hydrate Ridge ERDDAP gave north -10.2 cm/s, the raw value, where the Gold Copy's rotated north was -7.2 cm/s; east agreed. The Gold Copy's pair is a true rotation of the raw one.",
@@ -739,7 +789,7 @@
    "The Gold Copy holds the Oregon Shelf Vector from 2014 to now; ERDDAP's copy ends on 19 March 2024. The deep profilers' current meters (VEL3D-A) are other datasets, with velocities named _profiler_depth_enabled, and this script does not read them.",
    "Direction is where the water goes. A month of hourly means separates M2 from S2 but not K1 from P1, which needs about a year (UTide warns of the Rayleigh criterion).",
    "Some Gold Copy files fail on the server (DAP error 500), such as the Oregon Offshore Vector's of 1-2 January 2023; the script names them and goes on.",
-   "EarthScope also has the MAVS at Axial Base, Southern Hydrate Ridge and Slope Base (not International District), as OO.AXBA1, OO.HYS14 and OO.HYSB1 location 20: LOE, LON and LOZ at 1 Hz in m/s and LKO in degrees C, since 2014 (coszo.org/current-meter.html). They are the Gold Copy's rotated velocities (identical one-minute means at Axial Base on 1 March 2025) and the quicker download, but carry no QARTOD results, beam values or pitch and roll, so this script's cleaning needs the Gold Copy."
+   "EarthScope has five of the six (OO.AXBA1, HYS14 and HYSB1 location 20 for the MAVS at Axial Base, Southern Hydrate Ridge and Slope Base; OO.CZSHF location 20 and CZOFF location 21 for the Oregon Shelf and Offshore Vectors; not International District's MAVS): the Gold Copy's rotated velocities, every sample, quicker to get. On a good stretch the two agree: Axial Base, 1-20 March 2025, median hourly speed 2.68 cm/s from EarthScope and 2.67 from the Gold Copy, M2 1.90 and 1.91 cm/s. But EarthScope carries no QARTOD results, beam values or pitch and roll, so it cannot be cleaned as well: at Southern Hydrate Ridge, 20 September-4 October 2023 (a failing MAVS), the Gold Copy's cleaning kept 82 % with a 95th percentile speed of 10.9 cm/s, while EarthScope with the spike and spiky-hour checks kept 65 % and still reached 47 cm/s (railed-beam hours give smooth, wrong velocities); at Oregon Offshore, 1-15 January 2025, 96.5 % of the Vector's samples had a beam correlation under 70 %, which EarthScope cannot see (median speed 11.7 cm/s from EarthScope, 6.7 from the few good Gold Copy samples). Use EarthScope for a quick look or raw samples and the Gold Copy for cleaned currents."
   ],
   "sources": [
    {
