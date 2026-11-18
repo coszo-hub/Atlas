@@ -20,6 +20,7 @@ CATALOG = "usgs"         # "usgs" (ComCat, the world) or "axial" (the Axial Seam
 QUERY = dict(starttime="2025-07-29", endtime="2025-07-30", minmagnitude=8)   # the catalogue search
 REGION = None            # None: anywhere; or (latitude, longitude, radius in degrees): (43.9, -128.6, 2.0) is the
                          # Blanco fracture zone, (45.95, -130.0, 0.1) Axial's caldera, (40.4, -126.5, 3.0) Mendocino
+                         # (a distance in km over 111 is degrees: within 500 km of Axial is (45.95, -130.0, 4.5))
 MAX_EVENTS = 5           # the largest this many
 NETWORK = "OO"
 STATIONS = "AXBA1,AXCC1,AXEC2,HYS14,HYSB1"   # the OO seismic stations

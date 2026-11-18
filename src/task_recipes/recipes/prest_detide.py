@@ -34,7 +34,7 @@ REFDES, sta = match[0], GAUGES[match[0]]
 # 1. Each pressure channel's part of the fit's span (the year before END, or the span asked for if longer), thirty days
 #    a request, cut to one-minute means as it comes. The values are already pascals: the metadata's response says
 #    pascals to psia, which the data do not follow, so the response is not removed.
-client = Client("https://service.earthscope.org")
+client = Client("https://service.earthscope.org", timeout=600)   # a slow day took 150 s for one day of LDO
 start, end = pd.Timestamp(START), pd.Timestamp(END)
 fit_start = min(start, end - pd.Timedelta(days=FIT_DAYS))
 inv = client.get_stations(network="OO", station=sta, location="10", channel="UDO,LDO", starttime=UTCDateTime(fit_start),
@@ -43,7 +43,7 @@ lat = inv[0][0].latitude
 def fetch(code, a, b):
     """One request's one-minute means; an empty list when EarthScope has no data then."""
     try:
-        st = Client("https://service.earthscope.org").get_waveforms("OO", sta, "10", code, UTCDateTime(a), UTCDateTime(b))
+        st = Client("https://service.earthscope.org", timeout=600).get_waveforms("OO", sta, "10", code, UTCDateTime(a), UTCDateTime(b))
     except FDSNNoDataException:
         return a, []
     out = []
