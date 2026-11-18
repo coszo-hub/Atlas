@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { paperKey, assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, isWhaleDataQuestion, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
+import { paperKey, assetChunkIds, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, isOrientationIssueQuestion, placeStations, orientationForStations, isDataAccessQuestion, distinctiveWords, isAssetQuestion, questionCodes, askedPlace, isPaperUsageQuestion, instrumentSearch, instrumentCodes, typeInventory, statusSearch, askedType, liveTargetOf, isStatusQuestion, refdesOf, liveStatusHit, locatedUntil, magnitudeFloor, isDasOverview, DAS_EXPERIMENTS, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, excerpt, isInstrumentInventoryQuestion, namedDas, parseHypo71Events, publicHit, searchText, sourceKey, sourceKind, fullTextFor, paperKeys, withPlaces, withRouteCitations, questionParts, interleave, taskRecipeIds, codeModeAnswer, withTestedScript, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets } from "../src/helpers.js";
 
 const hypo71 = await readFile(new URL("./fixtures/hypo71_20260923.dat", import.meta.url), "utf8");
 
@@ -1261,16 +1261,4 @@ test("every instrument at a place or on a node, from the designators", async () 
   assert.equal(placeDesignators("what sensors are deployed at axial", ids).length, 3);
   assert.deepEqual(placeDesignators("Which instruments are connected to PC01B?", ids), ["CE04OSPS-PC01B-05-ZPLSCB102"]);
   assert.deepEqual(placeDesignators("What is the depth of the CTD at Axial Base?", ids), []);
-});
-
-test("whale counts and tracks are not answered; the research on whale calls is", () => {
-  for (const q of ["how many whales at axial today", "How many whales are at Axial today?", "how many fin whale calls at axial in december 2024?", "How many fin whale calls at Axial in December 2024?",
-    "Where are the fin whales now?", "show me the whale tracks over the caldera", "whale call counts at Axial this week",
-    "are there whales at Axial right now?", "number of blue whales near the Oregon Offshore site"]) assert.ok(isWhaleDataQuestion(q), q);
-  for (const q of ["How does DAS detect whales?", "papers on fin whale calls recorded by the OOI seismometers",
-    "Which whale calls and other sounds were recorded in the November 2021 DAS experiment on the RCA cables offshore central Oregon?",
-    "How are fin whales tracked with ocean bottom seismometers?", "Summarize Wilcock et al. 2023 on fin whale calls",
-    "How many earthquakes at Axial today?", "fin whale calls on the AXEC2 hydrophone",
-    "How many fin whale calls did Wilcock 2014 detect?", "How many fin whale tracks did Soule and Wilcock (2013) locate?",
-    "How many hours of Southern Resident killer whale audio did Nestor et al. (2026) curate from public hydrophone data?"]) assert.ok(!isWhaleDataQuestion(q), q);
 });

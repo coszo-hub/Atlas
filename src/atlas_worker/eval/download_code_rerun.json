@@ -1,0 +1,477 @@
+{
+ "summary": {
+  "model": "ooi-gemma-4-26b",
+  "asked": 27,
+  "passed": 27,
+  "has_code": 27,
+  "dates_in_code": 27,
+  "same_route": 27,
+  "by_route": {
+   "erddap": "13/13",
+   "gold": "4/4",
+   "raw": "2/2",
+   "earthscope": "8/8"
+  }
+ },
+ "results": [
+  {
+   "id": "CE04OSBP-LJ01C-07-VEL3DC107",
+   "question": "Give me Python code to download Oregon Offshore Benthic Package 3D Current Meter (CE04OSBP-LJ01C-07-VEL3DC107) data from 2026-09-30 03:27 to 2026-10-01 03:27 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 20 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-09-30T03:27:00Z\", \"2026-10-01T03:27:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-ce04osbp-lj01c-07-vel3dc107'\ne.variables = ['time', 'eastward_sea_water_velocity', 'northward_sea_water_velocity', 'upward_sea_water_velocity', 'depth_reading', 'sea_water_pressure', 'eastward_sea_water_velocity_qc_agg']\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('CE04OSBP-LJ01C-07-VEL3DC107' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "CE04OSBP-LJ01C-08-OPTAAC104",
+   "question": "Give me Python code to download Oregon Offshore Benthic Package Spectrophotometer (CE04OSBP-LJ01C-08-OPTAAC104) data from 2026-10-27 02:03 to 2026-10-27 03:03 UTC",
+   "easiest": "gold",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "gold"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "nc file of 29 kB",
+   "run_error": null,
+   "code": "# pip install requests xarray netCDF4\nimport re, requests, xarray as xr\n\nDATASET = 'CE04OSBP-LJ01C-08-OPTAAC104-streamed-optaa_sample'\nVARIABLES = ['elapsed_run_time']   # any of the stream's variables listed above\nSTART, END = \"2026-10-27T02:03:00\", \"2026-10-27T03:03:00\"   # the timeframe, UTC\nT = 'https://thredds.dataexplorer.oceanobservatories.org/thredds'\nstamp = lambda t: t.replace(\"-\", \"\").replace(\":\", \"\")[:15]\nxml = requests.get(f\"{T}/catalog/ooigoldcopy/public/{DATASET}/catalog.xml\", timeout=120).text\npaths = [p for p in re.findall(r'urlPath=\"([^\"]+\\.nc)\"', xml)\n         if (s := re.search(r'_(\\d{8}T\\d{6})[.\\d]*-(\\d{8}T\\d{6})[.\\d]*\\.nc$', p))\n         and s.group(2) >= stamp(START) and s.group(1) <= stamp(END)]\nparts = []\nfor path in paths:\n    ds = xr.open_dataset(f\"{T}/dodsC/{path}\")   # OPeNDAP: nothing is read until .load()\n    ds = (ds.swap_dims({\"obs\": \"time\"}) if \"obs\" in ds.dims else ds).reset_coords()   # depth becomes a variable\n    wanted = [v for v in VARIABLES if v in ds.variables]   # a file can lack one (the newest, not yet processed)\n    if wanted:\n        parts.append(ds[wanted].sel(time=slice(START, END)).load())\nif not parts:\n    raise SystemExit(f\"no {VARIABLES} in {DATASET} between {START} and {END}\")\ndata = xr.concat(parts, dim=\"time\", data_vars=\"all\", join=\"outer\")   # what a file lacks is NaN\ndata.encoding.pop(\"unlimited_dims\", None)\ndata.to_netcdf(f\"{DATASET}_{stamp(START)}_{stamp(END)}.nc\")   # or data.to_dataframe().to_csv(...)\n"
+  },
+  {
+   "id": "CE04OSBP-LJ01C-11-HYDBBA105",
+   "question": "Give me Python code to download Oregon Offshore Benthic Package Broadband Hydrophone (CE04OSBP-LJ01C-11-HYDBBA105) data from 2026-10-27 00:00 to 2026-10-27 00:10 UTC",
+   "easiest": "raw",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "raw"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "mseed file of 39.3 MB and 1 more file",
+   "run_error": null,
+   "code": "# pip install requests\nimport re, requests\nfrom datetime import datetime, timedelta\n\nBASE = 'https://rawdata.oceanobservatories.org/files/CE04OSBP/LJ01C/HYDBBA105'\nSTART, END = datetime(2026, 10, 27, 0, 0), datetime(2026, 10, 27, 0, 10)   # the timeframe, UTC\nfolders = []\nday = START.replace(hour=0, minute=0, second=0) - timedelta(days=1)   # a file can start the day before\nwhile day <= END:\n    folders += [f\"{BASE}/{day:%Y/%m/%d}/\", f\"{BASE}/{day:%Y/%m/%d}/addendum/\"]\n    day += timedelta(days=1)\nfiles = []\nfor folder in folders:\n    r = requests.get(folder, timeout=120)\n    if not r.ok:\n        continue\n    for name in dict.fromkeys(re.findall('href=\"\\\\.?/?([A-Za-z0-9_+-][A-Za-z0-9._:+-]*\\\\.mseed)\"', r.text)):\n        t = re.search('\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}', name)\n        if t:\n            files.append((datetime.strptime(t.group(0), '%Y-%m-%dT%H:%M:%S'), folder + name))\nfiles.sort()\nkeep = [url for i, (t, url) in enumerate(files) if t < END and (i + 1 == len(files) or files[i + 1][0] > START)]\nfor url in keep:\n    with requests.get(url, stream=True, timeout=600) as r, open(url.rsplit(\"/\", 1)[-1], \"wb\") as out:\n        for block in r.iter_content(1 << 20):\n            out.write(block)\n"
+  },
+  {
+   "id": "CE04OSPD-DP01B-02-VEL3DA105",
+   "question": "Give me Python code to download Oregon Offshore Cabled Deep Profiler Mooring 3D Current Meter (CE04OSPD-DP01B-02-VEL3DA105) data from 2025-08-09 04:13 to 2025-08-10 04:13 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 59 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2025-08-09T04:13:00Z\", \"2025-08-10T04:13:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-ce04ospd-dp01b-02-vel3da105'\ne.variables = ['time', 'eastward_sea_water_velocity_profiler_depth_enabled', 'northward_sea_water_velocity_profiler_depth_enabled', 'eastward_sea_water_velocity_profiler_depth_enabled_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('CE04OSPD-DP01B-02-VEL3DA105' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "CE04OSPS-SF01B-4B-VELPTD106",
+   "question": "Give me Python code to download Oregon Offshore Cabled Shallow Profiler Mooring Current Meter (CE04OSPS-SF01B-4B-VELPTD106) data from 2026-08-02 17:22 to 2026-08-03 17:22 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 336 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-08-02T17:22:00Z\", \"2026-08-03T17:22:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-ce04osps-sf01b-4b-velptd106'\ne.variables = ['time', 'eastward_sea_water_velocity_profiler_depth_enabled', 'northward_sea_water_velocity_profiler_depth_enabled', 'eastward_sea_water_velocity_profiler_depth_enabled_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('CE04OSPS-SF01B-4B-VELPTD106' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "CE02SHBP-LJ01D-07-VEL3DC108",
+   "question": "Give me Python code to download Oregon Shelf Benthic Package 3D Current Meter (CE02SHBP-LJ01D-07-VEL3DC108) data from 2024-03-18 03:09 to 2024-03-19 03:09 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 97 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2024-03-18T03:09:00Z\", \"2024-03-19T03:09:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-ce02shbp-lj01d-07-vel3dc108'\ne.variables = ['time', 'eastward_sea_water_velocity', 'northward_sea_water_velocity']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('CE02SHBP-LJ01D-07-VEL3DC108' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "CE02SHBP-LJ01D-08-OPTAAD106",
+   "question": "Give me Python code to download Oregon Shelf Benthic Package Spectrophotometer (CE02SHBP-LJ01D-08-OPTAAD106) data from 2026-10-27 02:03 to 2026-10-27 03:03 UTC",
+   "easiest": "gold",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "gold"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "nc file of 28 kB",
+   "run_error": null,
+   "code": "# pip install requests xarray netCDF4\nimport re, requests, xarray as xr\n\nDATASET = 'CE02SHBP-LJ01D-08-OPTAAD106-streamed-optaa_sample'\nVARIABLES = ['elapsed_run_time']   # any of the stream's variables listed above\nSTART, END = \"2026-10-27T02:03:00\", \"2026-10-27T03:03:00\"   # the timeframe, UTC\nT = 'https://thredds.dataexplorer.oceanobservatories.org/thredds'\nstamp = lambda t: t.replace(\"-\", \"\").replace(\":\", \"\")[:15]\nxml = requests.get(f\"{T}/catalog/ooigoldcopy/public/{DATASET}/catalog.xml\", timeout=120).text\npaths = [p for p in re.findall(r'urlPath=\"([^\"]+\\.nc)\"', xml)\n         if (s := re.search(r'_(\\d{8}T\\d{6})[.\\d]*-(\\d{8}T\\d{6})[.\\d]*\\.nc$', p))\n         and s.group(2) >= stamp(START) and s.group(1) <= stamp(END)]\nparts = []\nfor path in paths:\n    ds = xr.open_dataset(f\"{T}/dodsC/{path}\")   # OPeNDAP: nothing is read until .load()\n    ds = (ds.swap_dims({\"obs\": \"time\"}) if \"obs\" in ds.dims else ds).reset_coords()   # depth becomes a variable\n    wanted = [v for v in VARIABLES if v in ds.variables]   # a file can lack one (the newest, not yet processed)\n    if wanted:\n        parts.append(ds[wanted].sel(time=slice(START, END)).load())\nif not parts:\n    raise SystemExit(f\"no {VARIABLES} in {DATASET} between {START} and {END}\")\ndata = xr.concat(parts, dim=\"time\", data_vars=\"all\", join=\"outer\")   # what a file lacks is NaN\ndata.encoding.pop(\"unlimited_dims\", None)\ndata.to_netcdf(f\"{DATASET}_{stamp(START)}_{stamp(END)}.nc\")   # or data.to_dataframe().to_csv(...)\n"
+  },
+  {
+   "id": "CE02SHBP-LJ01D-11-HYDBBA106",
+   "question": "Give me Python code to download Oregon Shelf Benthic Package Broadband Hydrophone (CE02SHBP-LJ01D-11-HYDBBA106) data from 2026-10-27 00:00 to 2026-10-27 00:10 UTC",
+   "easiest": "raw",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "raw"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "mseed file of 34.5 MB and 1 more file",
+   "run_error": null,
+   "code": "# pip install requests\nimport re, requests\nfrom datetime import datetime, timedelta\n\nBASE = 'https://rawdata.oceanobservatories.org/files/CE02SHBP/LJ01D/HYDBBA106'\nSTART, END = datetime(2026, 10, 27, 0, 0), datetime(2026, 10, 27, 0, 10)   # the timeframe, UTC\nfolders = []\nday = START.replace(hour=0, minute=0, second=0) - timedelta(days=1)   # a file can start the day before\nwhile day <= END:\n    folders += [f\"{BASE}/{day:%Y/%m/%d}/\", f\"{BASE}/{day:%Y/%m/%d}/addendum/\"]\n    day += timedelta(days=1)\nfiles = []\nfor folder in folders:\n    r = requests.get(folder, timeout=120)\n    if not r.ok:\n        continue\n    for name in dict.fromkeys(re.findall('href=\"\\\\.?/?([A-Za-z0-9_+-][A-Za-z0-9._:+-]*\\\\.mseed)\"', r.text)):\n        t = re.search('\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}', name)\n        if t:\n            files.append((datetime.strptime(t.group(0), '%Y-%m-%dT%H:%M:%S'), folder + name))\nfiles.sort()\nkeep = [url for i, (t, url) in enumerate(files) if t < END and (i + 1 == len(files) or files[i + 1][0] > START)]\nfor url in keep:\n    with requests.get(url, stream=True, timeout=600) as r, open(url.rsplit(\"/\", 1)[-1], \"wb\") as out:\n        for block in r.iter_content(1 << 20):\n            out.write(block)\n"
+  },
+  {
+   "id": "RS03ASHS-MJ03B-07-TMPSFA301",
+   "question": "Give me Python code to download ASHES Hydrothermal Field Thermistor Array (RS03ASHS-MJ03B-07-TMPSFA301) data from 2026-10-25 12:10 to 2026-10-26 12:10 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 94 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-10-25T12:10:00Z\", \"2026-10-26T12:10:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03ashs-mj03b-07-tmpsfa301'\ne.variables = ['time', 'tempsfl_01', 'tempsfl_02', 'tempsfl_01_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03ASHS-MJ03B-07-TMPSFA301' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03AXBS-LJ03A-11-OPTAAC303",
+   "question": "Give me Python code to download Axial Seamount Base Spectrophotometer (AC-S) (RS03AXBS-LJ03A-11-OPTAAC303) data from 2026-10-26 11:03 to 2026-10-26 12:03 UTC",
+   "easiest": "gold",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "gold"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "nc file of 29 kB",
+   "run_error": null,
+   "code": "# pip install requests xarray netCDF4\nimport re, requests, xarray as xr\n\nDATASET = 'RS03AXBS-LJ03A-11-OPTAAC303-streamed-optaa_sample'\nVARIABLES = ['elapsed_run_time']   # any of the stream's variables listed above\nSTART, END = \"2026-10-26T11:03:00\", \"2026-10-26T12:03:00\"   # the timeframe, UTC\nT = 'https://thredds.dataexplorer.oceanobservatories.org/thredds'\nstamp = lambda t: t.replace(\"-\", \"\").replace(\":\", \"\")[:15]\nxml = requests.get(f\"{T}/catalog/ooigoldcopy/public/{DATASET}/catalog.xml\", timeout=120).text\npaths = [p for p in re.findall(r'urlPath=\"([^\"]+\\.nc)\"', xml)\n         if (s := re.search(r'_(\\d{8}T\\d{6})[.\\d]*-(\\d{8}T\\d{6})[.\\d]*\\.nc$', p))\n         and s.group(2) >= stamp(START) and s.group(1) <= stamp(END)]\nparts = []\nfor path in paths:\n    ds = xr.open_dataset(f\"{T}/dodsC/{path}\")   # OPeNDAP: nothing is read until .load()\n    ds = (ds.swap_dims({\"obs\": \"time\"}) if \"obs\" in ds.dims else ds).reset_coords()   # depth becomes a variable\n    wanted = [v for v in VARIABLES if v in ds.variables]   # a file can lack one (the newest, not yet processed)\n    if wanted:\n        parts.append(ds[wanted].sel(time=slice(START, END)).load())\nif not parts:\n    raise SystemExit(f\"no {VARIABLES} in {DATASET} between {START} and {END}\")\ndata = xr.concat(parts, dim=\"time\", data_vars=\"all\", join=\"outer\")   # what a file lacks is NaN\ndata.encoding.pop(\"unlimited_dims\", None)\ndata.to_netcdf(f\"{DATASET}_{stamp(START)}_{stamp(END)}.nc\")   # or data.to_dataframe().to_csv(...)\n"
+  },
+  {
+   "id": "RS03AXBS-MJ03A-06-PRESTA301",
+   "question": "Give me Python code to download Axial Seamount Base Seafloor Pressure Sensor (Tidal Pressure Gauge) (RS03AXBS-MJ03A-06-PRESTA301) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 344 kB",
+   "run_error": null,
+   "code": "# pip install obspy pandas\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'AXBA1', '10'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-02T00:00:00\")   # the timeframe, UTC\nTEMPERATURE = {\"UDO\": \"UK1\", \"LDO\": \"LK1\"}   # each pressure channel's housing temperature\n\n# Which pressure channel recorded which part of the timeframe (UDO every 15 s, LDO at 1 Hz).\ninv = client.get_stations(network=NET, station=STA, location=LOC, channel=\"UDO,LDO\", starttime=t1, endtime=t2, level=\"channel\")\nparts = []\nfor cha in inv[0][0]:\n    a, b = max(t1, cha.start_date), min(t2, cha.end_date) if cha.end_date else t2\n    if a >= b:\n        continue\n    st = client.get_waveforms(NET, STA, LOC, f\"{cha.code},{TEMPERATURE[cha.code]}\", a, b)\n    st.merge(method=1, fill_value=None)\n    # Already pascals and degrees C: no remove_sensitivity or remove_response (see above).\n    columns = {}\n    for tr in st:\n        name = \"pressure_pa\" if tr.stats.channel == cha.code else \"housing_temperature_c\"\n        t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n        columns[name] = pd.Series(tr.data.astype(float), index=t)\n    df = pd.DataFrame(columns)\n    df[\"channel\"] = cha.code\n    parts.append(df)\n    print(f\"{cha.code} ({cha.sample_rate:g} Hz): {a} to {b}, {len(df)} samples\")\n\ndata = pd.concat(parts).sort_index()\ndata.index.name = \"time_utc\"\nout = f\"{NET}.{STA}.{LOC}_pressure_{t1.date}_{t2.date}.csv\"\ndata.to_csv(out)\nprint(f\"wrote {out}: {len(data)} rows, {data.pressure_pa.min():.0f} to {data.pressure_pa.max():.0f} Pa\")\n"
+  },
+  {
+   "id": "RS03AXBS-MJ03A-12-VEL3DB301",
+   "question": "Give me Python code to download Axial Seamount Base Seafloor 3D Current Meter (RS03AXBS-MJ03A-12-VEL3DB301) data from 2025-03-01 00:00 to 2025-03-01 06:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 3.0 MB and 1 more file",
+   "run_error": null,
+   "code": "# pip install obspy pandas numpy\nimport numpy as np\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'AXBA1', '20'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-01T06:00:00\")   # the timeframe, UTC\nNAMES = {\"LOE\": \"east_m_s\", \"LON\": \"north_m_s\", \"LOZ\": \"up_m_s\", \"LKO\": \"temperature_c\"}\n\nst = client.get_waveforms(NET, STA, LOC, \",\".join(NAMES), t1, t2)\nst.merge(method=1, fill_value=None)   # gaps stay gaps\ncolumns = {}\nfor tr in st:\n    t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n    columns[NAMES[tr.stats.channel]] = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan), index=t)\ndf = pd.DataFrame(columns)\ndf.index.name = \"time_utc\"\nfor c in [\"east_m_s\", \"north_m_s\", \"up_m_s\"]:\n    df.loc[df[c].abs() > 5, c] = np.nan   # not a current: bad values the instrument wrote\ndf[\"speed_m_s\"] = np.hypot(df.east_m_s, df.north_m_s)\ndf[\"direction_deg\"] = np.degrees(np.arctan2(df.east_m_s, df.north_m_s)) % 360   # towards, clockwise from north\ndf.to_csv(f\"{NET}.{STA}.{LOC}_currents_1Hz_{t1.date}.csv\")\nminute = df[[\"east_m_s\", \"north_m_s\", \"up_m_s\", \"temperature_c\"]].resample(\"1min\").mean()\nminute[\"speed_m_s\"] = np.hypot(minute.east_m_s, minute.north_m_s)\nminute.to_csv(f\"{NET}.{STA}.{LOC}_currents_1min_{t1.date}.csv\")\nprint(f\"{len(df)} samples; mean speed {minute.speed_m_s.mean():.3f} m/s over {len(minute)} minutes\")\n"
+  },
+  {
+   "id": "EARTHSCOPE-OO-AXCC2",
+   "question": "Give me Python code to download Axial Seamount Central Caldera Tiltmeter/Accelerometer Station AXCC2 (EARTHSCOPE-OO-AXCC2) data from 2021-08-25 23:59 to 2021-08-26 00:09 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "mseed file of 216 kB",
+   "run_error": null,
+   "code": "# pip install obspy\nimport numpy as np\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nt1, t2 = UTCDateTime(\"2021-08-25T23:59:00\"), UTCDateTime(\"2021-08-26T00:09:00\")   # the timeframe, UTC\nst = client.get_waveforms('OO', 'AXCC2', \"*\", 'BNZ', t1, t2)\ninv = client.get_stations(network='OO', station='AXCC2', channel='BNZ', starttime=t1, endtime=t2, level=\"response\")\n# Counts to ground acceleration in m/s**2; leave this loop out for raw counts. The pre-filter tapers the spectrum off outside\n# the band the instrument records (the flat part of its response, below Nyquist), where dividing by its tiny\n# response would blow up noise.\nfor tr in st:\n    f = np.logspace(-4, np.log10(tr.stats.sampling_rate / 2), 500)\n    amp = np.abs(inv.get_response(tr.id, tr.stats.starttime).get_evalresp_response_for_frequencies(f, output=\"DEF\"))\n    flat = f[amp >= amp.max() / np.sqrt(2)]\n    low = max(flat[0], 2 / (tr.stats.endtime - tr.stats.starttime))   # no lower than the record resolves\n    high = min(flat[-1], 0.45 * tr.stats.sampling_rate)\n    tr.detrend(\"linear\")\n    tr.remove_response(inventory=inv, output='ACC', pre_filt=(low / 2, low, 0.8 * high, high), water_level=None)\nst.write('OO.AXCC2.BNZ_' + f\"{t1.date}.mseed\", format=\"MSEED\")\n"
+  },
+  {
+   "id": "RS03AXPD-DP03A-02-VEL3DA303",
+   "question": "Give me Python code to download Axial Seamount Deep Profiler 3D Current Meter (WFP) (RS03AXPD-DP03A-02-VEL3DA303) data from 2025-05-06 05:02 to 2025-05-07 05:02 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 286 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2025-05-06T05:02:00Z\", \"2025-05-07T05:02:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03axpd-dp03a-02-vel3da303'\ne.variables = ['time', 'eastward_sea_water_velocity_profiler_depth_enabled', 'northward_sea_water_velocity_profiler_depth_enabled', 'eastward_sea_water_velocity_profiler_depth_enabled_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03AXPD-DP03A-02-VEL3DA303' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03INT1-MJ03C-09-THSPHA301",
+   "question": "Give me Python code to download International District Hydrothermal Field 1 Vent Fluid Thermistor/pH (RS03INT1-MJ03C-09-THSPHA301) data from 2015-07-10 20:33 to 2015-07-11 20:33 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 4 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2015-07-10T20:33:00Z\", \"2015-07-11T20:33:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03int1-mj03c-09-thspha301'\ne.variables = ['time', 'thsphhc_h2', 'thsphhs_h2s', 'thsphhc_h2_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03INT1-MJ03C-09-THSPHA301' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03INT1-MJ03C-09-TRHPHA302",
+   "question": "Give me Python code to download International District Hydrothermal Field 1 Vent Fluid Thermistor/pH (RS03INT1-MJ03C-09-TRHPHA302) data from 2026-10-25 12:30 to 2026-10-26 12:30 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 90 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-10-25T12:30:00Z\", \"2026-10-26T12:30:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03int1-mj03c-09-trhpha302'\ne.variables = ['time', 'trhphte_ref', 'trhphte_abs']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03INT1-MJ03C-09-TRHPHA302' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03INT1-MJ03C-10-TRHPHA301",
+   "question": "Give me Python code to download International District Hydrothermal Field 1 Vent Fluid Thermistor/pH (RS03INT1-MJ03C-10-TRHPHA301) data from 2026-10-25 12:30 to 2026-10-26 12:30 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 93 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-10-25T12:30:00Z\", \"2026-10-26T12:30:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03int1-mj03c-10-trhpha301'\ne.variables = ['time', 'trhphte_ref', 'trhphte_abs', 'trhphte_ref_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03INT1-MJ03C-10-TRHPHA301' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03INT2-MJ03D-12-VEL3DB304",
+   "question": "Give me Python code to download International District Hydrothermal Field 2 3D Current Meter (RS03INT2-MJ03D-12-VEL3DB304) data from 2026-10-25 12:32 to 2026-10-26 12:32 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 159 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-10-25T12:32:00Z\", \"2026-10-26T12:32:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03int2-mj03d-12-vel3db304'\ne.variables = ['time', 'eastward_sea_water_velocity', 'northward_sea_water_velocity', 'upward_sea_water_velocity', 'sea_water_temperature']\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03INT2-MJ03D-12-VEL3DB304' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS03AXPS-SF03A-4B-VELPTD302",
+   "question": "Give me Python code to download Axial Seamount Shallow Profiler Current Meter (RS03AXPS-SF03A-4B-VELPTD302) data from 2026-10-25 12:22 to 2026-10-26 12:22 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 212 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-10-25T12:22:00Z\", \"2026-10-26T12:22:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs03axps-sf03a-4b-velptd302'\ne.variables = ['time', 'eastward_sea_water_velocity_profiler_depth_enabled', 'northward_sea_water_velocity_profiler_depth_enabled', 'eastward_sea_water_velocity_profiler_depth_enabled_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS03AXPS-SF03A-4B-VELPTD302' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS01SBPD-DP01A-02-VEL3DA103",
+   "question": "Give me Python code to download Oregon Slope Base Deep Profiler 3D Current Meter (WFP) (RS01SBPD-DP01A-02-VEL3DA103) data from 2024-02-16 14:31 to 2024-02-17 14:31 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 463 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2024-02-16T14:31:00Z\", \"2024-02-17T14:31:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs01sbpd-dp01a-02-vel3da103'\ne.variables = ['time', 'eastward_sea_water_velocity', 'eastward_sea_water_velocity_profiler_depth_enabled']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS01SBPD-DP01A-02-VEL3DA103' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS01SBPS-SF01A-4B-VELPTD102",
+   "question": "Give me Python code to download Oregon Slope Base Shallow Profiler Current Meter (RS01SBPS-SF01A-4B-VELPTD102) data from 2026-08-15 20:48 to 2026-08-16 20:48 UTC",
+   "easiest": "erddap",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "erddap"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 329 kB",
+   "run_error": null,
+   "code": "# pip install erddapy pandas\nfrom erddapy import ERDDAP\n\nSTART, END = \"2026-08-15T20:48:00Z\", \"2026-08-16T20:48:00Z\"   # the timeframe, UTC\ne = ERDDAP(server='https://erddap.dataexplorer.oceanobservatories.org/erddap', protocol=\"tabledap\", response=\"csv\")\ne.dataset_id = 'ooi-rs01sbps-sf01a-4b-velptd102'\ne.variables = ['time', 'eastward_sea_water_velocity_profiler_depth_enabled', 'northward_sea_water_velocity_profiler_depth_enabled', 'eastward_sea_water_velocity_profiler_depth_enabled_qc_agg']   # any of the Variables listed above, with time\ne.constraints = {\"time>=\": START, \"time<=\": END}\ndf = e.to_pandas(index_col=\"time (UTC)\", parse_dates=True)\ndf.to_csv('RS01SBPS-SF01A-4B-VELPTD102' + f\"_{START[:10]}_{END[:10]}.csv\")\n"
+  },
+  {
+   "id": "RS01SLBS-LJ01A-11-OPTAAC103",
+   "question": "Give me Python code to download Oregon Slope Base Seafloor Spectrophotometer (AC-S) (RS01SLBS-LJ01A-11-OPTAAC103) data from 2026-10-26 11:03 to 2026-10-26 12:03 UTC",
+   "easiest": "gold",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "gold"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "nc file of 29 kB",
+   "run_error": null,
+   "code": "# pip install requests xarray netCDF4\nimport re, requests, xarray as xr\n\nDATASET = 'RS01SLBS-LJ01A-11-OPTAAC103-streamed-optaa_sample'\nVARIABLES = ['elapsed_run_time']   # any of the stream's variables listed above\nSTART, END = \"2026-10-26T11:03:00\", \"2026-10-26T12:03:00\"   # the timeframe, UTC\nT = 'https://thredds.dataexplorer.oceanobservatories.org/thredds'\nstamp = lambda t: t.replace(\"-\", \"\").replace(\":\", \"\")[:15]\nxml = requests.get(f\"{T}/catalog/ooigoldcopy/public/{DATASET}/catalog.xml\", timeout=120).text\npaths = [p for p in re.findall(r'urlPath=\"([^\"]+\\.nc)\"', xml)\n         if (s := re.search(r'_(\\d{8}T\\d{6})[.\\d]*-(\\d{8}T\\d{6})[.\\d]*\\.nc$', p))\n         and s.group(2) >= stamp(START) and s.group(1) <= stamp(END)]\nparts = []\nfor path in paths:\n    ds = xr.open_dataset(f\"{T}/dodsC/{path}\")   # OPeNDAP: nothing is read until .load()\n    ds = (ds.swap_dims({\"obs\": \"time\"}) if \"obs\" in ds.dims else ds).reset_coords()   # depth becomes a variable\n    wanted = [v for v in VARIABLES if v in ds.variables]   # a file can lack one (the newest, not yet processed)\n    if wanted:\n        parts.append(ds[wanted].sel(time=slice(START, END)).load())\nif not parts:\n    raise SystemExit(f\"no {VARIABLES} in {DATASET} between {START} and {END}\")\ndata = xr.concat(parts, dim=\"time\", data_vars=\"all\", join=\"outer\")   # what a file lacks is NaN\ndata.encoding.pop(\"unlimited_dims\", None)\ndata.to_netcdf(f\"{DATASET}_{stamp(START)}_{stamp(END)}.nc\")   # or data.to_dataframe().to_csv(...)\n"
+  },
+  {
+   "id": "RS01SLBS-MJ01A-06-PRESTA101",
+   "question": "Give me Python code to download Oregon Slope Base Seafloor Pressure Sensor (Tidal Pressure Gauge) (RS01SLBS-MJ01A-06-PRESTA101) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 5.2 MB",
+   "run_error": null,
+   "code": "# pip install obspy pandas\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'HYSB1', '10'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-02T00:00:00\")   # the timeframe, UTC\nTEMPERATURE = {\"UDO\": \"UK1\", \"LDO\": \"LK1\"}   # each pressure channel's housing temperature\n\n# Which pressure channel recorded which part of the timeframe (UDO every 15 s, LDO at 1 Hz).\ninv = client.get_stations(network=NET, station=STA, location=LOC, channel=\"UDO,LDO\", starttime=t1, endtime=t2, level=\"channel\")\nparts = []\nfor cha in inv[0][0]:\n    a, b = max(t1, cha.start_date), min(t2, cha.end_date) if cha.end_date else t2\n    if a >= b:\n        continue\n    st = client.get_waveforms(NET, STA, LOC, f\"{cha.code},{TEMPERATURE[cha.code]}\", a, b)\n    st.merge(method=1, fill_value=None)\n    # Already pascals and degrees C: no remove_sensitivity or remove_response (see above).\n    columns = {}\n    for tr in st:\n        name = \"pressure_pa\" if tr.stats.channel == cha.code else \"housing_temperature_c\"\n        t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n        columns[name] = pd.Series(tr.data.astype(float), index=t)\n    df = pd.DataFrame(columns)\n    df[\"channel\"] = cha.code\n    parts.append(df)\n    print(f\"{cha.code} ({cha.sample_rate:g} Hz): {a} to {b}, {len(df)} samples\")\n\ndata = pd.concat(parts).sort_index()\ndata.index.name = \"time_utc\"\nout = f\"{NET}.{STA}.{LOC}_pressure_{t1.date}_{t2.date}.csv\"\ndata.to_csv(out)\nprint(f\"wrote {out}: {len(data)} rows, {data.pressure_pa.min():.0f} to {data.pressure_pa.max():.0f} Pa\")\n"
+  },
+  {
+   "id": "RS01SLBS-MJ01A-12-VEL3DB101",
+   "question": "Give me Python code to download Oregon Slope Base Seafloor 3D Current Meter (RS01SLBS-MJ01A-12-VEL3DB101) data from 2025-03-01 00:00 to 2025-03-01 06:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 3.1 MB and 1 more file",
+   "run_error": null,
+   "code": "# pip install obspy pandas numpy\nimport numpy as np\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'HYSB1', '20'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-01T06:00:00\")   # the timeframe, UTC\nNAMES = {\"LOE\": \"east_m_s\", \"LON\": \"north_m_s\", \"LOZ\": \"up_m_s\", \"LKO\": \"temperature_c\"}\n\nst = client.get_waveforms(NET, STA, LOC, \",\".join(NAMES), t1, t2)\nst.merge(method=1, fill_value=None)   # gaps stay gaps\ncolumns = {}\nfor tr in st:\n    t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n    columns[NAMES[tr.stats.channel]] = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan), index=t)\ndf = pd.DataFrame(columns)\ndf.index.name = \"time_utc\"\nfor c in [\"east_m_s\", \"north_m_s\", \"up_m_s\"]:\n    df.loc[df[c].abs() > 5, c] = np.nan   # not a current: bad values the instrument wrote\ndf[\"speed_m_s\"] = np.hypot(df.east_m_s, df.north_m_s)\ndf[\"direction_deg\"] = np.degrees(np.arctan2(df.east_m_s, df.north_m_s)) % 360   # towards, clockwise from north\ndf.to_csv(f\"{NET}.{STA}.{LOC}_currents_1Hz_{t1.date}.csv\")\nminute = df[[\"east_m_s\", \"north_m_s\", \"up_m_s\", \"temperature_c\"]].resample(\"1min\").mean()\nminute[\"speed_m_s\"] = np.hypot(minute.east_m_s, minute.north_m_s)\nminute.to_csv(f\"{NET}.{STA}.{LOC}_currents_1min_{t1.date}.csv\")\nprint(f\"{len(df)} samples; mean speed {minute.speed_m_s.mean():.3f} m/s over {len(minute)} minutes\")\n"
+  },
+  {
+   "id": "RS01SUM1-LJ01B-09-PRESTB102",
+   "question": "Give me Python code to download Southern Hydrate Ridge Flank Seafloor Pressure (Tidal Pressure Gauge) (RS01SUM1-LJ01B-09-PRESTB102) data from 2025-03-01 00:00 to 2025-03-02 00:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 5.0 MB",
+   "run_error": null,
+   "code": "# pip install obspy pandas\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'HYS14', '10'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-02T00:00:00\")   # the timeframe, UTC\nTEMPERATURE = {\"UDO\": \"UK1\", \"LDO\": \"LK1\"}   # each pressure channel's housing temperature\n\n# Which pressure channel recorded which part of the timeframe (UDO every 15 s, LDO at 1 Hz).\ninv = client.get_stations(network=NET, station=STA, location=LOC, channel=\"UDO,LDO\", starttime=t1, endtime=t2, level=\"channel\")\nparts = []\nfor cha in inv[0][0]:\n    a, b = max(t1, cha.start_date), min(t2, cha.end_date) if cha.end_date else t2\n    if a >= b:\n        continue\n    st = client.get_waveforms(NET, STA, LOC, f\"{cha.code},{TEMPERATURE[cha.code]}\", a, b)\n    st.merge(method=1, fill_value=None)\n    # Already pascals and degrees C: no remove_sensitivity or remove_response (see above).\n    columns = {}\n    for tr in st:\n        name = \"pressure_pa\" if tr.stats.channel == cha.code else \"housing_temperature_c\"\n        t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n        columns[name] = pd.Series(tr.data.astype(float), index=t)\n    df = pd.DataFrame(columns)\n    df[\"channel\"] = cha.code\n    parts.append(df)\n    print(f\"{cha.code} ({cha.sample_rate:g} Hz): {a} to {b}, {len(df)} samples\")\n\ndata = pd.concat(parts).sort_index()\ndata.index.name = \"time_utc\"\nout = f\"{NET}.{STA}.{LOC}_pressure_{t1.date}_{t2.date}.csv\"\ndata.to_csv(out)\nprint(f\"wrote {out}: {len(data)} rows, {data.pressure_pa.min():.0f} to {data.pressure_pa.max():.0f} Pa\")\n"
+  },
+  {
+   "id": "RS01SUM1-LJ01B-12-VEL3DB104",
+   "question": "Give me Python code to download Southern Hydrate Ridge Flank 3D Current Meter (RS01SUM1-LJ01B-12-VEL3DB104) data from 2025-03-01 00:00 to 2025-03-01 06:00 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 3.1 MB and 1 more file",
+   "run_error": null,
+   "code": "# pip install obspy pandas numpy\nimport numpy as np\nimport pandas as pd\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nNET, STA, LOC = 'OO', 'HYS14', '20'\nt1, t2 = UTCDateTime(\"2025-03-01T00:00:00\"), UTCDateTime(\"2025-03-01T06:00:00\")   # the timeframe, UTC\nNAMES = {\"LOE\": \"east_m_s\", \"LON\": \"north_m_s\", \"LOZ\": \"up_m_s\", \"LKO\": \"temperature_c\"}\n\nst = client.get_waveforms(NET, STA, LOC, \",\".join(NAMES), t1, t2)\nst.merge(method=1, fill_value=None)   # gaps stay gaps\ncolumns = {}\nfor tr in st:\n    t = pd.to_datetime(tr.times(\"timestamp\"), unit=\"s\", utc=True).round(\"s\")\n    columns[NAMES[tr.stats.channel]] = pd.Series(np.ma.filled(np.ma.array(tr.data, dtype=float), np.nan), index=t)\ndf = pd.DataFrame(columns)\ndf.index.name = \"time_utc\"\nfor c in [\"east_m_s\", \"north_m_s\", \"up_m_s\"]:\n    df.loc[df[c].abs() > 5, c] = np.nan   # not a current: bad values the instrument wrote\ndf[\"speed_m_s\"] = np.hypot(df.east_m_s, df.north_m_s)\ndf[\"direction_deg\"] = np.degrees(np.arctan2(df.east_m_s, df.north_m_s)) % 360   # towards, clockwise from north\ndf.to_csv(f\"{NET}.{STA}.{LOC}_currents_1Hz_{t1.date}.csv\")\nminute = df[[\"east_m_s\", \"north_m_s\", \"up_m_s\", \"temperature_c\"]].resample(\"1min\").mean()\nminute[\"speed_m_s\"] = np.hypot(minute.east_m_s, minute.north_m_s)\nminute.to_csv(f\"{NET}.{STA}.{LOC}_currents_1min_{t1.date}.csv\")\nprint(f\"{len(df)} samples; mean speed {minute.speed_m_s.mean():.3f} m/s over {len(minute)} minutes\")\n"
+  },
+  {
+   "id": "EARTHSCOPE-OO-HYS13",
+   "question": "Give me Python code to download Southern Hydrate Ridge Summit Seismic Station HYS13 (EARTHSCOPE-OO-HYS13) data from 2026-10-26 08:21 to 2026-10-26 08:31 UTC",
+   "easiest": "earthscope",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "earthscope"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "mseed file of 1.1 MB",
+   "run_error": null,
+   "code": "# pip install obspy\nimport numpy as np\nfrom obspy import UTCDateTime\nfrom obspy.clients.fdsn import Client\n\nclient = Client('https://service.earthscope.org')\nt1, t2 = UTCDateTime(\"2026-10-26T08:21:00\"), UTCDateTime(\"2026-10-26T08:31:00\")   # the timeframe, UTC\nst = client.get_waveforms('OO', 'HYS13', \"*\", 'EHZ', t1, t2)\ninv = client.get_stations(network='OO', station='HYS13', channel='EHZ', starttime=t1, endtime=t2, level=\"response\")\n# Counts to ground velocity in m/s; leave this loop out for raw counts. The pre-filter tapers the spectrum off outside\n# the band the instrument records (the flat part of its response, below Nyquist), where dividing by its tiny\n# response would blow up noise.\nfor tr in st:\n    f = np.logspace(-4, np.log10(tr.stats.sampling_rate / 2), 500)\n    amp = np.abs(inv.get_response(tr.id, tr.stats.starttime).get_evalresp_response_for_frequencies(f, output=\"DEF\"))\n    flat = f[amp >= amp.max() / np.sqrt(2)]\n    low = max(flat[0], 2 / (tr.stats.endtime - tr.stats.starttime))   # no lower than the record resolves\n    high = min(flat[-1], 0.45 * tr.stats.sampling_rate)\n    tr.detrend(\"linear\")\n    tr.remove_response(inventory=inv, output='VEL', pre_filt=(low / 2, low, 0.8 * high, high), water_level=None)\nst.write('OO.HYS13.EHZ_' + f\"{t1.date}.mseed\", format=\"MSEED\")\n"
+  }
+ ]
+}

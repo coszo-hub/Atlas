@@ -2,7 +2,7 @@
 // Browser requests contain only a question. The Worker fetches evidence itself
 // and returns stable corpus citations, never a Gemini key or Graph-RAG API key.
 
-import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, isWhaleDataQuestion, WHALE_DATA_ANSWER, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, placeDesignators, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
+import { RECIPE_COLLECTION, TASK_COLLECTION, taskRecipeIds, coszoSensorIds, withRangeNote, withoutOffRouteAccess, isAxialRecord, isCoszoRecord, isMarginQuestion, offMargin, marginAssets, codeModeAnswer, withTestedScript, answerPrompt, axialDayWindow, evidencePackage, eventsInWindow, fullTextFor, interleave, isInstrumentInventoryQuestion, isDasOverview, DAS_EXPERIMENTS, locatedUntil, magnitudeFloor, isPaperUsageQuestion, asksForPapers, topicText, topicLeads, isAssetQuestion, assetChunkIds, isDataAccessQuestion, dataAccessSites, dataAccessInstruments, typeOnlyInstruments, isOrientationQuestion, orientationStations, placeStations, orientationForStations, distinctiveWords, instrumentSearch, instrumentCodes, questionCodes, askedPlace, placeDesignators, typeInventory, isStatusQuestion, statusSearch, askedType, instrumentKey, liveTargetOf, liveStatusHit, namedDas, paperKey, paperKeys, publicHit, questionParts, searchText, sourceKey, sourceKind, withPlaces, withRouteCitations } from "./helpers.js";
 // Which OOI asset-management chunk holds which instrument, site, type, cruise year and depth band (written by
 // src/ooi_asset_management/build_asset_metadata.py).
 import ASSET_DIRECTORY from "./asset_directory.json" with { type: "json" };
@@ -988,9 +988,6 @@ export default {
     const requestedModel = ["gemini-2.5-flash", "gemini-3.5-flash-lite", ...Object.keys(GROQ_MODELS), OOI_MODEL, ...OPENAI_MODELS].includes(body?.model)
       ? body.model : "auto";
     if (query.length < 2 || query.length > MAX_QUERY_LENGTH) return response({ error: "invalid query" }, 400, cors);
-    if (!code && isWhaleDataQuestion(query)) {   // not the earthquake count, nor an answer pieced from papers (code from raw data is fine)
-      return response({ query, answer: WHALE_DATA_ANSWER, answer_model: "RCA Atlas", answer_citations: [], hits: [], neighbors: [], tool_hints: [] }, 200, cors);
-    }
     try {
       // A request for code for a task ("write code to count Axial earthquakes on 15 October") gets the code, not the count.
       const liveToolResult = code || taskRecipeIds(query, TASK_RECIPES).length ? null

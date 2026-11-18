@@ -1,0 +1,134 @@
+{
+ "summary": {
+  "model": "ooi-gemma-4-26b",
+  "asked": 7,
+  "passed": 7,
+  "has_code": 7,
+  "dates_in_code": 7,
+  "same_route": 7,
+  "by_route": {
+   "ucsd": "7/7"
+  }
+ },
+ "results": [
+  {
+   "id": "COSZO-BPR-O1",
+   "question": "Give me Python code to download Bottom pressure recorder O1 (COSZO-BPR-O1) data from 2014-10-01 22:43 to 2014-10-02 00:33 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 429 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2014-10-01 22:43', '2014-10-02 00:33'   # UTC\n# Station O1's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2014-10-01 22:43:55', '2014-10-02 00:33:39', 'https://library.ucsd.edu/dc/object/bb6529640g/_5_1.csv/download'),\n    ('2014-10-02 06:15:30', '2014-10-02 08:06:38', 'https://library.ucsd.edu/dc/object/bb6529640g/_6_1.csv/download'),\n    ('2014-10-03 21:25:31', '2014-10-04 03:28:48', 'https://library.ucsd.edu/dc/object/bb6529640g/_7_1.csv/download'),\n    ('2015-10-21 05:05:30', '2015-10-21 07:08:14', 'https://library.ucsd.edu/dc/object/bb6529640g/_15_1.csv/download'),\n    ('2016-06-04 15:57:15', '2016-06-04 18:22:44', 'https://library.ucsd.edu/dc/object/bb6529640g/_23_1.csv/download'),\n    ('2017-09-06 10:58:00', '2017-09-06 12:56:44', 'https://library.ucsd.edu/dc/object/bb6529640g/_42_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O1 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O1_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O2",
+   "question": "Give me Python code to download Bottom pressure recorder O2 (COSZO-BPR-O2) data from 2014-10-02 19:09 to 2014-10-02 20:58 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 414 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2014-10-02 19:09', '2014-10-02 20:58'   # UTC\n# Station O2's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2014-10-02 19:09:00', '2014-10-02 20:58:54', 'https://library.ucsd.edu/dc/object/bb6529640g/_10_1.csv/download'),\n    ('2014-10-03 01:21:06', '2014-10-03 03:17:09', 'https://library.ucsd.edu/dc/object/bb6529640g/_11_1.csv/download'),\n    ('2014-10-03 09:31:35', '2014-10-03 11:20:58', 'https://library.ucsd.edu/dc/object/bb6529640g/_12_1.csv/download'),\n    ('2015-10-19 23:56:00', '2015-10-20 01:46:04', 'https://library.ucsd.edu/dc/object/bb6529640g/_18_1.csv/download'),\n    ('2015-10-20 06:50:50', '2015-10-20 08:40:54', 'https://library.ucsd.edu/dc/object/bb6529640g/_19_1.csv/download'),\n    ('2016-06-05 21:44:45', '2016-06-05 23:30:13', 'https://library.ucsd.edu/dc/object/bb6529640g/_26_1.csv/download'),\n    ('2017-09-05 20:47:30', '2017-09-05 22:39:24', 'https://library.ucsd.edu/dc/object/bb6529640g/_45_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O2 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O2_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O2B",
+   "question": "Give me Python code to download Bottom pressure recorder O2B (COSZO-BPR-O2B) data from 2015-10-20 04:10 to 2015-10-20 06:00 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 442 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2015-10-20 04:10', '2015-10-20 06:00'   # UTC\n# Station O2B's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2015-10-20 04:10:30', '2015-10-20 06:00:14', 'https://library.ucsd.edu/dc/object/bb6529640g/_20_1.csv/download'),\n    ('2016-06-05 19:11:35', '2016-06-05 21:32:58', 'https://library.ucsd.edu/dc/object/bb6529640g/_27_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O2B visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O2B_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O3",
+   "question": "Give me Python code to download Bottom pressure recorder O3 (COSZO-BPR-O3) data from 2016-06-06 05:05 to 2016-06-06 07:19 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 532 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2016-06-06 05:05', '2016-06-06 07:19'   # UTC\n# Station O3's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2016-06-06 05:05:35', '2016-06-06 07:19:59', 'https://library.ucsd.edu/dc/object/bb6529640g/_30_1.csv/download'),\n    ('2017-09-05 05:46:50', '2017-09-05 07:55:24', 'https://library.ucsd.edu/dc/object/bb6529640g/_48_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O3 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O3_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O4",
+   "question": "Give me Python code to download Bottom pressure recorder O4 (COSZO-BPR-O4) data from 2016-06-08 08:05 to 2016-06-08 09:52 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 455 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2016-06-08 08:05', '2016-06-08 09:52'   # UTC\n# Station O4's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2016-06-08 08:05:45', '2016-06-08 09:52:04', 'https://library.ucsd.edu/dc/object/bb6529640g/_33_1.csv/download'),\n    ('2017-09-04 17:35:50', '2017-09-04 19:42:23', 'https://library.ucsd.edu/dc/object/bb6529640g/_51_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O4 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O4_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O5",
+   "question": "Give me Python code to download Bottom pressure recorder O5 (COSZO-BPR-O5) data from 2016-06-08 01:58 to 2016-06-08 03:56 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 543 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2016-06-08 01:58', '2016-06-08 03:56'   # UTC\n# Station O5's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2016-06-08 01:58:30', '2016-06-08 03:56:14', 'https://library.ucsd.edu/dc/object/bb6529640g/_36_1.csv/download'),\n    ('2017-09-02 23:50:30', '2017-09-03 02:19:19', 'https://library.ucsd.edu/dc/object/bb6529640g/_54_1.csv/download'),\n    ('2017-09-07 02:33:00', '2017-09-07 05:12:04', 'https://library.ucsd.edu/dc/object/bb6529640g/_55_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O5 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O5_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  },
+  {
+   "id": "COSZO-BPR-O6",
+   "question": "Give me Python code to download Bottom pressure recorder O6 (COSZO-BPR-O6) data from 2016-06-07 18:30 to 2016-06-07 20:41 UTC",
+   "easiest": "ucsd",
+   "model": "OOI Gemma 4 26B-A4B",
+   "error": null,
+   "has_code": true,
+   "dates_in_code": true,
+   "services": [
+    "ucsd"
+   ],
+   "same_route": true,
+   "passed": true,
+   "wrote": "csv file of 511 kB",
+   "run_error": null,
+   "code": "# pip install pandas requests\nimport io\nimport pandas as pd\nimport requests\n\nSTART, END = '2016-06-07 18:30', '2016-06-07 20:41'   # UTC\n# Station O6's visits (first and last sample, UTC) and their files\nVISITS = [\n    ('2016-06-07 18:30:50', '2016-06-07 20:41:58', 'https://library.ucsd.edu/dc/object/bb6529640g/_39_1.csv/download'),\n    ('2017-09-02 15:55:45', '2017-09-02 17:40:59', 'https://library.ucsd.edu/dc/object/bb6529640g/_58_1.csv/download'),\n    ('2017-09-07 12:27:30', '2017-09-07 14:02:59', 'https://library.ucsd.edu/dc/object/bb6529640g/_59_1.csv/download'),\n]\nNAMES = [\"time1\", \"time2\", \"pressure1_kPa\", \"pressure2_kPa\", \"temperature1_C\", \"temperature2_C\"]\nt1, t2 = pd.Timestamp(START), pd.Timestamp(END)\nparts = []\nfor a, b, url in VISITS:\n    if pd.Timestamp(a) <= t2 and pd.Timestamp(b) >= t1:\n        df = pd.read_csv(io.StringIO(requests.get(url, timeout=120).text), header=None, names=NAMES)\n        for k in (\"time1\", \"time2\"):   # MATLAB datenumber: 719529 is 1970-01-01\n            df[k] = pd.to_datetime((df[k] - 719529) * 86400, unit=\"s\").dt.round(\"ms\")\n        parts.append(df[(df[\"time1\"] >= t1) & (df[\"time1\"] <= t2)])\nif not parts:\n    raise SystemExit(\"No O6 visit in the timeframe; its visits are \" + \"; \".join(f\"{a} to {b}\" for a, b, _ in VISITS))\nout = pd.concat(parts).rename(columns={\"time1\": \"time1_utc\", \"time2\": \"time2_utc\"})\nout.to_csv(\"ascpr_O6_pressure.csv\", index=False)\nprint(len(out), \"rows\", out[\"time1_utc\"].min(), \"to\", out[\"time1_utc\"].max())\n"
+  }
+ ]
+}
