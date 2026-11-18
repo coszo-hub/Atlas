@@ -469,7 +469,8 @@
    "Short-period stations (AXAS1, AXAS2, AXEC1, AXEC3, AXID1, HYS11-13, CMG-6TF with a 1 s corner) do not record long periods: the pre-filter keeps their records above about 0.5 Hz, so a distant event's surface waves are seen properly only on the broadbands (AXBA1, AXCC1, AXEC2, HYS14, HYSB1).",
    "Rotation to radial and transverse needs all three components and the event's location; a station with one component, or an event with only an origin time, stays in Z, N and E.",
    "The OO stations had long outages (Hydrate Ridge from August 2020 to August 2022): a station with no data or an incomplete window is listed in events_stations.csv rather than saved.",
-   "USGS ComCat returns the largest MAX_EVENTS of the search, which for a great earthquake's days are its aftershocks too; narrow QUERY or raise minmagnitude."
+   "USGS ComCat returns the largest MAX_EVENTS of the search, which for a great earthquake's days are its aftershocks too; narrow QUERY or raise minmagnitude.",
+   "The Axial Seamount Earthquake Catalog lists only the caldera's own microearthquakes and is not filtered by REGION: earthquakes within a distance of Axial or of magnitude 4 and up come from USGS ComCat with REGION (asked for M4.5 or larger within 500 km of Axial in September 2026, the Axial catalogue had none and ComCat four, M4.8 to 5.4); the script searches ComCat when CATALOG is \"axial\" with a REGION over 0.3 degrees or a minmagnitude of 4 or more."
   ],
   "sources": [
    {

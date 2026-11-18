@@ -16,7 +16,9 @@ from obspy.taup import TauPyModel
 # The events: from a catalogue (EVENTS = None), or your own list of origin times, with their location when known
 # (dicts with time, and latitude, longitude, depth_km and magnitude if you have them).
 EVENTS = None
-CATALOG = "usgs"         # "usgs" (ComCat, the world) or "axial" (the Axial Seamount Earthquake Catalog)
+CATALOG = "usgs"         # "usgs" (ComCat, the world) or "axial" (the Axial Seamount Earthquake Catalog: the caldera's
+                         # own small earthquakes only; earthquakes near Axial, within a distance of it or of magnitude
+                         # 4 and up are in "usgs" with REGION)
 QUERY = dict(starttime="2025-07-29", endtime="2025-07-30", minmagnitude=8)   # the catalogue search
 REGION = None            # None: anywhere; or (latitude, longitude, radius in degrees): (43.9, -128.6, 2.0) is the
                          # Blanco fracture zone, (45.95, -130.0, 0.1) Axial's caldera, (40.4, -126.5, 3.0) Mendocino
@@ -36,6 +38,12 @@ client = Client("https://service.earthscope.org")
 model = TauPyModel("iasp91")
 
 # 1. The events, each with its origin and, when known, its location.
+# The Axial catalogue lists only the caldera's microearthquakes (it has no location filter), so a wider REGION or a
+# magnitude of 4 and up is searched in ComCat: asked for M4.5 within 500 km of Axial in September 2026, the Axial
+# catalogue had none and ComCat four (M4.8 to 5.4).
+if EVENTS is None and CATALOG == "axial" and ((REGION and REGION[2] > 0.3) or QUERY.get("minmagnitude", -9) >= 4):
+    print("the Axial catalogue lists only the caldera's small earthquakes: searching ComCat (USGS) instead")
+    CATALOG = "usgs"
 if EVENTS is None and CATALOG == "usgs":
     where = dict(zip(("latitude", "longitude", "maxradius"), REGION)) if REGION else {}
     cat = Client("USGS").get_events(**{k: UTCDateTime(v) if "time" in k else v for k, v in QUERY.items()}, **where,
